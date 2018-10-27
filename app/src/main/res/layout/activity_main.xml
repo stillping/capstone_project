@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,12 +23,49 @@
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+    <uk.me.desiderio.fabmenu.FloatingActionMenu
+        android:id="@+id/fab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|start"
+        android:gravity="end|bottom"
+        app:layout_dodgeInsetEdges="bottom"
+        custom:main_fab="@id/fab_main"
+        custom:background_colour="@color/fabDefaultBackground">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_trends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
+            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            android:layout_marginStart="@dimen/fab_mini_horizontal_margin"
+            android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
+            app:srcCompat="@android:drawable/ic_media_play"
+            app:fabSize="mini"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_neighbourhood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
+            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            android:layout_marginStart="@dimen/fab_mini_horizontal_margin"
+            android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
+            app:srcCompat="@android:drawable/ic_media_play"
+            app:fabSize="mini"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_normal_top_margin"
+            android:layout_marginBottom="@dimen/fab_normal_margin"
+            android:layout_marginStart="@dimen/fab_normal_margin"
+            android:layout_marginEnd="@dimen/fab_normal_margin"
+            app:srcCompat="@android:drawable/ic_menu_help"
+            app:fabSize="normal"/>
+
+    </uk.me.desiderio.fabmenu.FloatingActionMenu>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

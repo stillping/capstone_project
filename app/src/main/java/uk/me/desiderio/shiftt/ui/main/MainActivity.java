@@ -6,17 +6,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
+import uk.me.desiderio.fabmenu.FloatingActionMenu;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        FloatingActionMenu.OnItemClickListener {
 
     private MainActivityViewModel viewModel;
 
@@ -32,21 +33,35 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.main_content_text_view);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        FloatingActionMenu floatingActionMenu = findViewById(R.id.fab_menu);
+        floatingActionMenu.setOnItemClickListener(this);
 
        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
        viewModel.getMessage().observe(this, message -> {
             textView.setText(message);
         });
 
-        viewModel.getMessage().setValue("Hola Mundo, el cielo es verde");
+        viewModel.getMessage().setValue("Hello World, Winter is coming");
+    }
+
+    @Override
+    public void onFloatingMenuItemClick(View v) {
+        int viewId = v.getId();
+        String message = " NO message";
+
+        switch (viewId) {
+            case R.id.fab_trends:
+                message = "trends clicked";
+                break;
+            case R.id.fab_neighbourhood:
+                message = "neighbour clicked";
+                break;
+            default:
+        }
+
+        Snackbar.make(v, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
     }
 
     @Override
@@ -70,4 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
