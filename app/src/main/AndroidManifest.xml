@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrendsListActivity" />
-        <activity android:name=".NeighbourhoodActivity"></activity>
+        <activity android:name=".NeighbourhoodActivity" />
+        <activity android:name=".TweetListActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package uk.me.desiderio.shiftt.ui.trendslist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.support.AndroidSupportInjection;
 import uk.me.desiderio.shiftt.R;
+import uk.me.desiderio.shiftt.TweetListActivity;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 /**
- * View controller showing a list of twitter trends in the area
+ * Activity showing a list of twitter trends in the area
  */
 
 public class TrendsListFragment extends Fragment {
@@ -39,6 +41,14 @@ public class TrendsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.trends_list_fragment, container, false);
 
         textView = rootView.findViewById(R.id.trends_message);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), TweetListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
