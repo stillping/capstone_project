@@ -2,6 +2,7 @@ package uk.me.desiderio.shiftt.ui.main;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import uk.me.desiderio.shiftt.MainActivity;
 
 /**
  * {@link ViewModel} for the {@link MainActivity}

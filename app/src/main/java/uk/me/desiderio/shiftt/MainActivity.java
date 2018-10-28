@@ -1,4 +1,4 @@
-package uk.me.desiderio.shiftt.ui.main;
+package uk.me.desiderio.shiftt;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import uk.me.desiderio.fabmenu.FloatingActionMenu;
 import uk.me.desiderio.shiftt.NeighbourhoodActivity;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.TrendsListActivity;
+import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity implements

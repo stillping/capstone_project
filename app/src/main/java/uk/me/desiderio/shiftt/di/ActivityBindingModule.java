@@ -5,7 +5,7 @@ import dagger.android.ContributesAndroidInjector;
 import uk.me.desiderio.shiftt.NeighbourhoodActivity;
 import uk.me.desiderio.shiftt.TrendsListActivity;
 import uk.me.desiderio.shiftt.TweetListActivity;
-import uk.me.desiderio.shiftt.ui.main.MainActivity;
+import uk.me.desiderio.shiftt.MainActivity;
 import uk.me.desiderio.shiftt.ui.main.MainActivityModule;
 import uk.me.desiderio.shiftt.ui.neighbourhood.NeighbourhoodActivityModule;
 import uk.me.desiderio.shiftt.ui.neighbourhood.NeighbourhoodFragmentBindingModule;
