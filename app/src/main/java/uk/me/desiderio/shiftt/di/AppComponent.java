@@ -13,7 +13,7 @@ import uk.me.desiderio.shiftt.ShifttApplication;
 @Singleton
 @dagger.Component(modules = {
         AndroidSupportInjectionModule.class,
-        ActivityContributeModule.class,
+        ActivityBindingModule.class,
         AppModule.class
 })
 public interface AppComponent extends AndroidInjector<ShifttApplication> {

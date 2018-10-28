@@ -6,12 +6,18 @@ import dagger.Module;
 import dagger.multibindings.IntoMap;
 import uk.me.desiderio.shiftt.di.ViewModelKey;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
+import uk.me.desiderio.shiftt.ui.trendslist.TrendsListViewModel;
 
 /**
  * Module to provide {@link ViewModel} to Dagger
  */
 @Module
 public abstract class ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TrendsListViewModel.class)
+    abstract ViewModel providesTrendsListViewModel(TrendsListViewModel trendsListViewModel);
 
     @Binds
     @IntoMap

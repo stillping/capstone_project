@@ -1,5 +1,6 @@
 package uk.me.desiderio.shiftt.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,12 +9,15 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import javax.inject.Inject;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
 import uk.me.desiderio.fabmenu.FloatingActionMenu;
 import uk.me.desiderio.shiftt.R;
+import uk.me.desiderio.shiftt.TrendsListActivity;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity implements
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         floatingActionMenu.setOnItemClickListener(this);
 
        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
+        // TODO: Use the ViewModel
        viewModel.getMessage().observe(this, message -> {
             textView.setText(message);
         });
@@ -49,9 +54,13 @@ public class MainActivity extends AppCompatActivity implements
         int viewId = v.getId();
         String message = " NO message";
 
+        Intent intent = new Intent(this, TrendsListActivity.class);
+        startActivity(intent);
+
         switch (viewId) {
             case R.id.fab_trends:
                 message = "trends clicked";
+
                 break;
             case R.id.fab_neighbourhood:
                 message = "neighbour clicked";

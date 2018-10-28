@@ -5,6 +5,8 @@ import dagger.Module;
 /**
  * Module to provide dependencies to {@link MainActivity}
  */
+
 @Module
 public class MainActivityModule {
+    // TODO implements provides methods
 }

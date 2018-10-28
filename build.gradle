@@ -23,7 +23,7 @@ allprojects {
 }
 
 ext {
-    dagger_version = "2.16"
+    dagger_version = "2.18"
     architecture_version = "2.0.0"
 }
 

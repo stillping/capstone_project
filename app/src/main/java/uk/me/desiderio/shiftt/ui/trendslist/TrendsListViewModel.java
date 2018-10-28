@@ -1,18 +1,19 @@
-package uk.me.desiderio.shiftt.ui.main;
+package uk.me.desiderio.shiftt.ui.trendslist;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import uk.me.desiderio.shiftt.TrendsListActivity;
 
 /**
- * {@link ViewModel} for the {@link MainActivity}
+ * ViewModel for the {@link TrendsListActivity}
  */
-public class MainActivityViewModel extends ViewModel {
 
+public class TrendsListViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
     private MutableLiveData<String> message;
 
-    public MainActivityViewModel() {
+    public TrendsListViewModel() {
         this.message = new MutableLiveData<>();
     }
 

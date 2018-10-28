@@ -23,6 +23,8 @@
 
     <include layout="@layout/content_main" />
 
+    <!-- TODO improve fab icons -->
+
     <uk.me.desiderio.fabmenu.FloatingActionMenu
         android:id="@+id/fab_menu"
         android:layout_width="match_parent"
