@@ -6,6 +6,7 @@ import dagger.Module;
 import dagger.multibindings.IntoMap;
 import uk.me.desiderio.shiftt.di.ViewModelKey;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
+import uk.me.desiderio.shiftt.ui.neighbourhood.NeighbourhoodViewModel;
 import uk.me.desiderio.shiftt.ui.trendslist.TrendsListViewModel;
 
 /**
@@ -18,6 +19,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TrendsListViewModel.class)
     abstract ViewModel providesTrendsListViewModel(TrendsListViewModel trendsListViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NeighbourhoodViewModel.class)
+    abstract ViewModel providesNeighbourhoodViewModel(MainActivityViewModel mainActivityViewModel);
 
     @Binds
     @IntoMap

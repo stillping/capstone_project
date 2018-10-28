@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
 import uk.me.desiderio.fabmenu.FloatingActionMenu;
+import uk.me.desiderio.shiftt.NeighbourhoodActivity;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.TrendsListActivity;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
@@ -54,18 +55,23 @@ public class MainActivity extends AppCompatActivity implements
         int viewId = v.getId();
         String message = " NO message";
 
-        Intent intent = new Intent(this, TrendsListActivity.class);
-        startActivity(intent);
+        Class activityClass = null;
 
         switch (viewId) {
             case R.id.fab_trends:
                 message = "trends clicked";
-
+                activityClass = TrendsListActivity.class;
                 break;
             case R.id.fab_neighbourhood:
                 message = "neighbour clicked";
+                activityClass = NeighbourhoodActivity.class;
                 break;
             default:
+        }
+
+        if(activityClass != null) {
+            Intent intent = new Intent(this, activityClass);
+            startActivity(intent);
         }
 
         Snackbar.make(v, message, Snackbar.LENGTH_LONG)
