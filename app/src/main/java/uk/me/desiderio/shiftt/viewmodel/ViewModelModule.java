@@ -1,6 +1,9 @@
 package uk.me.desiderio.shiftt.viewmodel;
 
+import javax.inject.Singleton;
+
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -37,5 +40,7 @@ public abstract class ViewModelModule {
     abstract ViewModel providesTweetListViewModel(TweetListViewModel tweetListViewModel);
 
     @Binds
-    abstract ViewModelFactory bindsViewModelFactory(ViewModelFactory viewModelFactory);
+    @Singleton
+    abstract ViewModelProvider.NewInstanceFactory bindsViewModelFactory(ViewModelFactory viewModelFactory);
+
 }

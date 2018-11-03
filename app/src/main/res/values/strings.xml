@@ -1,4 +1,40 @@
 <resources>
     <string name="app_name">Capstone Project</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh_location">Refresh</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Settings -->
+    <string name="pref_category_twitter">Twitter Search</string>
+    <string name="pref_category_location">Last Known Location</string>
+
+    <string name="pref_category_key_twitter">twitter_category</string>
+    <string name="pref_category_key_location">location_category</string>
+
+    <string name="pref_key_twitter_radius_size">twitter_search_size</string>
+    <string name="pref_key_twitter_radius_unit">twitter_search_units</string>
+    <string name="pref_key_location">location</string>
+
+    <string name="pref_twitter_search_radius_size_name">Radius size</string>
+    <string name="pref_twitter_default_search_radius_size">9</string>
+
+    <string name="pref_twitter_search_radius_unit_title">Radius unit</string>
+    <string-array name="pref_twitter_search_radius_unit_labels">
+        <item>Kilometers</item>
+        <item>Miles</item>
+    </string-array>
+    <string-array name="pref_twitter_search_radius_unit_values">
+        <item>km</item>
+        <item>ml</item>
+    </string-array>
+
+    <string name="pref_location_lat_name">Latitude</string>
+    <string name="pref_location_lat_key">latitude_shared_preference_key</string>
+    <string name="pref_location_lon_name">Longitude</string>
+    <string name="pref_location_lon_key">longitude_shared_preference_key</string>
+    <string name="pref_location_time_name">Time</string>
+    <string name="pref_location_time_key">location_time_shared_preference_key</string>
+
 </resources>

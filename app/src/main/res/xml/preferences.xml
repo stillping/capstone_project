@@ -1,0 +1,46 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="@string/pref_category_key_twitter"
+        android:title="@string/pref_category_twitter">
+
+        <!-- todo change this for a slider or at least limit the values to enter-->
+        <EditTextPreference
+            android:key="@string/pref_key_twitter_radius_size"
+            android:title="@string/pref_twitter_search_radius_size_name"
+            android:defaultValue="@string/pref_twitter_default_search_radius_size"
+            android:capitalize="words"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"/>
+
+        <ListPreference
+            android:defaultValue="km"
+            android:title="@string/pref_twitter_search_radius_unit_title"
+            android:entries="@array/pref_twitter_search_radius_unit_labels"
+            android:entryValues="@array/pref_twitter_search_radius_unit_values"
+            android:key="@string/pref_key_twitter_radius_unit"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/pref_category_key_location"
+        android:title="@string/pref_category_location">
+
+        <Preference
+            android:key="@string/pref_location_lat_key"
+            android:summary="Summary Basic Pref"
+            android:title="@string/pref_location_lat_name" />
+        <Preference
+            android:key="@string/pref_location_lon_key"
+            android:summary="Summary Basic Pref"
+            android:title="@string/pref_location_lon_name" />
+        <Preference
+            android:key="@string/pref_location_time_key"
+            android:summary="Summary Basic Pref"
+            android:title="@string/pref_location_time_name" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

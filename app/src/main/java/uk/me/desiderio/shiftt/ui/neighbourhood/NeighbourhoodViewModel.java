@@ -1,5 +1,7 @@
 package uk.me.desiderio.shiftt.ui.neighbourhood;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.NeighbourhoodActivity;
@@ -13,6 +15,7 @@ public class NeighbourhoodViewModel extends ViewModel {
 
     private MutableLiveData<String> message;
 
+    @Inject
     public NeighbourhoodViewModel() {
         this.message = new MutableLiveData<>();
     }

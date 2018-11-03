@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.me.desiderio.shiftt">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".ShifttApplication"
         android:allowBackup="true"
@@ -22,7 +24,10 @@
         </activity>
         <activity android:name=".TrendsListActivity" />
         <activity android:name=".NeighbourhoodActivity" />
-        <activity android:name=".TweetListActivity"></activity>
+        <activity android:name=".TweetListActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

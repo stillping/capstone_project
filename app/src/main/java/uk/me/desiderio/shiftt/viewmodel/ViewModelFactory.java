@@ -2,6 +2,7 @@ package uk.me.desiderio.shiftt.viewmodel;
 
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
@@ -12,24 +13,40 @@ import androidx.lifecycle.ViewModelProvider;
  * Factory class to provide {@link ViewModel}. The implemention follows guidelines so that can be
  * injected using Dagger
  */
-public class ViewModelFactory<M extends ViewModel> extends ViewModelProvider.NewInstanceFactory {
 
-    private Map<Class<M>, Provider<M>> creators;
+public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    public ViewModelFactory(Map<Class<M>, Provider<M>> creators) {
+    private Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
+
+    @Inject
+    public ViewModelFactory(Map<Class<? extends ViewModel>,
+                Provider<ViewModel>> creators) {
         this.creators = creators;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        Provider<M> creator = creators.get(modelClass);
+
+        Provider<? extends ViewModel> creator = creators.get(modelClass);
+
+        if (creator == null) {
+            for (Map.Entry<Class<? extends ViewModel>, Provider<ViewModel>> entry : creators.entrySet()) {
+                if (modelClass.isAssignableFrom(entry.getKey())) {
+                    creator = entry.getValue();
+                    break;
+                }
+            }
+        }
 
         if(creator == null) {
             throw new IllegalArgumentException("unknown model class " + modelClass.getSimpleName());
         }
 
-        return (T)creator.get();
-
+        try {
+            return (T) creator.get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

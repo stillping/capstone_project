@@ -1,5 +1,7 @@
 package uk.me.desiderio.shiftt.ui.tweetlist;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.TweetListActivity;
@@ -13,6 +15,7 @@ public class TweetListViewModel extends ViewModel {
 
     private MutableLiveData<String> message;
 
+    @Inject
     public TweetListViewModel() {
         this.message = new MutableLiveData<>();
     }

@@ -1,5 +1,7 @@
 package uk.me.desiderio.shiftt.ui.trendslist;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.TrendsListActivity;
@@ -13,6 +15,7 @@ public class TrendsListViewModel extends ViewModel {
 
     private MutableLiveData<String> message;
 
+    @Inject
     public TrendsListViewModel() {
         this.message = new MutableLiveData<>();
     }

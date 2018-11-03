@@ -1,23 +1,36 @@
 package uk.me.desiderio.shiftt.ui.main;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.MainActivity;
+import uk.me.desiderio.shiftt.data.ShifttRepository;
+import uk.me.desiderio.shiftt.model.LocationViewData;
 
 /**
  * {@link ViewModel} for the {@link MainActivity}
  */
+
 public class MainActivityViewModel extends ViewModel {
 
     // TODO: Implement the ViewModel
+    private ShifttRepository repository;
 
-    private MutableLiveData<String> message;
-
-    public MainActivityViewModel() {
-        this.message = new MutableLiveData<>();
+    @Inject
+    public MainActivityViewModel(ShifttRepository repository) {
+        this.repository = repository;
     }
 
-    public MutableLiveData<String> getMessage() {
-        return message;
+    public MutableLiveData<LocationViewData> getLocationViewData() {
+        return repository.getLocationViewData();
+    }
+
+    public void getLastKnownLocation() {
+        repository.updateLastKnownLocation();
+    }
+
+    public void initLocationUpdates() {
+        repository.initLocationUpdates();
     }
 }

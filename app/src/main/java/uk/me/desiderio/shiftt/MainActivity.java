@@ -1,7 +1,10 @@
 package uk.me.desiderio.shiftt;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,44 +14,60 @@ import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
 import uk.me.desiderio.fabmenu.FloatingActionMenu;
-import uk.me.desiderio.shiftt.NeighbourhoodActivity;
-import uk.me.desiderio.shiftt.R;
-import uk.me.desiderio.shiftt.TrendsListActivity;
+import uk.me.desiderio.shiftt.data.location.LocationPermissionRequest;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
+import uk.me.desiderio.shiftt.utils.PermissionManager;
+import uk.me.desiderio.shiftt.utils.PermissionManager.PermissionStatus;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity implements
         FloatingActionMenu.OnItemClickListener {
 
-    private MainActivityViewModel viewModel;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    @Inject
     ViewModelFactory viewModelFactory;
+
+
+    @Inject
+    LocationManager locationManager;
+
+    @Inject
+    PermissionManager permissionManager;
+
+
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        TextView textView = (TextView) findViewById(R.id.main_content_text_view);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FloatingActionMenu floatingActionMenu = findViewById(R.id.fab_menu);
         floatingActionMenu.setOnItemClickListener(this);
 
-       viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         // TODO: Use the ViewModel
-       viewModel.getMessage().observe(this, message -> {
-            textView.setText(message);
-        });
 
-        viewModel.getMessage().setValue("Hello World, Winter is coming");
+        viewModel.getLocationViewData().observe(this, location -> {
+            Log.d(TAG, " location(2) : latitude: " + location.getLatitude());
+            // TODO show location in the map
+        });
+        viewModel.getLastKnownLocation();
+
+        // location permision request should be carried out before the view model is initialized
+        requestLocationPermissions();
     }
 
     @Override
@@ -70,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
             default:
         }
 
-        if(activityClass != null) {
+        if (activityClass != null) {
             Intent intent = new Intent(this, activityClass);
             startActivity(intent);
         }
@@ -82,25 +101,76 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if(id == R.id.action_refresh_location) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LocationPermissionRequest.LOCATION_REQUEST_CODE:
+                if (hasAnyPermissionGranted(grantResults)) {
+                    initLocationUpdates();
+                } else {
+                    showNoLocationDialog();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
+    private void requestLocationPermissions() {
+        @PermissionStatus
+        int permissionStatus = permissionManager
+                .getPermissionStatus(LocationPermissionRequest.REQUIRED_PERMISIONS);
+
+        switch (permissionStatus) {
+            case PermissionManager.PERMISSION_GRANTED:
+                initLocationUpdates();
+                break;
+            case PermissionManager.CAN_ASK_PERMISSION:
+                showNoLocationDialog();
+                break;
+            case PermissionManager.PERMISSION_DENIED:
+                permissionManager.requestPermissions(LocationPermissionRequest.REQUIRED_PERMISIONS,
+                                                     LocationPermissionRequest.LOCATION_REQUEST_CODE);
+                break;
+        }
+    }
+
+    private void initLocationUpdates() {
+        viewModel.initLocationUpdates();
+    }
+
+    private void showNoLocationDialog() {
+        // TODO : need to be implemented : can ask permission path
+    }
+
+    private boolean hasAnyPermissionGranted(int[] grantResults) {
+        if(grantResults.length > 0) {
+            for(int result : grantResults) {
+                if(result == PackageManager.PERMISSION_GRANTED) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
