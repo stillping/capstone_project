@@ -74,4 +74,14 @@ public class ShifttRepository {
     public MutableLiveData<LocationViewData> getLocationViewData() {
         return locationViewData;
     }
+
+
+    public void requestNeigbourhoodData() {
+        double lat = sharedPreferences.getLastKnownLatitude();
+        double lon = sharedPreferences.getLastKnownLongitude();
+        String radiusUnits = sharedPreferences.getSearchRadiusUnits();
+        String radiusSize = sharedPreferences.getSearchRadiusSize();
+
+        // TODO add request to twitter service with above parameters
+    }
 }

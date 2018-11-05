@@ -5,12 +5,12 @@ import dagger.Subcomponent;
 import dagger.android.AndroidInjector;
 
 /**
- * Subcomponent injecting the {@link NeighbourhoodFragment}
+ * Subcomponent injecting the {@link ShifttMapFragment}
  */
 
 @Subcomponent
-public interface NeighbourhoodFragmentSubcomponent extends AndroidInjector<NeighbourhoodFragment> {
+public interface NeighbourhoodFragmentSubcomponent extends AndroidInjector<ShifttMapFragment> {
 
     @Subcomponent.Builder
-    abstract class Builder extends AndroidInjector.Builder<NeighbourhoodFragment> {}
+    abstract class Builder extends AndroidInjector.Builder<ShifttMapFragment> {}
 }

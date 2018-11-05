@@ -21,7 +21,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <fragment
+        android:id="@+id/main_map_fragment"
+        android:name="uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <!-- TODO improve fab icons -->
 
@@ -32,41 +37,41 @@
         android:layout_gravity="bottom|start"
         android:gravity="end|bottom"
         app:layout_dodgeInsetEdges="bottom"
-        custom:main_fab="@id/fab_main"
-        custom:background_colour="@color/fabDefaultBackground">
+        custom:background_colour="@color/fabDefaultBackground"
+        custom:main_fab="@id/fab_main">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_trends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
-            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
             android:layout_marginStart="@dimen/fab_mini_horizontal_margin"
+            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
-            app:srcCompat="@android:drawable/ic_media_play"
-            app:fabSize="mini"/>
+            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_media_play" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_neighbourhood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
-            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
             android:layout_marginStart="@dimen/fab_mini_horizontal_margin"
+            android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
-            app:srcCompat="@android:drawable/ic_media_play"
-            app:fabSize="mini"/>
+            android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_media_play" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fab_normal_top_margin"
-            android:layout_marginBottom="@dimen/fab_normal_margin"
             android:layout_marginStart="@dimen/fab_normal_margin"
+            android:layout_marginTop="@dimen/fab_normal_top_margin"
             android:layout_marginEnd="@dimen/fab_normal_margin"
-            app:srcCompat="@android:drawable/ic_menu_help"
-            app:fabSize="normal"/>
+            android:layout_marginBottom="@dimen/fab_normal_margin"
+            app:fabSize="normal"
+            app:srcCompat="@android:drawable/ic_menu_help" />
 
     </uk.me.desiderio.fabmenu.FloatingActionMenu>
 

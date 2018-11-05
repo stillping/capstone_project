@@ -11,8 +11,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import uk.me.desiderio.shiftt.ui.neighbourhood.NeighbourhoodFragment;
-import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
+import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
 
 /**
  * Activity to show map with drawn areas where some twitter activity had taken place
@@ -29,7 +28,7 @@ public class NeighbourhoodActivity extends AppCompatActivity implements HasSuppo
         setContentView(R.layout.neighbourhood_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, NeighbourhoodFragment.newInstance())
+                    .replace(R.id.container, ShifttMapFragment.newInstance())
                     .commitNow();
         }
     }

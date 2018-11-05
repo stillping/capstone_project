@@ -8,7 +8,7 @@ import dagger.android.support.FragmentKey;
 import dagger.multibindings.IntoMap;
 
 /**
- * Module providing binding for {@link NeighbourhoodFragment}
+ * Module providing binding for {@link ShifttMapFragment}
  */
 
 @Module(subcomponents = NeighbourhoodFragmentSubcomponent.class)
@@ -20,7 +20,7 @@ public abstract class NeighbourhoodFragmentBindingModule {
 
     @Binds
     @IntoMap
-    @FragmentKey(NeighbourhoodFragment.class)
+    @FragmentKey(ShifttMapFragment.class)
     abstract AndroidInjector.Factory<? extends Fragment> bindAndroidInjectorFactory(
             NeighbourhoodFragmentSubcomponent.Builder builder);
 }

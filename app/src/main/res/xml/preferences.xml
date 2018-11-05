@@ -5,7 +5,7 @@
 
         <!-- todo change this for a slider or at least limit the values to enter-->
         <EditTextPreference
-            android:key="@string/pref_key_twitter_radius_size"
+            android:key="@string/pref_key_twitter_radius_size_key"
             android:title="@string/pref_twitter_search_radius_size_name"
             android:defaultValue="@string/pref_twitter_default_search_radius_size"
             android:capitalize="words"
@@ -19,7 +19,7 @@
             android:title="@string/pref_twitter_search_radius_unit_title"
             android:entries="@array/pref_twitter_search_radius_unit_labels"
             android:entryValues="@array/pref_twitter_search_radius_unit_values"
-            android:key="@string/pref_key_twitter_radius_unit"
+            android:key="@string/pref_key_twitter_radius_unit_key"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
 

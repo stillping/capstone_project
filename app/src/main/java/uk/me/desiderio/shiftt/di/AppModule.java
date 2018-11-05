@@ -45,5 +45,4 @@ public class AppModule {
    FusedLocationProviderClient providesFusedLocationProviderClient(@ForApplication Context context) {
        return LocationServices.getFusedLocationProviderClient(context);
    }
-
 }

@@ -13,8 +13,8 @@
     <string name="pref_category_key_twitter">twitter_category</string>
     <string name="pref_category_key_location">location_category</string>
 
-    <string name="pref_key_twitter_radius_size">twitter_search_size</string>
-    <string name="pref_key_twitter_radius_unit">twitter_search_units</string>
+    <string name="pref_key_twitter_radius_size_key">twitter_search_size_key</string>
+    <string name="pref_key_twitter_radius_unit_key">twitter_search_units_key</string>
     <string name="pref_key_location">location</string>
 
     <string name="pref_twitter_search_radius_size_name">Radius size</string>

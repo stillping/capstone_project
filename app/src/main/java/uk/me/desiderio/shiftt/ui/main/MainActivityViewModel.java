@@ -33,4 +33,8 @@ public class MainActivityViewModel extends ViewModel {
     public void initLocationUpdates() {
         repository.initLocationUpdates();
     }
+
+    public void requestNeigbourhoodData() {
+        repository.requestNeigbourhoodData();
+    }
 }
