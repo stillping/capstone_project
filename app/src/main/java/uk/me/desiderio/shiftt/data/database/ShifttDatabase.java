@@ -8,6 +8,7 @@ import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.UserEnt;
 
 @Database(entities = {TweetEnt.class,
@@ -16,8 +17,9 @@ import uk.me.desiderio.shiftt.data.database.model.UserEnt;
         BoundingBoxEnt.class,
         TweetEntitiesEnt.class,
         HashtagEntityEnt.class,
-        UserEnt.class},
-        version = 2,
+        UserEnt.class,
+        QueryTweetEntitiesHashtagEntityJoin.class},
+        version = 3,
         exportSchema = false)
 public abstract class ShifttDatabase extends RoomDatabase {
 

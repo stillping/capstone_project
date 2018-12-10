@@ -1,6 +1,5 @@
 package uk.me.desiderio.shiftt.data.database.model;
 
-import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.models.User;
 import com.twitter.sdk.android.core.models.UserEntities;
 
@@ -119,7 +118,8 @@ public class UserEnt implements SeedProvider {
     public boolean showAllInlineMedia;
 
     @Ignore
-    public Tweet status;
+    public TweetEnt status;
+    @ColumnInfo(name = "status_id")
     public long statusId;
 
     @ColumnInfo(name = "statuses_count")
@@ -240,7 +240,9 @@ public class UserEnt implements SeedProvider {
         this.protectedUser= user.protectedUser;
         this.screenName= user.screenName;
         this.showAllInlineMedia= user.showAllInlineMedia;
-        this.status= user.status;
+        if(user.status != null) {
+            this.status = new TweetEnt(user.status);
+        }
         this.statusesCount= user.statusesCount;
         this.timeZone= user.timeZone;
         this.url= user.url;
@@ -288,7 +290,7 @@ public class UserEnt implements SeedProvider {
                         protectedUser,
                         screenName,
                         showAllInlineMedia,
-                        status,
+                        (status != null)? status.getSeed() : null,
                         statusesCount,
                         timeZone,
                         url,

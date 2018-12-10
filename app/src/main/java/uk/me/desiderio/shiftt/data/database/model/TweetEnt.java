@@ -1,7 +1,5 @@
 package uk.me.desiderio.shiftt.data.database.model;
 
-import android.util.Log;
-
 import com.twitter.sdk.android.core.models.Card;
 import com.twitter.sdk.android.core.models.Coordinates;
 import com.twitter.sdk.android.core.models.Place;
@@ -32,122 +30,86 @@ import uk.me.desiderio.shiftt.data.database.converter.StringListTypeConverter;
 @Entity(tableName = "tweet")
 public class TweetEnt implements SeedProvider {
 
+    @NonNull
+    @ColumnInfo(name = "created_at")
+    public final String createdAt;
+    @ColumnInfo(name = "favorite_count")
+    public final Integer favoriteCount;
+    public final boolean favorited;
+    @ColumnInfo(name = "filter_level")
+    public final String filterLevel;
+    @PrimaryKey
+    public final long id;
+    @ColumnInfo(name = "id_str")
+    public final String idStr;
+    @ColumnInfo(name = "in_reply_to_screen_name")
+    public final String inReplyToScreenName;
+    @ColumnInfo(name = "in_reply_to_status_id")
+    public final long inReplyToStatusId;
+    @ColumnInfo(name = "in_reply_to_status_id_str")
+    public final String inReplyToStatusIdStr;
+    @ColumnInfo(name = "in_reply_to_user_id")
+    public final long inReplyToUserId;
+    @ColumnInfo(name = "in_reply_to_user_id_str")
+    public final String inReplyToUserIdStr;
+    public final String lang;
+    @ColumnInfo(name = "possibly_sensitive")
+    public final boolean possiblySensitive;
+    @ColumnInfo(name = "quoted_status_id")
+    public final long quotedStatusId;
+    @ColumnInfo(name = "quoted_status_id_str")
+    public final String quotedStatusIdStr;
+    @ColumnInfo(name = "retweet_count")
+    public final int retweetCount;
+    @ColumnInfo(name = "retweeted")
+    public final boolean retweeted;
+    public final String source;
+    public final String text;
+    public final boolean truncated;
+    @ColumnInfo(name = "withheld_copyright")
+    public final boolean withheldCopyright;
+    @ColumnInfo(name = "withheld_scope")
+    public final String withheldScope;
     public boolean isMetadata = false;
-
     @Ignore
     public CoordinatesEnt coordinates;
     @ColumnInfo(name = "coordinates_id")
     public long coordinatesId;
-
-
-    @NonNull
-    @ColumnInfo(name = "created_at")
-    public final String createdAt;
-
-
     @ColumnInfo(name = "current_user_retweet")
     @TypeConverters(CurrentUserRetweetDataTypeConverter.class)
     public CurrentUserRetweetEnt currentUserRetweet;
-
-
     @Ignore
     public TweetEntitiesEnt entities;
+    @ColumnInfo(name = "entities_id")
     public long entitiesId;
-
     @Ignore
-    @ColumnInfo(name = "extended_entities")
     public TweetEntitiesEnt extendedEntities;
-
+    @ColumnInfo(name = "extended_entities_id")
     public long extendedEntitiesId;
-
-    @ColumnInfo(name = "favorite_count")
-    public final Integer favoriteCount;
-
-    public final boolean favorited;
-
-    @ColumnInfo(name = "filter_level")
-    public final String filterLevel;
-
-    @PrimaryKey
-    public final long id;
-
-    @ColumnInfo(name = "id_str")
-    public final String idStr;
-
-    @ColumnInfo(name = "in_reply_to_screen_name")
-    public final String inReplyToScreenName;
-
-    @ColumnInfo(name = "in_reply_to_status_id")
-    public final long inReplyToStatusId;
-
-    @ColumnInfo(name = "in_reply_to_status_id_str")
-    public final String inReplyToStatusIdStr;
-
-    @ColumnInfo(name = "in_reply_to_user_id")
-    public final long inReplyToUserId;
-
-    @ColumnInfo(name = "in_reply_to_user_id_str")
-    public final String inReplyToUserIdStr;
-
-    public final String lang;
-
     @Ignore
     public PlaceEnt place;
     @ColumnInfo(name = "place_id")
     public String placeId;
-
-    @ColumnInfo(name = "possibly_sensitive")
-    public final boolean possiblySensitive;
-
     // this is not implemented //
     @Ignore
     @TypeConverters(ObjectTypeConverter.class)
     public Object scopes;
-
-    @ColumnInfo(name = "quoted_status_id")
-    public final long quotedStatusId;
-
-    @ColumnInfo(name = "quoted_status_id_str")
-    public final String quotedStatusIdStr;
-
     @Ignore
     public Tweet quotedStatus;
-
-    @ColumnInfo(name = "retweet_count")
-    public final int retweetCount;
-
-    @ColumnInfo(name = "retweeted")
-    public final boolean retweeted;
-
     @Ignore
     public Tweet retweetedStatus;
     @ColumnInfo(name = "retweeted_status_id")
     public long retweetedStatusId;
-
-    public final String source;
-
-    public final String text;
-
     @TypeConverters(IntegerListTypeConverter.class)
     @ColumnInfo(name = "display_text_range")
     public List<Integer> displayTextRange;
-
-    public final boolean truncated;
-
     @Ignore
     public UserEnt user;
+    @ColumnInfo(name = "user_id")
     public long userId;
-
-    @ColumnInfo(name = "withheld_copyright")
-    public final boolean withheldCopyright;
-
     @TypeConverters(StringListTypeConverter.class)
     @ColumnInfo(name = "withheld_in_countries")
     public List<String> withheldInCountries;
-
-    @ColumnInfo(name = "withheld_scope")
-    public final String withheldScope;
-
     @TypeConverters(CardTypeConverter.class)
     public Card card;
 

@@ -21,15 +21,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.VisibleForTesting;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 
+@VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class TweetMockDataProvider {
 
-    // TODO COORDINATES
+
     public static final String CREATED_AT_VALUE = "tweet_property_created_at_value";
     public static final int CURRENT_USER_RETWEET_ID_VALUE = 67;
     public static final String CURRENT_USER_RETWEET_ID_STR_VALUE =
             "tweet_property_current_user_retweet_id_str_value";
+    @SuppressWarnings("unused")
     public static final Object CURRENT_USER_RETWEET_VALUE = new Object() {
         public long id = CURRENT_USER_RETWEET_ID_VALUE;
         public String id_str = CURRENT_USER_RETWEET_ID_STR_VALUE;
@@ -53,8 +56,9 @@ public class TweetMockDataProvider {
     public static final int MEDIA_ENTITY_SIZE_HEIGHT_VALUE = 981;
     public static final String MEDIA_ENTITY_SIZE_RESIZE_VALUE =
             "tweet_property_media_entity_size_resize_value";
-    public static final String HASHMAP_ENTITY_TEXT_VALUE =
+    public static final String HASHTAG_ENTITY_TEXT_VALUE =
             "tweet_property_hashmap_entity_text_value";
+    public static final int HASHTAG_COUNT_VALUE = 2;
     public static final Integer MEDIA_ENTITY_VIDEO_INFO_ASPECT_RATIO_VALUE = 433;
     public static final long MEDIA_ENTITY_VIDEO_INFO_DURATION_MILLS_VALUE = 43L;
     public static final Integer FAVORITE_COUNT_VALUE = 35;
@@ -74,7 +78,7 @@ public class TweetMockDataProvider {
             "tweet_property_in_reply_to_user_id_str_value";
     public static final String LANG_VALUE = "tweet_property_lang_value";
     public static final boolean POSSIBLY_SENSITIVE_VALUE = true;
-    public static final Object SCOPES_VALUE = new Object();
+    private static final Object SCOPES_VALUE = new Object();
     public static final long QUOTED_STATUS_ID_VALUE = 11L;
     public static final String QUOTED_STATUS_ID_STR_VALUE =
             "tweet_property_quoted_status_id_str_value";
@@ -154,16 +158,16 @@ public class TweetMockDataProvider {
     public static final String USER_URL_VALUE = "tweet_property_user_url_value";
     public static final int USER_UTC_OFFSET_VALUE = 706;
     public static final boolean USER_VERIFIED_VALUE = true;
-    public static final String USER_WITHHELD_IN_COUNTRY_ONE_VALUE =
+    private static final String USER_WITHHELD_IN_COUNTRY_ONE_VALUE =
             "tweet_property_withheld_in_country_one_value";
-    public static final String USER_WITHHELD_IN_COUNTRY_TWO_VALUE =
+    private static final String USER_WITHHELD_IN_COUNTRY_TWO_VALUE =
             "tweet_property_withheld_in_country_two_value";
     public static final List<String> USER_WITHHELD_IN_COUNTRIES_VALUE =
             Arrays.asList(USER_WITHHELD_IN_COUNTRY_ONE_VALUE,
                           USER_WITHHELD_IN_COUNTRY_TWO_VALUE);
     public static final String USER_WITHELD_SCOPE_VALUE =
             "tweet_property_withheld_scope_value_value";
-    public static final long USER_SCOPE_ID_VALUE = 710L;
+    private static final long USER_SCOPE_ID_VALUE = 710L;
     public static final String CARD_NAME_VALUE =
             "card_bound_values_name_value";
     public static final String CARD_BOUND_VALUES_KEY_VALUE =
@@ -190,11 +194,12 @@ public class TweetMockDataProvider {
     public static final String MEDIA_ENTITY_TYPE_VALUE = "tweet_property_media_entity_type_value";
     public static final String MEDIA_ENTITY_ALT_TEXT_VALUE =
             "tweet_property_media_entity_alt_text_value";
-    static final String PLACE_ID_VALUE = "tweet_property_place_id_value";
+    private static final String PLACE_ID_VALUE = "tweet_property_place_id_value";
 
     /**
      * provides mock {@link TweetEnt} object
      */
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static TweetEnt getTweetEnt(long id, boolean hasNullFields) {
         Tweet tweet;
         if (hasNullFields) {
@@ -208,6 +213,7 @@ public class TweetMockDataProvider {
     /**
      * provides mocked Tweet with the nullable values as nulls
      **/
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static Tweet getTweetWithNullValues(long id) {
         return initTweet(id,
                          null,
@@ -225,11 +231,12 @@ public class TweetMockDataProvider {
     /**
      * provides mocked Tweet with no null values
      **/
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public static Tweet getTweet(long id) {
         Coordinates coordinates = getMockedCoordinatesObject();
         Place place = getMockedPlaceObject();
-        TweetEntities entities = getMockedEntitiesObject();
-        TweetEntities extendedEntities = getMockedEntitiesObject();
+        TweetEntities entities = getMockedEntitiesObject(id);
+        TweetEntities extendedEntities = getMockedEntitiesObject(id);
         User user = getMockedUserObject();
         Card card = getMockedCardObject();
         return initTweet(id,
@@ -251,8 +258,8 @@ public class TweetMockDataProvider {
     private static Tweet getMetadataTweet(long id) {
         Coordinates coordinates = getMockedCoordinatesObject();
         Place place = getMockedPlaceObject();
-        TweetEntities entities = getMockedEntitiesObject();
-        TweetEntities extendedEntities = getMockedEntitiesObject();
+        TweetEntities entities = getMockedEntitiesObject(id);
+        TweetEntities extendedEntities = getMockedEntitiesObject(id);
         Card card = getMockedCardObject();
         return initTweet(id,
                          coordinates,
@@ -356,7 +363,7 @@ public class TweetMockDataProvider {
                              ENTITY_END_VALUE);
     }
 
-    private static TweetEntities getMockedEntitiesObject() {
+    private static TweetEntities getMockedEntitiesObject(long tweetEntId) {
         UrlEntity urlEntity = getMockedUrlEntityObject();
 
         MentionEntity mentionEntity = new MentionEntity(MENTION_ENTITY_ID_VALUE,
@@ -392,13 +399,9 @@ public class TweetMockDataProvider {
                                                   videoInfo,
                                                   MEDIA_ENTITY_ALT_TEXT_VALUE);
 
-        HashtagEntity hashtagEntity = new HashtagEntity(HASHMAP_ENTITY_TEXT_VALUE,
-                                                        ENTITY_START_VALUE,
-                                                        ENTITY_END_VALUE);
+        HashtagEntity hashtagEntity = getHashtagEntity(1, tweetEntId);
 
-        HashtagEntity hashtagEntityTwo = new HashtagEntity(HASHMAP_ENTITY_TEXT_VALUE + "002",
-                                                           ENTITY_START_VALUE,
-                                                           ENTITY_END_VALUE);
+        HashtagEntity hashtagEntityTwo = getHashtagEntity(2, tweetEntId);
 
         SymbolEntity symbolEntity = new SymbolEntity(SYMBOL_ENTITY_TEXT_VALUE,
                                                      ENTITY_START_VALUE,
@@ -412,9 +415,16 @@ public class TweetMockDataProvider {
                                  Collections.singletonList(symbolEntity));
     }
 
+    private static HashtagEntity getHashtagEntity(int index, long tweetEntId) {
+        String text = tweetEntId + "_" + HASHTAG_ENTITY_TEXT_VALUE + "_" + index;
+        return new HashtagEntity(text,
+                                 ENTITY_START_VALUE,
+                                 ENTITY_END_VALUE);
+    }
+
     // User
 
-    public static User getMockedUserObject() {
+    private static User getMockedUserObject() {
         Tweet status = getMetadataTweet(USER_SCOPE_ID_VALUE);
         return new User(USER_CONTRIBUTORS_ENABLED_VALUE,
                         USER_CREATED_AT_VALUE,

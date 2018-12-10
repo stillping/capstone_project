@@ -17,11 +17,8 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import uk.me.desiderio.shiftt.data.database.converter.MediaEntityTypeConverter;
 import uk.me.desiderio.shiftt.data.database.converter.MentionEntityTypeConverter;
-import uk.me.desiderio.shiftt.data.database.converter.StringListTypeConverter;
 import uk.me.desiderio.shiftt.data.database.converter.SymbolEntityTypeConverter;
 import uk.me.desiderio.shiftt.data.database.converter.UrlEntityTypeConverter;
-import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
-import uk.me.desiderio.shiftt.data.database.model.SeedProvider;
 
 
 /**
@@ -39,27 +36,20 @@ public class TweetEntitiesEnt implements SeedProvider {
 
     @TypeConverters(MediaEntityTypeConverter.class)
     public final List<MediaEntity> media;
-
-    @Ignore
-    public final List<HashtagEntityEnt> hashtags;
-    @TypeConverters(StringListTypeConverter.class)
-    public final List<String> hashtagIds;
-
     @TypeConverters(SymbolEntityTypeConverter.class)
     public final List<SymbolEntity> symbols;
-
+    @Ignore
+    public List<HashtagEntityEnt> hashtags;
     @PrimaryKey(autoGenerate = true)
     public long id;
 
     public TweetEntitiesEnt(List<UrlEntity> urls,
                             List<MentionEntity> userMentions,
                             List<MediaEntity> media,
-                            List<String> hashtagIds,
                             List<SymbolEntity> symbols) {
         this.urls = urls;
         this.userMentions = userMentions;
         this.media = media;
-        this.hashtagIds = hashtagIds;
         this.hashtags = new ArrayList<>();
         this.symbols = symbols;
     }
@@ -70,7 +60,6 @@ public class TweetEntitiesEnt implements SeedProvider {
         this.userMentions = tweetEntities.userMentions;
         this.media = tweetEntities.media;
         this.hashtags = getHashtagEntities(tweetEntities.hashtags);
-        this.hashtagIds = new ArrayList<>();
         this.symbols = tweetEntities.symbols;
     }
 

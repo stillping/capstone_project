@@ -1,9 +1,13 @@
 package uk.me.desiderio.shiftt.data.database;
 
+import android.util.Log;
+
+import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.models.UrlEntity;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,19 +15,28 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import uk.me.desiderio.shiftt.data.database.model.CoordinatesEnt;
-import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
+import uk.me.desiderio.shiftt.utils.LiveDataTestUtil;
 
 import static com.google.common.truth.Truth.assertThat;
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.*;
 
 
 public class ShifttDaoTest {
+
+    private static final String TAG = ShifttDaoTest.class.getSimpleName();
+
+
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     private ShifttDatabase database;
     private ShifttDao dao;
@@ -33,6 +46,7 @@ public class ShifttDaoTest {
         database = Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
                 ShifttDatabase.class)
+                .allowMainThreadQueries()
                 .build();
 
         dao = database.shifttDao();
@@ -41,54 +55,158 @@ public class ShifttDaoTest {
     // helper to populate database
 
     private void populateDatabase(boolean hasNullFieldValues) {
-        TweetEnt[] tweetEntities = getTweetEntities(hasNullFieldValues);
+        List<TweetEnt> tweetEntities = getTweetEntities(hasNullFieldValues);
         dao.insertTweetEntities(tweetEntities);
     }
 
-    private TweetEnt[] getTweetEntities(boolean hasNullFieldValues) {
+    private List<TweetEnt> getTweetEntities(boolean hasNullFieldValues) {
         List<TweetEnt> tweetList = new ArrayList<>();
 
-        for (long i = 0; i < 10; i++) {
+        for (long i = 1; i < 11; i++) {
             tweetList.add(getTweetEnt(i, hasNullFieldValues));
         }
 
-
-        TweetEnt[] tweets = new TweetEnt[tweetList.size()];
-        return tweetList.toArray(tweets);
+        return tweetList;
     }
 
     // Retrieve all
 
     @Test
-    public void whenRetrievingAllTweetEntities_RightCountIsReturned() {
+    public void whenGetAllFeaturedPopTweetsEntQuery_thenRightCountRetrieved() throws
+            InterruptedException {
         populateDatabase(false);
 
-        List<TweetEnt> tweetEntities = dao.getAllResponseTweets();
+        List<QueryTweetEnt> queryTweetEntityList = LiveDataTestUtil.getValue(
+                dao.getAllFeaturedPopTweetsEntQuery());
 
-        assertThat(tweetEntities).isNotEmpty();
-        assertThat(tweetEntities).hasSize(10);
+        assertThat(queryTweetEntityList).isNotNull();
+        assertThat(queryTweetEntityList).hasSize(10);
+        assertThat(queryTweetEntityList.get(0)).isInstanceOf(QueryTweetEnt.class);
+    }
+
+
+    @Test
+    public void whenGetAllFeaturedPopTweetsEnt_thenRightCountRetrieved() throws
+            InterruptedException {
+        populateDatabase(false);
+
+        List<Tweet> queryTweetEntityList = LiveDataTestUtil.getValue(
+                dao.getAllFeaturedPopTweets());
+
+        assertThat(queryTweetEntityList).isNotNull();
+        assertThat(queryTweetEntityList).hasSize(10);
+        assertThat(queryTweetEntityList.get(0)).isInstanceOf(Tweet.class);
     }
 
     @Test
-    public void whenATweetIsRetrieved_thenRightTweetIsRetrieved() {
+    public void whenATweetEntIsRetrieved_thenRightTweetEntIsRetrieved() throws
+            InterruptedException {
         populateDatabase(false);
 
         long firstItemId = 1;
-        TweetEnt tweetEntity = dao.getTweetEntity(firstItemId);
+        TweetEnt tweetEntity = getTweetEntityById(firstItemId);
 
         assertThat(tweetEntity).isNotNull();
+        assertThat(tweetEntity).isInstanceOf(TweetEnt.class);
         assertThat(tweetEntity.id).isEqualTo(firstItemId);
+    }
+
+    @Test
+    public void whenATweetIsRetrieved_thenRightTweetIsRetrieved() throws InterruptedException {
+        populateDatabase(false);
+
+        long firstItemId = 1;
+        Tweet tweet = LiveDataTestUtil.getValue(dao.getFeaturedPopTweetById(firstItemId));
+
+        assertThat(tweet).isNotNull();
+        assertThat(tweet).isInstanceOf(Tweet.class);
+        assertThat(tweet.id).isEqualTo(firstItemId);
+    }
+
+
+    @Test
+    public void whenRetrievingAllQueryTweetEntities_hasBeenFullyPopulateWithChildObjects() throws
+            InterruptedException {
+        populateDatabase(false);
+
+        List<QueryTweetEnt> tweetEntities = LiveDataTestUtil.getValue(
+                dao.getAllFeaturedPopTweetsEntQuery());
+
+        QueryTweetEnt tweetEnt = tweetEntities.get(1);
+
+        if (tweetEnt.tweetEntity.coordinatesId > -1) {
+
+            assertThat(tweetEnt.coordinatesList).isNotNull();
+            assertThat(tweetEnt.coordinatesList).hasSize(1);
+            assertThat(tweetEnt.coordinatesList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.coordinatesId);
+        }
+
+        if (tweetEnt.tweetEntity.placeId != null) {
+
+            assertThat(tweetEnt.placeList).isNotNull();
+            assertThat(tweetEnt.placeList).hasSize(1);
+            assertThat(tweetEnt.placeList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.placeId);
+        }
+
+        if (tweetEnt.tweetEntity.entitiesId > -1) {
+
+            assertThat(tweetEnt.entitiesList).isNotNull();
+            assertThat(tweetEnt.entitiesList).hasSize(1);
+            assertThat(tweetEnt.entitiesList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.entitiesId);
+
+            // see below for hashtag tests
+        }
+
+        if (tweetEnt.tweetEntity.extendedEntitiesId > -1) {
+
+            assertThat(tweetEnt.extendedEntitiesList).isNotNull();
+            assertThat(tweetEnt.extendedEntitiesList).hasSize(1);
+            assertThat(tweetEnt.extendedEntitiesList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.extendedEntitiesId);
+
+            // see below for hashtag test
+        }
+
+        if (tweetEnt.tweetEntity.quotedStatusId > -1) {
+
+            assertThat(tweetEnt.quotedStatusList).isNotNull();
+            assertThat(tweetEnt.quotedStatusList).hasSize(1);
+            assertThat(tweetEnt.quotedStatusList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.quotedStatusId);
+        }
+
+        if (tweetEnt.tweetEntity.retweetedStatusId > 0) {
+
+            assertThat(tweetEnt.retweetedStatusList).isNotNull();
+            assertThat(tweetEnt.retweetedStatusList).hasSize(1);
+            assertThat(tweetEnt.retweetedStatusList.get(0).id).
+                    isEqualTo(tweetEnt.tweetEntity.retweetedStatusId);
+        }
+
+        if (tweetEnt.tweetEntity.userId > 0) {
+
+            assertThat(tweetEnt).isNotNull();
+            assertThat(tweetEnt.userList).hasSize(1);
+            assertThat(tweetEnt.userList.get(0).userEnt.id).
+                    isEqualTo(tweetEnt.tweetEntity.userId);
+
+
+            assertThat(tweetEnt.userList.get(0).tweetEntList.get(0)).isNotNull();
+        }
     }
 
     // test for primites properties
     @Test
-    public void whenATweetIsRetrieved_thenAValidTweetEntityIsReturned() {
+    public void whenATweetIsRetrieved_thenAValidTweetEntityIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long firstItemId = 1;
-        TweetEnt tweetEntity = dao.getTweetEntity(firstItemId);
+        TweetEnt tweetEntity = getTweetEntityById(firstItemId);
 
-        assertThat(tweetEntity.coordinates).isNull();
+        assertThat(tweetEntity.coordinates).isNotNull();
         // see below for further coordinates tests
 
         assertThat(tweetEntity.createdAt).isEqualTo(CREATED_AT_VALUE);
@@ -114,8 +232,9 @@ public class ShifttDaoTest {
         assertThat(tweetEntity.inReplyToUserId).isEqualTo(IN_REPLY_TO_USER_ID_VALUE);
         assertThat(tweetEntity.inReplyToUserIdStr).isEqualTo(IN_REPLY_TO_USER_ID_STR_VALUE);
         assertThat(tweetEntity.lang).isEqualTo(LANG_VALUE);
-        // todo revise this : why is so null check
-        assertThat(tweetEntity.place).isNull();
+
+
+        assertThat(tweetEntity.place).isNotNull();
         // see below for place tests
 
         assertThat(tweetEntity.possiblySensitive).isEqualTo(POSSIBLY_SENSITIVE_VALUE);
@@ -136,7 +255,7 @@ public class ShifttDaoTest {
         assertThat(tweetEntity.text).isEqualTo(TEXT_VALUE);
         assertThat(tweetEntity.displayTextRange).containsAllIn(DISPLAY_TEXT_RANGE);
         assertThat(tweetEntity.truncated).isEqualTo(TRUNCATED_VALUE);
-        assertThat(tweetEntity.user).isNull();
+        assertThat(tweetEntity.user).isNotNull();
         // see below for further user tests
 
         assertThat(tweetEntity.withheldCopyright).isEqualTo(WITHHELD_COPYRIGHT_VALUE);
@@ -152,11 +271,11 @@ public class ShifttDaoTest {
     // Coordinates test
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidCoordinatesIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidCoordinatesIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long firstItemId = 1;
-        TweetEnt tweetEntity = dao.getTweetEntity(firstItemId);
+        TweetEnt tweetEntity = getTweetEntityById(firstItemId);
 
         long coordinatesId = tweetEntity.coordinatesId;
 
@@ -172,11 +291,11 @@ public class ShifttDaoTest {
     }
 
     @Test
-    public void whenATweetWithoutCoordinatesIsRetrieve_thenNullCoordinatesIsReturned() {
+    public void whenATweetWithoutCoordinatesIsRetrieve_thenNullCoordinatesIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.coordinatesId).isEqualTo(-1);
         assertThat(tweetEntity.coordinates).isNull();
     }
@@ -184,11 +303,11 @@ public class ShifttDaoTest {
     // currentUserRetweet tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidCurrentUserRetweetIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidCurrentUserRetweetIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.currentUserRetweet).isNotNull();
 
         assertThat(tweetEntity.currentUserRetweet.id).isEqualTo(CURRENT_USER_RETWEET_ID_VALUE);
@@ -197,22 +316,22 @@ public class ShifttDaoTest {
 
 
     @Test
-    public void whenATweetIsRetrieve_thenANullCurrentUserRetweetIsReturned() {
+    public void whenATweetIsRetrieve_thenANullCurrentUserRetweetIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.currentUserRetweet).isNull();
     }
 
     // Place tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidPlaceIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidPlaceIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         String placeId = tweetEntity.placeId;
         PlaceEnt placeEntity = dao.getPlace(placeId);
 
@@ -234,11 +353,11 @@ public class ShifttDaoTest {
     }
 
     @Test
-    public void whenATweetWithoutPlaceIsRetrieve_thenNullPlaceIsReturned() {
+    public void whenATweetWithoutPlaceIsRetrieve_thenNullPlaceIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.placeId).isNull();
         assertThat(tweetEntity.place).isNull();
     }
@@ -246,12 +365,12 @@ public class ShifttDaoTest {
     // Entities tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidEntitiesIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidEntitiesIsReturned() throws InterruptedException {
 
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
 
         assertThat(tweetEntity).isNotNull();
         assertThat(tweetEntity.entities).isNotNull();
@@ -261,26 +380,27 @@ public class ShifttDaoTest {
 
     @Test
     public void
-    whenTweetEntitiesHasId_thenTheRightEntitiesObjecExistInEntityTable() {
+    whenTweetEntitiesHasId_thenTheRightEntitiesObjecExistInEntityTable() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
 
         long entitiesid = tweetEntity.entitiesId;
 
         assertThat(entitiesid).isNotEqualTo(0);
 
         testEntityInsertion(entitiesid);
+        testEntitiesHashtagJoinInserction(entitiesid);
     }
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidExtendedEntitiesIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidExtendedEntitiesIsReturned() throws InterruptedException {
 
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
 
         assertThat(tweetEntity).isNotNull();
         assertThat(tweetEntity.extendedEntities).isNotNull();
@@ -289,17 +409,34 @@ public class ShifttDaoTest {
     }
 
     @Test
-    public void whenTweetExtendedEntitiesHasId_thenTheRightEntitiesObjecExistInEntityTable() {
+    public void whenTweetExtendedEntitiesHasId_thenTheRightEntitiesObjecExistInEntityTable() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
 
         long entitiesid = tweetEntity.extendedEntitiesId;
+        Log.d(TAG, ":  ======= insertTweetData: tweet id: " + tweetEntity.id +
+                "extended " + "entities id " + entitiesid);
 
         assertThat(entitiesid).isNotEqualTo(0);
 
         testEntityInsertion(entitiesid);
+        testEntitiesHashtagJoinInserction(entitiesid);
+    }
+
+    private void testEntitiesHashtagJoinInserction(long entitiesId) {
+
+        List<QueryTweetEntitiesHashtagEntityJoin> hashtagJointList =
+                dao.getHashtagEntityListByEntitiesId(entitiesId);
+
+        Log.d(TAG, entitiesId + ":  ======= insertTweetData: id: " + hashtagJointList.get(0).tweetEntitiesId + "" +
+                " : hashtag: "
+                + hashtagJointList.get(0).hashtagText);
+        assertThat(hashtagJointList).isNotNull();
+        assertThat(hashtagJointList).hasSize(HASHTAG_COUNT_VALUE);
+        assertThat(hashtagJointList.get(0).tweetEntitiesId).isEqualTo(entitiesId);
+        assertThat(hashtagJointList.get(0).hashtagText).contains(HASHTAG_ENTITY_TEXT_VALUE);
     }
 
     private void testEntityInsertion(long entitiesid) {
@@ -314,21 +451,7 @@ public class ShifttDaoTest {
                     .containsAllIn(Arrays.asList(ENTITY_START_VALUE,
                                                  ENTITY_END_VALUE));
 
-            assertThat(rawTweetEntities.hashtagIds).isNotNull();
-            assertThat(rawTweetEntities.hashtagIds).hasSize(2);
-
-
-            // check hashtag table element number
-            HashtagEntityEnt[] hashtagEntityRoomEntities =
-                    dao.getAllHashtagEntities();
-            assertThat(hashtagEntityRoomEntities).isNotEmpty();
-            assertThat(hashtagEntityRoomEntities).asList().hasSize(2);
-
-            // check right element is retrieved
-            String hashtagName = rawTweetEntities.hashtagIds.get(0);
-            HashtagEntityEnt hashtagEntityRoomEntity =
-                    dao.getHashtagEntity(hashtagName);
-            assertThat(hashtagEntityRoomEntity.text).isEqualTo(hashtagName);
+            // see below for hashtag join table insertion tests
         }
     }
 
@@ -398,12 +521,6 @@ public class ShifttDaoTest {
                 .containsAllIn(Collections.singletonList
                         (MEDIA_ENTITY_VIDEO_INFO_ASPECT_RATIO_VALUE));
 
-        assertThat(tweetEntity.hashtagIds).hasSize(2);
-        assertThat(tweetEntity.hashtags).hasSize(2);
-        assertThat(tweetEntity.hashtags.get(0).text).isEqualTo(HASHMAP_ENTITY_TEXT_VALUE);
-        assertThat(tweetEntity.hashtags.get(0).indices)
-                .containsAllIn(Arrays.asList(ENTITY_START_VALUE, ENTITY_END_VALUE));
-
         assertThat(tweetEntity.media.get(0).altText).isEqualTo(MEDIA_ENTITY_ALT_TEXT_VALUE);
 
         // has expected symbols
@@ -418,51 +535,51 @@ public class ShifttDaoTest {
     // Status tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidQuotedStatusIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidQuotedStatusIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.quotedStatus).isNotNull();
         assertThat(tweetEntity.quotedStatus.id).isEqualTo(QUOTED_STATUS_ID_VALUE);
     }
 
     @Test
-    public void whenATweetWithoutQuotedRequestIsRetrieve_thenANullQuotedStatusIsReturned() {
+    public void whenATweetWithoutQuotedRequestIsRetrieve_thenANullQuotedStatusIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.quotedStatus).isNull();
     }
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidRetweetStatusIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidRetweetStatusIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.retweetedStatus).isNotNull();
         assertThat(tweetEntity.retweetedStatus.id).isEqualTo(RETWEET_STATUS_ID);
     }
 
     @Test
-    public void whenATweetWithoutRetweetStatusIsRetrieve_thenANullRetweetStatusIsReturned() {
+    public void whenATweetWithoutRetweetStatusIsRetrieve_thenANullRetweetStatusIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.retweetedStatus).isNull();
     }
 
     // User tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidUserIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidUserIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.user).isNotNull();
 
         assertThat(tweetEntity.user.contributorsEnabled).isEqualTo(USER_CONTRIBUTORS_ENABLED_VALUE);
@@ -515,21 +632,21 @@ public class ShifttDaoTest {
     }
 
     @Test
-    public void whenATweetWithoutUserIsRetrieve_thenNullUserIsReturned() {
+    public void whenATweetWithoutUserIsRetrieve_thenNullUserIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.userId).isEqualTo(0);
         assertThat(tweetEntity.user).isNull();
     }
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidUserEntitiesIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidUserEntitiesIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntityById(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
 
         assertThat(tweetEntity.user.entities).isNotNull();
         assertThat(tweetEntity.user.entities.url).isNotNull();
@@ -558,11 +675,11 @@ public class ShifttDaoTest {
     // withheldInCountries tests
 
     @Test
-    public void withheldInCountriesTest() {
+    public void withheldInCountriesTest() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.withheldInCountries).isNotNull();
 
         assertThat(tweetEntity.withheldInCountries).hasSize(2);
@@ -573,11 +690,11 @@ public class ShifttDaoTest {
     // Card tests
 
     @Test
-    public void whenATweetIsRetrieve_thenAValidTCardIsReturned() {
+    public void whenATweetIsRetrieve_thenAValidTCardIsReturned() throws InterruptedException {
         populateDatabase(false);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.card).isNotNull();
 
         assertThat(tweetEntity.card.name).isEqualTo(CARD_NAME_VALUE);
@@ -588,11 +705,11 @@ public class ShifttDaoTest {
     }
 
     @Test
-    public void whenATweetWithoutCardIsRetrieve_thenNullCardIsReturned() {
+    public void whenATweetWithoutCardIsRetrieve_thenNullCardIsReturned() throws InterruptedException {
         populateDatabase(true);
 
         long secondItemId = 2;
-        TweetEnt tweetEntity = dao.getTweetEntity(secondItemId);
+        TweetEnt tweetEntity = getTweetEntityById(secondItemId);
         assertThat(tweetEntity.card).isNull();
 
     }
@@ -600,5 +717,11 @@ public class ShifttDaoTest {
     @After
     public void tearDown() {
         database.close();
+    }
+
+    private TweetEnt getTweetEntityById(long id) throws InterruptedException {
+        return LiveDataTestUtil
+                .getValue(dao.getFeaturedPopTweetEntQuery(id))
+                .getPopulatedTweetEnt();
     }
 }
