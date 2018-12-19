@@ -14,13 +14,16 @@ import uk.me.desiderio.shiftt.di.ForApplication;
  */
 public class ShifttSharedPreferences {
 
-    public static String PREF_LATITUDE;
-    public static String PREF_LONGITUDE;
-    public static String PREF_LOCATION_TIME;
-    public static String PREF_SEARCH_RADIUS_UNITS;
-    public static String PREF_SEARCH_RADIUS_SIZE;
+    public static String PREF_KEY_LATITUDE;
+    public static String PREF_KEY_LONGITUDE;
+    public static String PREF_KEY_LOCATION_TIME;
+    public static String PREF_KEY_SEARCH_RADIUS_UNITS;
+    public static String PREF_KEY_SEARCH_RADIUS_SIZE;
+    public static String PREF_DEFAULT_SEARCH_RADIUS_UNITS;
+    public static String PREF_DEFAULT_SEARCH_RADIUS_SIZE;
 
 
+    // TODO add check for default values in order to not carry out request
     public static final double COOR_DEFAULT_VALUE = 200;
 
     private Context context;
@@ -28,44 +31,50 @@ public class ShifttSharedPreferences {
     @Inject
     public ShifttSharedPreferences(@ForApplication Context context) {
         this.context = context;
-        PREF_LATITUDE = context.getString(R.string.pref_location_lat_key);
-        PREF_LONGITUDE = context.getString(R.string.pref_location_lon_key);
-        PREF_LOCATION_TIME = context.getString(R.string.pref_location_time_key);
-        PREF_SEARCH_RADIUS_UNITS = context.getString(R.string.pref_key_twitter_radius_unit_key);
-        PREF_SEARCH_RADIUS_SIZE = context.getString(R.string.pref_key_twitter_radius_size_key);
+        PREF_KEY_LATITUDE = context.getString(R.string.pref_location_lat_key);
+        PREF_KEY_LONGITUDE = context.getString(R.string.pref_location_lon_key);
+        PREF_KEY_LOCATION_TIME = context.getString(R.string.pref_location_time_key);
+        PREF_KEY_SEARCH_RADIUS_UNITS = context.getString(R.string.pref_key_twitter_radius_unit_key);
+        PREF_KEY_SEARCH_RADIUS_SIZE = context.getString(R.string.pref_key_twitter_radius_size_key);
+        PREF_DEFAULT_SEARCH_RADIUS_SIZE = context.getString(R.string
+                                                              .pref_twitter_default_search_radius_size);
+        PREF_DEFAULT_SEARCH_RADIUS_UNITS = context.getString(R.string
+                                                              .pref_twitter_default_search_radius_units);
     }
 
     public void setLastKnownLocation(double lat, double lon, long time) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putLong(PREF_LATITUDE, Double.doubleToRawLongBits(lat));
-        editor.putLong(PREF_LONGITUDE, Double.doubleToRawLongBits(lon));
-        editor.putLong(PREF_LOCATION_TIME, time);
+        editor.putLong(PREF_KEY_LATITUDE, Double.doubleToRawLongBits(lat));
+        editor.putLong(PREF_KEY_LONGITUDE, Double.doubleToRawLongBits(lon));
+        editor.putLong(PREF_KEY_LOCATION_TIME, time);
         editor.apply();
 
     }
 
     public double getLastKnownLatitude() {
         return Double.longBitsToDouble(getSharedPreferences()
-                                               .getLong(PREF_LATITUDE,
+                                               .getLong(PREF_KEY_LATITUDE,
                                                         Double.doubleToLongBits(COOR_DEFAULT_VALUE)));
     }
 
     public double getLastKnownLongitude() {
         return Double.longBitsToDouble(getSharedPreferences()
-                                               .getLong(PREF_LONGITUDE,
+                                               .getLong(PREF_KEY_LONGITUDE,
                                                         Double.doubleToLongBits(COOR_DEFAULT_VALUE)));
     }
 
     public long getLastKnownLocationTime() {
-        return getSharedPreferences().getLong(PREF_LOCATION_TIME, 0);
+        return getSharedPreferences().getLong(PREF_KEY_LOCATION_TIME, 0);
     }
 
     public String getSearchRadiusUnits() {
-        return getSharedPreferences().getString(PREF_SEARCH_RADIUS_UNITS, "km");
+        return getSharedPreferences().getString(PREF_KEY_SEARCH_RADIUS_UNITS,
+                                                PREF_DEFAULT_SEARCH_RADIUS_UNITS);
     }
 
     public String getSearchRadiusSize() {
-        return getSharedPreferences().getString(PREF_SEARCH_RADIUS_SIZE, "3");
+        return getSharedPreferences().getString(PREF_KEY_SEARCH_RADIUS_SIZE,
+                                                PREF_DEFAULT_SEARCH_RADIUS_SIZE);
     }
 
     private SharedPreferences getSharedPreferences() {

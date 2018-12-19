@@ -15,7 +15,7 @@
             android:singleLine="true"/>
 
         <ListPreference
-            android:defaultValue="km"
+            android:defaultValue="@string/pref_twitter_default_search_radius_units"
             android:title="@string/pref_twitter_search_radius_unit_title"
             android:entries="@array/pref_twitter_search_radius_unit_labels"
             android:entryValues="@array/pref_twitter_search_radius_unit_values"
