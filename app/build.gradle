@@ -31,6 +31,9 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
+    // robolectric 4.0 setting
+    testOptions.unitTests.includeAndroidResources = true
 }
 
 dependencies {
@@ -38,6 +41,7 @@ dependencies {
     implementation project(":fabmenu")
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
 
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
@@ -73,8 +77,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     // Optional -- Robolectric environment
     testImplementation 'androidx.test:core:1.0.0'
-    // Optional -- Mockito framework
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    // Optional -- Mockito framework NOT USED
+    testImplementation 'org.mockito:mockito-core:2.19.0'
+
+    testImplementation 'com.google.truth:truth:0.42'
 
     // Core library
     androidTestImplementation 'androidx.test:core:1.0.0'
@@ -83,10 +89,12 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.0'
 
+    testImplementation "org.robolectric:robolectric:4.0.2"
+
     // Assertions
     androidTestImplementation 'androidx.test.ext:junit:1.0.0'
     androidTestImplementation 'androidx.test.ext:truth:1.0.0'
-    testImplementation 'com.google.truth:truth:0.42'
+
 
     // Espresso dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
@@ -98,5 +106,11 @@ dependencies {
     //testImplementation "android.arch.persistence.room:testing:1.0.0"
 
     //RxAndroid
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    //implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+
+    // aligned with he okhttp3 at twitter-core
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.4.2'
+
+    androidTestImplementation 'org.powermock:powermock-module-junit4:1.6.6'
+    androidTestImplementation 'org.powermock:powermock-api-mockito:1.6.6'
 }

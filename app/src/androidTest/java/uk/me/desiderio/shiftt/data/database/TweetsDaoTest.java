@@ -29,17 +29,19 @@ import uk.me.desiderio.shiftt.utils.LiveDataTestUtil;
 import static com.google.common.truth.Truth.assertThat;
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.*;
 
+/**
+ * Tests for the {@link TweetsDao}
+ */
+public class TweetsDaoTest {
 
-public class ShifttDaoTest {
-
-    private static final String TAG = ShifttDaoTest.class.getSimpleName();
+    private static final String TAG = TweetsDaoTest.class.getSimpleName();
 
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     private ShifttDatabase database;
-    private ShifttDao dao;
+    private TweetsDao dao;
 
     @Before
     public void setUp() {
@@ -49,7 +51,7 @@ public class ShifttDaoTest {
                 .allowMainThreadQueries()
                 .build();
 
-        dao = database.shifttDao();
+        dao = database.tweetsDao();
     }
 
     // helper to populate database

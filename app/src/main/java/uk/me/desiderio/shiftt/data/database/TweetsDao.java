@@ -19,14 +19,15 @@ import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
+import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
 import uk.me.desiderio.shiftt.data.database.model.UserEnt;
 
 @Dao
-public abstract class ShifttDao {
+public abstract class TweetsDao {
 
-    private static final String TAG = ShifttDao.class.getSimpleName();
+    private static final String TAG = TweetsDao.class.getSimpleName();
 
     // QUERY
 

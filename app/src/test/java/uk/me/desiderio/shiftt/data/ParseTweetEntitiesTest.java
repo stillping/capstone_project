@@ -19,8 +19,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.CARD_BOUND_VALUES_KEY_VALUE;
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.CARD_BOUND_VALUES_OBJECT_VALUE;
 
+/**
+ * tests serialization betweet {@link Tweet} network data object and {@link TweetEnt}
+ * room database data objects.
+ */
 @RunWith(Parameterized.class)
-public class ParseEntitiesTest {
+public class ParseTweetEntitiesTest {
 
     private static final Long TWEET_ID_VALUE = 33L;
     // extected tweet
@@ -28,7 +32,7 @@ public class ParseEntitiesTest {
     // actual tweet
     private Tweet returnedTweet;
 
-    public ParseEntitiesTest(Tweet initialTweet) {
+    public ParseTweetEntitiesTest(Tweet initialTweet) {
         this.initialTweet = initialTweet;
     }
 

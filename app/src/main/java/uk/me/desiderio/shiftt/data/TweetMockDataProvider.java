@@ -22,8 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.VisibleForTesting;
+import uk.me.desiderio.shiftt.data.database.TweetsDao;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 
+/**
+ * Provides mocked serielised network data to carry out tests on {@link TweetsDao}
+ */
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class TweetMockDataProvider {
 
@@ -78,14 +82,13 @@ public class TweetMockDataProvider {
             "tweet_property_in_reply_to_user_id_str_value";
     public static final String LANG_VALUE = "tweet_property_lang_value";
     public static final boolean POSSIBLY_SENSITIVE_VALUE = true;
-    private static final Object SCOPES_VALUE = new Object();
     public static final long QUOTED_STATUS_ID_VALUE = 11L;
     public static final String QUOTED_STATUS_ID_STR_VALUE =
             "tweet_property_quoted_status_id_str_value";
-    //TODO this.quotedStatus = tweet.quotedStatus;
+
     public static final boolean RETWEEDED_VALUE = true;
     public static final String SOURCE_VALUE = "tweet_property_source_value";
-    //TODO this.retweetedStatus = tweet.retweetedStatus;
+
     public static final String TEXT_VALUE = "tweet_property_text_value";
     public static final List<Integer> DISPLAY_TEXT_RANGE =
             Arrays.asList(33, 44, 55);
@@ -94,7 +97,6 @@ public class TweetMockDataProvider {
     public static final List<String> WITHHELD_IN_COUNTRIES_VALUE =
             Arrays.asList("tweet_property_withheld_in_countries_one_value",
                           "tweet_property_withheld_in_countries_two_value");
-    //TODO this.user = tweet.user;
     public static final String WITHHELD_SCOPE_VALUE = "tweet_property_withheld_scope_value";
     public static final int RETWEET_COUNT = 22;
     public static final int RETWEET_STATUS_ID = 27;
@@ -158,16 +160,8 @@ public class TweetMockDataProvider {
     public static final String USER_URL_VALUE = "tweet_property_user_url_value";
     public static final int USER_UTC_OFFSET_VALUE = 706;
     public static final boolean USER_VERIFIED_VALUE = true;
-    private static final String USER_WITHHELD_IN_COUNTRY_ONE_VALUE =
-            "tweet_property_withheld_in_country_one_value";
-    private static final String USER_WITHHELD_IN_COUNTRY_TWO_VALUE =
-            "tweet_property_withheld_in_country_two_value";
-    public static final List<String> USER_WITHHELD_IN_COUNTRIES_VALUE =
-            Arrays.asList(USER_WITHHELD_IN_COUNTRY_ONE_VALUE,
-                          USER_WITHHELD_IN_COUNTRY_TWO_VALUE);
     public static final String USER_WITHELD_SCOPE_VALUE =
             "tweet_property_withheld_scope_value_value";
-    private static final long USER_SCOPE_ID_VALUE = 710L;
     public static final String CARD_NAME_VALUE =
             "card_bound_values_name_value";
     public static final String CARD_BOUND_VALUES_KEY_VALUE =
@@ -194,6 +188,15 @@ public class TweetMockDataProvider {
     public static final String MEDIA_ENTITY_TYPE_VALUE = "tweet_property_media_entity_type_value";
     public static final String MEDIA_ENTITY_ALT_TEXT_VALUE =
             "tweet_property_media_entity_alt_text_value";
+    private static final Object SCOPES_VALUE = new Object();
+    private static final String USER_WITHHELD_IN_COUNTRY_ONE_VALUE =
+            "tweet_property_withheld_in_country_one_value";
+    private static final String USER_WITHHELD_IN_COUNTRY_TWO_VALUE =
+            "tweet_property_withheld_in_country_two_value";
+    public static final List<String> USER_WITHHELD_IN_COUNTRIES_VALUE =
+            Arrays.asList(USER_WITHHELD_IN_COUNTRY_ONE_VALUE,
+                          USER_WITHHELD_IN_COUNTRY_TWO_VALUE);
+    private static final long USER_SCOPE_ID_VALUE = 710L;
     private static final String PLACE_ID_VALUE = "tweet_property_place_id_value";
 
     /**

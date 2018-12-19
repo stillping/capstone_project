@@ -6,9 +6,11 @@ import uk.me.desiderio.shiftt.data.database.model.BoundingBoxEnt;
 import uk.me.desiderio.shiftt.data.database.model.CoordinatesEnt;
 import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
+import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
+import uk.me.desiderio.shiftt.data.database.model.TrendPlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
-import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.UserEnt;
 
 @Database(entities = {TweetEnt.class,
@@ -18,12 +20,16 @@ import uk.me.desiderio.shiftt.data.database.model.UserEnt;
         TweetEntitiesEnt.class,
         HashtagEntityEnt.class,
         UserEnt.class,
-        QueryTweetEntitiesHashtagEntityJoin.class},
-        version = 3,
+        QueryTweetEntitiesHashtagEntityJoin.class,
+        TrendEnt.class,
+        TrendPlaceEnt.class},
+        version = 5,
         exportSchema = false)
 public abstract class ShifttDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "shiftt";
 
-    public abstract ShifttDao shifttDao();
+    public abstract TweetsDao tweetsDao();
+
+    public abstract TrendsDao trendsDao();
 }
