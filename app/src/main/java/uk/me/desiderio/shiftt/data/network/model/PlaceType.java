@@ -1,9 +1,10 @@
 package uk.me.desiderio.shiftt.data.network.model;
 
 import androidx.annotation.VisibleForTesting;
+import uk.me.desiderio.shiftt.data.network.TrendsByPlaceIdService;
 
 /**
- * Retrofit network data object for the 'TrendsByPlaceIdService' response
+ * Retrofit network data object for the {@link TrendsByPlaceIdService}  response
  */
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 public class PlaceType {

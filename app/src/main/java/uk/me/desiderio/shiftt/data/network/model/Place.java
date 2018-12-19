@@ -3,9 +3,10 @@ package uk.me.desiderio.shiftt.data.network.model;
 import com.google.gson.annotations.SerializedName;
 
 import androidx.annotation.VisibleForTesting;
+import uk.me.desiderio.shiftt.data.network.TrendsByPlaceIdService;
 
 /**
- * Retrofit network data object for the 'TrendsByPlaceIdService' response
+ * Retrofit network data object for the {@link TrendsByPlaceIdService}  response
  */
 public class Place {
 

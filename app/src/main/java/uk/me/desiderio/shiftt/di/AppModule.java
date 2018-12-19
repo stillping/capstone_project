@@ -15,7 +15,9 @@ import uk.me.desiderio.shiftt.viewmodel.ViewModelModule;
  * Module to provided bindings at application level
  */
 
-@Module(includes = {ViewModelModule.class, AppBindingsModule.class})
+@Module(includes = {ViewModelModule.class,
+        AppBindingsModule.class,
+        TwitterCoreModule.class})
 public class AppModule {
 
     Application app;
@@ -41,8 +43,10 @@ public class AppModule {
         return (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
-   @Provides
-   FusedLocationProviderClient providesFusedLocationProviderClient(@ForApplication Context context) {
-       return LocationServices.getFusedLocationProviderClient(context);
-   }
+    @Provides
+    FusedLocationProviderClient providesFusedLocationProviderClient(@ForApplication
+                                                                            Context contex) {
+        return LocationServices.getFusedLocationProviderClient(contex);
+    }
+
 }

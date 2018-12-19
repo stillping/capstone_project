@@ -19,7 +19,7 @@ import uk.me.desiderio.shiftt.ShifttApplication;
         AndroidSupportInjectionModule.class,
         AppModule.class,
         ActivityBindingModule.class,
-
+        ServiceBindingModule.class
 })
 public interface AppComponent extends AndroidInjector<ShifttApplication> {
 
