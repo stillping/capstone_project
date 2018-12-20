@@ -13,7 +13,7 @@ import androidx.lifecycle.LiveData;
 
 /**
  * {@link LiveData} to hold a {@link Location}. The class retrieves the location from Google's
- * Location Service using the {@link FusedLocationProviderClient}
+ * Place Service using the {@link FusedLocationProviderClient}
  */
 
 public class LocationLiveData extends LiveData<Location> {
@@ -29,26 +29,26 @@ public class LocationLiveData extends LiveData<Location> {
         this.locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d(TAG, "Location : Data : callback: " + locationResult);
+                Log.d(TAG, "Place : Data : callback: " + locationResult);
                 if (locationResult == null) {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
                     setValue(location);
                 }
-            };
+            }
         };
     }
 
     @Override
     protected void onActive() {
-        Log.d(TAG, "Location : Data : active");
+        Log.d(TAG, "Place : Data : active");
         startLocationUpdates();
     }
 
     @Override
     protected void onInactive() {
-        Log.d(TAG, "Location : Data : INactive");
+        Log.d(TAG, "Place : Data : Inactive");
         stopLocationUpdates();
     }
 
@@ -56,8 +56,8 @@ public class LocationLiveData extends LiveData<Location> {
     private void startLocationUpdates() {
         LocationRequest locationRequest = new LocationRequest();
         locationProviderClient.requestLocationUpdates(locationRequest,
-                                                    locationCallback,
-                                                    null );
+                                                      locationCallback,
+                                                      null);
     }
 
     private void stopLocationUpdates() {

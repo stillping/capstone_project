@@ -8,13 +8,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.twitter.sdk.android.core.models.Tweet;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,17 +29,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
 import uk.me.desiderio.fabmenu.FloatingActionMenu;
+import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.location.LocationPermissionRequest;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
+import uk.me.desiderio.shiftt.ui.model.MapItem;
 import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
 import uk.me.desiderio.shiftt.utils.PermissionManager;
 import uk.me.desiderio.shiftt.utils.PermissionManager.PermissionStatus;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
-
-import static uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment.SHIFTT_MAP_FRAGMENT_TAG;
 
 public class MainActivity extends AppCompatActivity implements
         FloatingActionMenu.OnItemClickListener {
@@ -76,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements
         FloatingActionMenu floatingActionMenu = findViewById(R.id.fab_menu);
         floatingActionMenu.setOnItemClickListener(this);
 
-        // TODO: Use the ViewModel
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         viewModel.getLocationViewData().observe(this, locationViewData -> {
             Log.d(TAG, " location : latitude: " + locationViewData.getLatitude());
@@ -85,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements
             moveMapCamera(lastKnownLocation);
 
         });
+
+        // update view with lst location available
         viewModel.getLastKnownLocation();
 
         // location permision request should be carried out before the view model is initialized
@@ -105,13 +113,10 @@ public class MainActivity extends AppCompatActivity implements
         int viewId = v.getId();
         String message = " NO message";
 
-        Class activityClass = null;
-
         switch (viewId) {
             case R.id.fab_trends:
                 message = "trends clicked";
-                activityClass = TrendsListActivity.class;
-                Intent intent = new Intent(this, activityClass);
+                Intent intent = new Intent(this, TrendsListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.fab_neighbourhood:
@@ -198,8 +203,20 @@ public class MainActivity extends AppCompatActivity implements
         viewModel.initLocationUpdates();
     }
 
+    private Observer<List<MapItem>> neighbourhoodDataObserver;
     private void requestNeigbourhoodData() {
-        viewModel.requestNeigbourhoodData();
+        if(neighbourhoodDataObserver == null) {
+            neighbourhoodDataObserver = mapItemsList -> {
+                Log.d(TAG, "xmaes : requestNeigbourhoodData: " + mapItemsList.size());
+                mapFragment.swapMapData(mapItemsList);
+            };
+        }
+        viewModel.requestNeigbourhoodData().observe(this, neighbourhoodDataObserver);
+    }
+
+    private void removeNeighbourhoodData() {
+        viewModel.requestNeigbourhoodData().removeObserver(neighbourhoodDataObserver);
+        // TODO remove neighbourhood data from map
     }
 
     private void showNoLocationDialog() {
@@ -208,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void moveMapCamera(LatLng lastKnownLocation) {
         mapFragment.moveMapCamera(lastKnownLocation);
-
     }
 
     // TODO add animation when hiding/showing the fab menu
@@ -234,9 +250,12 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(shouldShow);
     }
 
-
-
     @IntDef({MAIN_VIEW_STATE, NEIGHBOURG_VIEW_STATE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ViewState {   }
+
+
+
+
+
 }

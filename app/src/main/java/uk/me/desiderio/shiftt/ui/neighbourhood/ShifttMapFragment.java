@@ -2,16 +2,24 @@ package uk.me.desiderio.shiftt.ui.neighbourhood;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import uk.me.desiderio.shiftt.R;
+import uk.me.desiderio.shiftt.ui.model.MapItem;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 /**
@@ -26,14 +35,11 @@ import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
  * interact with {@link GoogleMap}
  */
 
-public class ShifttMapFragment extends Fragment implements OnMapReadyCallback {
-
-    private static final String TAG = ShifttMapFragment.class.getSimpleName();
-
-    private static final float DEFAULT_MAP_ZOOM = 14;
+public class ShifttMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPolygonClickListener {
 
     public static final String SHIFTT_MAP_FRAGMENT_TAG = "map_fragment_tag";
-
+    private static final String TAG = ShifttMapFragment.class.getSimpleName();
+    private static final float DEFAULT_MAP_ZOOM = 14;
     // TODO this seems is not injected
     private ViewModelFactory viewModelFactory;
     private GoogleMap googleMap;
@@ -66,24 +72,12 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        NeighbourhoodViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(NeighbourhoodViewModel.class);
-        // TODO: Use the ViewModel
-        viewModel.getMessage().observe(this, message -> {
-            //textView.setText(message);
-        });
-
-        viewModel.getMessage().setValue("Hello World, Autumn is coming [Neighbours]");
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         initMap(googleMap);
     }
 
     @SuppressLint("MissingPermission")
-    public void initMap(GoogleMap gMap) {
+    private void initMap(GoogleMap gMap) {
         googleMap = gMap;
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -94,15 +88,61 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     lastKnownLocation, DEFAULT_MAP_ZOOM));
         }
-
     }
 
-    private void setGoogleMapBounds() {
-        LatLngBounds searchBounds = new LatLngBounds(
-                new LatLng(-44, 113), new LatLng(-10, 154));
+    public void swapMapData(List<MapItem> mapItems) {
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        mapItems
+                .forEach(mapItem -> {
+                    Polygon polygon = addPoligon(mapItem.name, mapItem.coordinates);
+                    includePolygonInBounds(polygon, boundsBuilder);
+                });
+        moveCameraToBounds(boundsBuilder.build());
+    }
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(searchBounds, 0));
-        // TODO : not sure if this can be called at the same time
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchBounds.getCenter(), DEFAULT_MAP_ZOOM));
+    private void moveCameraToBounds(LatLngBounds bounds) {
+        Log.d(TAG, "swapMapData: campana northeast lat: " + bounds.northeast.latitude + " lng:" +
+                " " + bounds.northeast.longitude);
+        Log.d(TAG, "swapMapData: campana southwest lat: " + bounds.southwest.latitude + " lng:" +
+                " " + bounds.southwest.longitude);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 2));
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(),0));
+    }
+
+    private void includePolygonInBounds(Polygon polygon, LatLngBounds.Builder boundsBuilder) {
+        polygon.getPoints()
+                .forEach(latLng -> {
+                    boundsBuilder.include(latLng);
+                    Log.d(TAG, "includePolygonInBounds: campana lat: " + latLng.latitude + " lng:" +
+                            " " + latLng.longitude);
+                });
+    }
+
+    private Polygon addPoligon(String name, List<LatLng> coorsList) {
+        PolygonOptions options =
+                new PolygonOptions()
+                        .fillColor(R.color.colorAccent)
+                        .geodesic(true)
+                        .addAll(coorsList);
+        Polygon polygon = googleMap.addPolygon(options);
+        polygon.setClickable(true);
+        polygon.setTag(name);
+        return polygon;
+    }
+
+    @SuppressWarnings("unused")
+    private void addMarkers(String accountName, LatLng coors) {
+        MarkerOptions options = new MarkerOptions()
+                .title(accountName)
+                .position(coors)
+                .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.ic_menu_add));
+        googleMap.addMarker(options);
+    }
+
+    @Override
+    public void onPolygonClick(Polygon polygon) {
+        String tag = polygon.getTag().toString();
+        Log.d(TAG, "poligon tag name: " + tag);
+        Toast.makeText(getContext(), " : Polygon Name : " + tag, Toast.LENGTH_SHORT).show();
     }
 }

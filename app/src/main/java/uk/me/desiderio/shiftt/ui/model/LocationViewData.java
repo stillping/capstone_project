@@ -1,12 +1,10 @@
-package uk.me.desiderio.shiftt.model;
+package uk.me.desiderio.shiftt.ui.model;
 
-import uk.me.desiderio.shiftt.MainActivity;
-import uk.me.desiderio.shiftt.NeighbourhoodActivity;
+import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
 
 /**
- * Data class to populate map views {@link MainActivity} and {@link NeighbourhoodActivity}
+ * Data class to provide location to  map views {@link ShifttMapFragment}
  */
-
 public class LocationViewData {
     private double latitude;
     private double longitude;
@@ -26,6 +24,7 @@ public class LocationViewData {
         return longitude;
     }
 
+    // TODO implement
     public boolean isFresh() {
         return isFresh;
     }

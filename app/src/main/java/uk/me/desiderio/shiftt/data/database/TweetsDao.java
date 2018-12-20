@@ -56,6 +56,9 @@ public abstract class TweetsDao {
     abstract LiveData<QueryTweetEnt> getFeaturedPopTweetEntQuery(long id);
 
 
+    @Query("SELECT * FROM place")
+    public abstract LiveData<List<PlaceEnt>> getAllPlaces();
+
     @Query("SELECT * FROM coordinates WHERE id = :id")
     public abstract CoordinatesEnt getCoordinates(long id);
 

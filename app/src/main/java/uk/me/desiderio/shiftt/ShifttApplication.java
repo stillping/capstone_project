@@ -1,5 +1,7 @@
 package uk.me.desiderio.shiftt;
 
+import com.twitter.sdk.android.core.Twitter;
+
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
 import uk.me.desiderio.shiftt.di.AppComponent;
@@ -12,6 +14,12 @@ import uk.me.desiderio.shiftt.di.DaggerAppComponent;
  */
 
 public class ShifttApplication extends DaggerApplication {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Twitter.initialize(this);
+    }
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {

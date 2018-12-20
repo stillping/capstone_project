@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.annotation.VisibleForTesting;
 import dagger.android.AndroidInjection;
+import uk.me.desiderio.shiftt.data.network.TwitterNetworkDataSource.TwitterRadiusUnit;
 
 /**
  *
@@ -31,13 +32,12 @@ public class TwitterIntentService extends IntentService {
     public static final String EXTRA_RADIUS_SIZE = "search_radius_size";
     @VisibleForTesting
     public static final String EXTRA_RADIUS_UNIT = "search_radius_unit";
-    @VisibleForTesting
-    public static final String EXTRA_WOE_ID = "search_woe_id";
-    public static final String TASK_TRENDS_BY_LOCATION = "task_trends_by_place_id";
-    public static final String TASK_SEARCH_TWEETS_ON_LOCATION =
-            "task_search_tweets_on_location";
+
 
     private static final String SERVICE_NAME = TwitterIntentService.class.getSimpleName();
+
+    @Inject
+    public TwitterNetworkDataSource dataSource;
 
     @Inject
     public TwitterIntentService() {
@@ -61,6 +61,7 @@ public class TwitterIntentService extends IntentService {
                                                                  @NonNull double lon,
                                                                  @Nullable String trendName,
                                                                  @NonNull String radiusSize,
+                                                                 @TwitterRadiusUnit
                                                                  @NonNull String radiusUnit) {
         Intent intent = new Intent(context, TwitterIntentService.class);
         intent.setAction(TASK_SEARCH_TWEETS_ON_LOCATION);
@@ -86,6 +87,7 @@ public class TwitterIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        @TwitterServiceTask
         String task = intent.getAction();
 
         double lat = intent.getDoubleExtra(EXTRA_LATITUDE, 0d);
@@ -99,13 +101,16 @@ public class TwitterIntentService extends IntentService {
                 String radiusSize = intent.getStringExtra(EXTRA_RADIUS_SIZE);
                 String radiusUnit = intent.getStringExtra(EXTRA_RADIUS_UNIT);
 
-                // todo call tweet request from Data Source
+                dataSource.requestTweetsOnTrendNameAndGeocode(trendName,
+                                                              lat, lng,
+                                                              radiusSize,
+                                                              radiusUnit);
                 break;
             case TASK_TRENDS_BY_LOCATION:
                 // initially request place by location then a second reques is triggered
                 // for the trends in each of the response places
                 Log.d(SERVICE_NAME, "onHandleIntent: TASK_CLOSEST_PLACES_BY_LOCATION");
-                // todo call trends request from Data Source
+                dataSource.requestClosestPlacesByLocation(lat, lng);
                 break;
         }
     }
@@ -113,7 +118,11 @@ public class TwitterIntentService extends IntentService {
     @StringDef({TASK_SEARCH_TWEETS_ON_LOCATION,
             TASK_TRENDS_BY_LOCATION})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TwitterServiceTask {
-    }
+    @interface TwitterServiceTask { }
+    @VisibleForTesting
+    public static final String TASK_TRENDS_BY_LOCATION = "task_trends_by_place_id";
+    @VisibleForTesting
+    public static final String TASK_SEARCH_TWEETS_ON_LOCATION =
+            "task_search_tweets_on_location";
 
 }

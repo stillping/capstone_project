@@ -1,12 +1,17 @@
 package uk.me.desiderio.shiftt.ui.main;
 
+import com.twitter.sdk.android.core.models.Tweet;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.MainActivity;
 import uk.me.desiderio.shiftt.data.ShifttRepository;
-import uk.me.desiderio.shiftt.model.LocationViewData;
+import uk.me.desiderio.shiftt.ui.model.LocationViewData;
+import uk.me.desiderio.shiftt.ui.model.MapItem;
 
 /**
  * {@link ViewModel} for the {@link MainActivity}
@@ -14,7 +19,6 @@ import uk.me.desiderio.shiftt.model.LocationViewData;
 
 public class MainActivityViewModel extends ViewModel {
 
-    // TODO: Implement the ViewModel
     private ShifttRepository repository;
 
     @Inject
@@ -22,8 +26,8 @@ public class MainActivityViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public MutableLiveData<LocationViewData> getLocationViewData() {
-        return repository.getLocationViewData();
+    public LiveData<LocationViewData> getLocationViewData() {
+        return repository.getLocationLiveData();
     }
 
     public void getLastKnownLocation() {
@@ -31,10 +35,10 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void initLocationUpdates() {
-        repository.initLocationUpdates();
+        repository.getCurrentFusedLocation();
     }
 
-    public void requestNeigbourhoodData() {
-        repository.requestNeigbourhoodData();
+    public LiveData<List<MapItem>> requestNeigbourhoodData() {
+        return repository.requestNeigbourhoodData();
     }
 }

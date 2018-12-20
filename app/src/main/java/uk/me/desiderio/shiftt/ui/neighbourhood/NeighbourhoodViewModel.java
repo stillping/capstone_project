@@ -9,7 +9,7 @@ import uk.me.desiderio.shiftt.NeighbourhoodActivity;
 /**
  * ViewModel for the {@link NeighbourhoodActivity}
  */
-
+@Deprecated
 public class NeighbourhoodViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
