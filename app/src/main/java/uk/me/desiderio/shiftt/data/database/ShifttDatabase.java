@@ -7,6 +7,7 @@ import uk.me.desiderio.shiftt.data.database.model.CoordinatesEnt;
 import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
+import uk.me.desiderio.shiftt.data.database.model.RateLimitEnt;
 import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 import uk.me.desiderio.shiftt.data.database.model.TrendPlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
@@ -22,8 +23,9 @@ import uk.me.desiderio.shiftt.data.database.model.UserEnt;
         UserEnt.class,
         QueryTweetEntitiesHashtagEntityJoin.class,
         TrendEnt.class,
-        TrendPlaceEnt.class},
-        version = 5,
+        TrendPlaceEnt.class,
+        RateLimitEnt.class},
+        version = 8,
         exportSchema = false)
 public abstract class ShifttDatabase extends RoomDatabase {
 
@@ -32,4 +34,6 @@ public abstract class ShifttDatabase extends RoomDatabase {
     public abstract TweetsDao tweetsDao();
 
     public abstract TrendsDao trendsDao();
+
+    public abstract RateLimitDao rateLimitsDao();
 }

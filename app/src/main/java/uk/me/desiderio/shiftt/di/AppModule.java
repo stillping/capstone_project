@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationServices;
 import androidx.room.Room;
 import dagger.Module;
 import dagger.Provides;
+import uk.me.desiderio.shiftt.data.database.RateLimitDao;
 import uk.me.desiderio.shiftt.data.database.ShifttDatabase;
 import uk.me.desiderio.shiftt.data.database.TrendsDao;
 import uk.me.desiderio.shiftt.data.database.TweetsDao;
@@ -75,6 +76,12 @@ public class AppModule {
     @Provides
     TrendsDao provideTrendssDao(ShifttDatabase database) {
         return database.trendsDao();
+    }
+
+
+    @Provides
+    RateLimitDao provideRateLimitDao(ShifttDatabase database) {
+        return database.rateLimitsDao();
     }
 
 }

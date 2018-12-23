@@ -15,7 +15,9 @@ import com.twitter.sdk.android.core.services.params.Geocode;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,13 +25,21 @@ import javax.inject.Singleton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import okhttp3.Headers;
+import okhttp3.internal.framed.Header;
 import retrofit2.Call;
+import uk.me.desiderio.shiftt.data.database.model.RateLimitEnt;
 import uk.me.desiderio.shiftt.data.network.model.Place;
+import uk.me.desiderio.shiftt.data.network.model.RateLimit;
 import uk.me.desiderio.shiftt.data.network.model.Trend;
 import uk.me.desiderio.shiftt.data.network.model.TrendsQueryResult;
 import uk.me.desiderio.shiftt.di.ForApplication;
 import uk.me.desiderio.shiftt.utils.AppExecutors;
+
+import static uk.me.desiderio.shiftt.data.network.RateLimiter.TREND_PLACE_KEY_NAME;
+import static uk.me.desiderio.shiftt.data.network.RateLimiter.TWEETS_KEY_NAME;
 
 @Singleton
 public class TwitterNetworkDataSource {
@@ -45,6 +55,8 @@ public class TwitterNetworkDataSource {
 
     private MutableLiveData<List<Tweet>> tweetListLiveData;
     private MutableLiveData<List<Trend>> trendListLiveData;
+    private MutableLiveData<RateLimit> rateLimitListLiveData;
+
 
     @Inject
     public TwitterNetworkDataSource(@ForApplication Context context,
@@ -58,6 +70,8 @@ public class TwitterNetworkDataSource {
 
         this.tweetListLiveData = new MutableLiveData<>();
         this.trendListLiveData = new MutableLiveData<>();
+        this.rateLimitListLiveData = new MutableLiveData<>();
+
     }
 
     public MutableLiveData<List<Tweet>> getTweetList() {
@@ -67,6 +81,12 @@ public class TwitterNetworkDataSource {
     public MutableLiveData<List<Trend>> getTrendList() {
         return trendListLiveData;
     }
+
+    public LiveData<RateLimit> getRateLimit() {
+        return rateLimitListLiveData;
+    }
+
+
 
     public void updateTweetData(List<Tweet> tweets) {
         tweetListLiveData.setValue(tweets);
@@ -107,6 +127,7 @@ public class TwitterNetworkDataSource {
             public void success(Result<List<Place>> result) {
                 Log.d(TAG, "requestClosestPlacesByLocation: success: " + result.data.get(0).name);
 
+                updateRateLimit(TREND_PLACE_KEY_NAME, lat, lng, result.response.headers());
                 // todo add checks for empty response!!
                 result.data.stream()
                         .forEach(place -> {
@@ -138,6 +159,7 @@ public class TwitterNetworkDataSource {
             @Override
             public void success(Result<Search> result) {
                 Log.d(TAG, "Neighbourhood Search: success: ");
+                updateRateLimit(TWEETS_KEY_NAME, lat, lng, result.response.headers());
                 updateTweetData(result.data.tweets);
             }
 
@@ -176,6 +198,20 @@ public class TwitterNetworkDataSource {
 
             }
         });
+    }
+
+    private void updateRateLimit(String key, double lat, double lng, Headers headers) {
+        String limit = headers.get(RateLimiter.RATE_LIMIT_CEILING_HEADER_KEY);
+        String remaining = headers.get(RateLimiter.RATE_LIMIT_REMAINING_HEADER_KEY);
+        String reset = headers.get(RateLimiter.RATE_LIMIT_RESET_TIME_HEADER_KEY);
+
+        long now = Instant.now().getEpochSecond();
+
+        rateLimitListLiveData.setValue(new RateLimit(key, lat, lng, now, limit, remaining, reset));
+
+        Log.d(TAG, key + ":: updateRateLimit: rateLimit: limit: " + limit
+                + " remaining: " + remaining
+                + " reset: " + reset);
     }
 
     private Call<Search> getSearchCall(String trendName, Geocode geocode) {
