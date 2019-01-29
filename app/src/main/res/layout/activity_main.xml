@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -17,18 +19,70 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <ImageView
+                android:id="@+id/main_logo_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/shiftt_logo" />
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
-        android:id="@+id/main_map_fragment"
-        android:name="uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment"
+    <!-- TODO improve fab icons -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_constraint_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"/>
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_anchor="@id/main_app_bar">
 
-    <!-- TODO improve fab icons -->
+
+        <fragment
+            android:id="@+id/main_map_fragment"
+            android:name="uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/main_refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            app:srcCompat="@drawable/ic_refresh"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/main_locate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            app:srcCompat="@drawable/ic_crosshairs"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_refresh_button" />
+
+        <ProgressBar
+            android:id="@+id/main_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <uk.me.desiderio.fabmenu.FloatingActionMenu
         android:id="@+id/fab_menu"
@@ -36,6 +90,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom|start"
         android:gravity="end|bottom"
+        app:layout_behavior="uk.me.desiderio.fabmenu.FloatingActionMenuBehaviour"
         app:layout_dodgeInsetEdges="bottom"
         custom:background_colour="@color/fabDefaultBackground"
         custom:main_fab="@id/fab_main">
@@ -48,8 +103,9 @@
             android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
             android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            app:backgroundTint="@color/colorAccentLight"
             app:fabSize="mini"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            app:srcCompat="@drawable/ic_arrow_trend" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_neighbourhood"
@@ -59,8 +115,9 @@
             android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
             android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            app:backgroundTint="@color/colorAccentLight"
             app:fabSize="mini"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            app:srcCompat="@drawable/ic_map_outline" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_main"
@@ -71,7 +128,7 @@
             android:layout_marginEnd="@dimen/fab_normal_margin"
             android:layout_marginBottom="@dimen/fab_normal_margin"
             app:fabSize="normal"
-            app:srcCompat="@android:drawable/ic_menu_help" />
+            app:srcCompat="@drawable/ic_plus" />
 
     </uk.me.desiderio.fabmenu.FloatingActionMenu>
 
