@@ -24,7 +24,7 @@ import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
-import uk.me.desiderio.shiftt.utils.LiveDataTestUtil;
+import uk.me.desiderio.shiftt.util.LiveDataTestUtil;
 
 import static com.google.common.truth.Truth.assertThat;
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.*;
@@ -35,7 +35,6 @@ import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.*;
 public class TweetsDaoTest {
 
     private static final String TAG = TweetsDaoTest.class.getSimpleName();
-
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

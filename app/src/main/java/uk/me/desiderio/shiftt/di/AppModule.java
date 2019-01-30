@@ -14,7 +14,8 @@ import uk.me.desiderio.shiftt.data.database.RateLimitDao;
 import uk.me.desiderio.shiftt.data.database.ShifttDatabase;
 import uk.me.desiderio.shiftt.data.database.TrendsDao;
 import uk.me.desiderio.shiftt.data.database.TweetsDao;
-import uk.me.desiderio.shiftt.utils.AppExecutors;
+import uk.me.desiderio.shiftt.util.AppExecutors;
+import uk.me.desiderio.shiftt.util.ConnectivityLiveData;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelModule;
 
 /**
@@ -84,4 +85,8 @@ public class AppModule {
         return database.rateLimitsDao();
     }
 
+    @Provides
+    ConnectivityLiveData providesConnectivityLiveData(@ForApplication Context context) {
+        return new ConnectivityLiveData(context);
+    }
 }

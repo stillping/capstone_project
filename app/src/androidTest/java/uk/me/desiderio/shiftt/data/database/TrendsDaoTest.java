@@ -13,7 +13,7 @@ import androidx.test.core.app.ApplicationProvider;
 import uk.me.desiderio.shiftt.data.database.model.QueryTrendEnt;
 import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 import uk.me.desiderio.shiftt.data.network.TrendMockDataProvider;
-import uk.me.desiderio.shiftt.utils.LiveDataTestUtil;
+import uk.me.desiderio.shiftt.util.LiveDataTestUtil;
 
 import static com.google.common.truth.Truth.assertThat;
 import static uk.me.desiderio.shiftt.data.network.TrendMockDataProvider.TREND_NAME_VALUE;

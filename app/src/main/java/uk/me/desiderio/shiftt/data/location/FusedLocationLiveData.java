@@ -13,18 +13,20 @@ import androidx.lifecycle.LiveData;
 
 /**
  * {@link LiveData} to hold a {@link Location}. The class retrieves the location from Google's
- * Place Service using the {@link FusedLocationProviderClient}
+ * Place Service using a {@link FusedLocationProviderClient}
+ * <p>
+ * All permisions should be in place whent this class is called
  */
 
-public class LocationLiveData extends LiveData<Location> {
+public class FusedLocationLiveData extends LiveData<Location> {
 
-    private static final String TAG = LocationLiveData.class.getSimpleName();
+    private static final String TAG = FusedLocationLiveData.class.getSimpleName();
 
     private FusedLocationProviderClient locationProviderClient;
     private LocationCallback locationCallback;
 
 
-    public LocationLiveData(FusedLocationProviderClient locationProviderClient) {
+    public FusedLocationLiveData(FusedLocationProviderClient locationProviderClient) {
         this.locationProviderClient = locationProviderClient;
         this.locationCallback = new LocationCallback() {
             @Override
@@ -42,7 +44,6 @@ public class LocationLiveData extends LiveData<Location> {
 
     @Override
     protected void onActive() {
-        Log.d(TAG, "Place : Data : active");
         startLocationUpdates();
     }
 

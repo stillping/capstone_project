@@ -1,4 +1,4 @@
-package uk.me.desiderio.shiftt.utils;
+package uk.me.desiderio.shiftt.util;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -18,10 +18,10 @@ public class LiveDataTestUtil {
      * Returns {@link LiveData} value after a delay of 2 secs. It used for testing
      * database returned values
      */
-    public static < T > T getValue(LiveData< T > liveData) throws InterruptedException {
+    public static <T> T getValue(LiveData<T> liveData) throws InterruptedException {
         final Object[] data = new Object[1];
         CountDownLatch latch = new CountDownLatch(1);
-        Observer< T > observer = new Observer < T > () {
+        Observer<T> observer = new Observer<T>() {
             @Override
             public void onChanged(@Nullable T o) {
                 data[0] = o;
@@ -34,5 +34,4 @@ public class LiveDataTestUtil {
 
         return (T) data[0];
     }
-
 }

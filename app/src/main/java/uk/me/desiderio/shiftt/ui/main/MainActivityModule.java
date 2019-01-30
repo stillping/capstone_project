@@ -13,7 +13,6 @@ import uk.me.desiderio.shiftt.di.ForActivity;
 
 @Module
 public abstract class MainActivityModule {
-    // TODO implements provides methods
 
     @Binds
     @ForActivity

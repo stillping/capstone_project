@@ -47,7 +47,7 @@ public class TweetListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TweetListViewModel.class);
-        // TODO: Use the ViewModel
+
         viewModel.getMessage().observe(this, message -> {
             textView.setText(message);
         });

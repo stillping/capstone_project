@@ -20,8 +20,8 @@ import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.CARD_BOUND_VALUE
 import static uk.me.desiderio.shiftt.data.TweetMockDataProvider.CARD_BOUND_VALUES_OBJECT_VALUE;
 
 /**
- * tests serialization betweet {@link Tweet} network data object and {@link TweetEnt}
- * room database data objects.
+ * tests serialization betweet {@link Tweet} network dataSource object and {@link TweetEnt}
+ * room database dataSource objects.
  */
 @RunWith(Parameterized.class)
 public class ParseTweetEntitiesTest {

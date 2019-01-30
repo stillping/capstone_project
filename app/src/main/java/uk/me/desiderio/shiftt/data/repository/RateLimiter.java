@@ -1,10 +1,13 @@
-package uk.me.desiderio.shiftt.data.network;
+package uk.me.desiderio.shiftt.data.repository;
+
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import androidx.collection.ArrayMap;
 import uk.me.desiderio.shiftt.data.network.model.RateLimit;
@@ -41,11 +44,12 @@ public class RateLimiter {
     public static final String TWEETS_KEY_NAME = "/search/tweets";
     public static final String TREND_PLACE_KEY_NAME = "trends/place";
 
-    public static final long MAX_LOCATION_AGE = 30;
-    public static final long MIN_DATA_AGE = 3;
+    public static final long MAX_LOCATION_AGE_IN_MIN = 30;
+    public static final long MIN_DATA_AGE_IN_MIN = 3;
 
     private final Map<String, RateLimit> limits;
 
+    @Inject
     public RateLimiter() {
         this.limits = new ArrayMap();
     }
@@ -76,7 +80,7 @@ public class RateLimiter {
                 && wouldServerAllow(rateLimit);
     }
 
-    private boolean isAFreshLocation(long lastKnownLocTime) {
+    public static boolean isAFreshLocation(long lastKnownLocTime) {
         Instant locationMaxAge = getMaxLocationAge(lastKnownLocTime);
         return now().isBefore(locationMaxAge);
     }
@@ -95,7 +99,7 @@ public class RateLimiter {
 
     // time helpers
 
-    private Instant now() {
+    private static Instant now() {
         return Instant.now();
     }
 
@@ -103,13 +107,13 @@ public class RateLimiter {
         return Instant.ofEpochSecond(resetTime).isBefore(now());
     }
 
-    private Instant getMaxLocationAge(long lastKnownLocTime) {
-        Duration halfAnHour = Duration.ofMinutes(MAX_LOCATION_AGE);
+    private static Instant getMaxLocationAge(long lastKnownLocTime) {
+        Duration halfAnHour = Duration.ofMinutes(MAX_LOCATION_AGE_IN_MIN);
         return Instant.ofEpochSecond(lastKnownLocTime).plus(halfAnHour);
     }
 
     private Instant getMaxDataAge(long dataTime) {
-        Duration dataMaxAge = Duration.ofMinutes(MIN_DATA_AGE);
+        Duration dataMaxAge = Duration.ofMinutes(MIN_DATA_AGE_IN_MIN);
         return Instant.ofEpochSecond(dataTime).plus(dataMaxAge);
     }
 

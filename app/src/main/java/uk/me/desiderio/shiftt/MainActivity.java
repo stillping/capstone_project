@@ -4,19 +4,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.material.snackbar.Snackbar;
-import com.twitter.sdk.android.core.models.Tweet;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,22 +28,24 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.AndroidInjection;
 import uk.me.desiderio.fabmenu.FloatingActionMenu;
-import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
-import uk.me.desiderio.shiftt.data.location.LocationPermissionRequest;
+import uk.me.desiderio.shiftt.data.repository.RateLimiter;
+import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
 import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
-import uk.me.desiderio.shiftt.utils.PermissionManager;
-import uk.me.desiderio.shiftt.utils.PermissionManager.PermissionStatus;
+import uk.me.desiderio.shiftt.util.ConnectivityLiveData;
+import uk.me.desiderio.shiftt.util.SnackbarDelegate;
+import uk.me.desiderio.shiftt.util.permission.LocationPermissionRequest;
+import uk.me.desiderio.shiftt.util.permission.PermissionManager;
+import uk.me.desiderio.shiftt.util.permission.PermissionManager.PermissionStatus;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity implements
         FloatingActionMenu.OnItemClickListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private static final int MAIN_VIEW_STATE = 943;
     private static final int NEIGHBOURG_VIEW_STATE = 645;
+    private static final String SAVED_VIEW_STATE_KEY = "saved_view_state_key";
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -56,14 +53,21 @@ public class MainActivity extends AppCompatActivity implements
     LocationManager locationManager;
     @Inject
     PermissionManager permissionManager;
+    @Inject
+    ConnectivityLiveData connectivityLiveData;
 
     private FloatingActionMenu floatingActionMenu;
     private MainActivityViewModel viewModel;
     private LatLng lastKnownLocation;
     private ShifttMapFragment mapFragment;
+    private ProgressBar progressBar;
 
     @ViewState
     private int currentViewState;
+
+    private Observer<Resource<List<MapItem>>> neighbourhoodResourceObserver;
+    private Observer<Boolean> connectivityObserver;
+    private SnackbarDelegate snackbarDelegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +78,15 @@ public class MainActivity extends AppCompatActivity implements
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         floatingActionMenu = findViewById(R.id.fab_menu);
+
+        progressBar = findViewById(R.id.main_progress_bar);
+        progressBar.setVisibility(View.GONE);
+
+        ImageView refreshButton = findViewById(R.id.main_refresh_button);
+        refreshButton.setOnClickListener(v -> requestFreshLocation());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         mapFragment = (ShifttMapFragment) fragmentManager.findFragmentById(R.id.main_map_fragment);
@@ -83,20 +94,39 @@ public class MainActivity extends AppCompatActivity implements
         FloatingActionMenu floatingActionMenu = findViewById(R.id.fab_menu);
         floatingActionMenu.setOnItemClickListener(this);
 
+        snackbarDelegate = new SnackbarDelegate(R.string.snackbar_connected_message_map_suffix,
+                                                floatingActionMenu);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         viewModel.getLocationViewData().observe(this, locationViewData -> {
-            Log.d(TAG, " location : latitude: " + locationViewData.getLatitude());
             lastKnownLocation = new LatLng(locationViewData.getLatitude(),
                                            locationViewData.getLongitude());
-            moveMapCamera(lastKnownLocation);
 
+            boolean isAFreshLocation = RateLimiter.isAFreshLocation(locationViewData.getTime());
+            if (!isAFreshLocation) {
+                requestFreshLocation();
+                // todo show progress bar
+            }
+            mapFragment.setCurrentLocation(lastKnownLocation, isAFreshLocation);
         });
 
-        // update view with lst location available
-        viewModel.getLastKnownLocation();
-
         // location permision request should be carried out before the view model is initialized
-        requestLocationPermissions();
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            currentViewState = savedInstanceState.getInt(SAVED_VIEW_STATE_KEY);
+
+        } else {
+            // Probably initialize members with default values for a new instance
+            currentViewState = MAIN_VIEW_STATE;
+        }
+
+        updateView(currentViewState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SAVED_VIEW_STATE_KEY, currentViewState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -121,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fab_neighbourhood:
                 message = "neighbour clicked";
+                mapFragment.resetCamera();
                 updateView(NEIGHBOURG_VIEW_STATE);
                 break;
             default:
@@ -145,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             updateView(MAIN_VIEW_STATE);
         } else if (id == R.id.action_refresh_location) {
             return true;
@@ -154,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    // Permissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -199,35 +231,66 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    private void initLocationUpdates() {
-        viewModel.initLocationUpdates();
+    // Location
+
+    private void requestFreshLocation() {
+        // initiate process to request for fresh location
+        requestLocationPermissions();
     }
 
-    private Observer<List<MapItem>> neighbourhoodDataObserver;
-    private void requestNeigbourhoodData() {
-        if(neighbourhoodDataObserver == null) {
-            neighbourhoodDataObserver = mapItemsList -> {
-                Log.d(TAG, "xmaes : requestNeigbourhoodData: " + mapItemsList.size());
-                mapFragment.swapMapData(mapItemsList);
+    private void initLocationUpdates() {
+        if (connectivityObserver == null) {
+            connectivityObserver = isConnected -> {
+                if (!isConnected) {
+                    snackbarDelegate.showSnackbar(SnackbarDelegate.NO_CONNECTED, null);
+                    connectivityLiveData.removeObserver(connectivityObserver);
+                    connectivityObserver = null;
+                    registerConnectedUpdates(v -> viewModel.initLocationUpdates());
+                } else {
+                    viewModel.initLocationUpdates();
+                }
             };
         }
-        viewModel.requestNeigbourhoodData().observe(this, neighbourhoodDataObserver);
+        connectivityLiveData.observe(this, connectivityObserver);
     }
 
-    private void removeNeighbourhoodData() {
-        viewModel.requestNeigbourhoodData().removeObserver(neighbourhoodDataObserver);
-        // TODO remove neighbourhood data from map
+    // neighbourhood data
+
+    private void requestNeigbourhoodResource() {
+        if (neighbourhoodResourceObserver == null) {
+            neighbourhoodResourceObserver = this::processResource;
+        }
+        viewModel.getNeighbourhoodResource(null).observe(this, neighbourhoodResourceObserver);
     }
 
-    private void showNoLocationDialog() {
-        // TODO : need to be implemented : can ask permission path
+    private void resetNeighbourhoodDataObserver() {
+        if (neighbourhoodResourceObserver != null) {
+            viewModel.getNeighbourhoodResource(null).removeObserver(neighbourhoodResourceObserver);
+        }
     }
 
-    private void moveMapCamera(LatLng lastKnownLocation) {
-        mapFragment.moveMapCamera(lastKnownLocation);
+    private void processResource(@NonNull Resource<List<MapItem>> resource) {
+        toggleProgressBar(resource.status);
+        swapViewData(resource.data);
+        toggleSnackbar(resource.status);
     }
 
-    // TODO add animation when hiding/showing the fab menu
+    private void registerConnectedUpdates(View.OnClickListener listener) {
+        if (connectivityObserver == null) {
+            connectivityObserver = isConnected -> {
+                if (isConnected) {
+                    snackbarDelegate.showSnackbar(SnackbarDelegate.CONNECTED, listener);
+                    connectivityLiveData.removeObserver(connectivityObserver);
+                    connectivityObserver = null;
+                }
+            };
+        }
+        connectivityLiveData.observe(this, connectivityObserver);
+    }
+
+
+    // UI
+
     private void updateView(@ViewState int state) {
         currentViewState = state;
 
@@ -236,26 +299,63 @@ public class MainActivity extends AppCompatActivity implements
             case MAIN_VIEW_STATE:
                 floatingActionMenu.setVisibility(View.VISIBLE);
                 showUpButton(false);
+                resetViewForMainState();
                 break;
             case NEIGHBOURG_VIEW_STATE:
                 floatingActionMenu.setVisibility(View.GONE);
                 showUpButton(true);
-                requestNeigbourhoodData();
+                requestNeigbourhoodResource();
                 break;
         }
     }
 
     private void showUpButton(boolean shouldShow) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(shouldShow);
-        getSupportActionBar().setDisplayShowHomeEnabled(shouldShow);
+    }
+
+    private void toggleSnackbar(@Resource.ResourceStatus int status) {
+        if (status == Resource.ERROR) {
+            snackbarDelegate.showSnackbar(SnackbarDelegate.ERROR, v -> viewModel.retry(null));
+        } else if (status == Resource.NO_CONNECTION) {
+            snackbarDelegate.showSnackbar(SnackbarDelegate.NO_CONNECTED, null);
+            registerConnectedUpdates(v -> viewModel.retry(null));
+        } else {
+            // branch for Resource.LOADING || Resource.SUCCESS
+            snackbarDelegate.hideSnackbar();
+        }
+    }
+
+    private void swapViewData(List<MapItem> mapItemsList) {
+        mapFragment.swapMapData(mapItemsList);
+        showEmptyView(mapItemsList == null || mapItemsList.isEmpty());
+    }
+
+    private void resetViewForMainState() {
+        mapFragment.reset();
+
+        progressBar.setVisibility(View.GONE);
+
+        resetNeighbourhoodDataObserver();
+    }
+
+    private void showEmptyView(boolean shouldShow) {
+        mapFragment.shouldShowEmptyStateMessage(shouldShow);
+    }
+
+    private void toggleProgressBar(@Resource.ResourceStatus int status) {
+        if (status == Resource.LOADING) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void showNoLocationDialog() {
+        // TODO : need to be implemented : can ask permission path
     }
 
     @IntDef({MAIN_VIEW_STATE, NEIGHBOURG_VIEW_STATE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ViewState {   }
-
-
-
-
-
+    private @interface ViewState {
+    }
 }

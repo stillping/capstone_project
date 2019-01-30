@@ -3,17 +3,18 @@ package uk.me.desiderio.shiftt.ui.model;
 import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
 
 /**
- * Data class to provide location to  map views {@link ShifttMapFragment}
+ * Data class to hold location data for map views at {@link ShifttMapFragment}
  */
 public class LocationViewData {
     private double latitude;
     private double longitude;
-    private boolean isFresh;
+    private long time;
 
-    public LocationViewData(double latitude, double longitude, boolean isFresh) {
+
+    public LocationViewData(double latitude, double longitude, long time) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.isFresh = isFresh;
+        this.time = time;
     }
 
     public double getLatitude() {
@@ -24,8 +25,7 @@ public class LocationViewData {
         return longitude;
     }
 
-    // TODO implement
-    public boolean isFresh() {
-        return isFresh;
+    public long getTime() {
+        return time;
     }
 }

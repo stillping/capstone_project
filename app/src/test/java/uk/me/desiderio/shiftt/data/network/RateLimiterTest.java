@@ -10,10 +10,11 @@ import java.time.Instant;
 import java.util.Arrays;
 
 import uk.me.desiderio.shiftt.data.network.model.RateLimit;
+import uk.me.desiderio.shiftt.data.repository.RateLimiter;
 
 import static com.google.common.truth.Truth.assertThat;
-import static uk.me.desiderio.shiftt.data.network.RateLimiter.MAX_LOCATION_AGE;
-import static uk.me.desiderio.shiftt.data.network.RateLimiter.MIN_DATA_AGE;
+import static uk.me.desiderio.shiftt.data.repository.RateLimiter.MAX_LOCATION_AGE_IN_MIN;
+import static uk.me.desiderio.shiftt.data.repository.RateLimiter.MIN_DATA_AGE_IN_MIN;
 
 /** tests for the {@link RateLimiter} class
  */
@@ -49,7 +50,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isTrue();
     }
@@ -60,7 +61,7 @@ public class RateLimiterTest {
         rateLimiter.addLimit(DEFAULT_LIMIT_NAME_VALUE,
                              Arrays.asList(DEFAULT_LOC_LAT_VALUE,
                                            DEFAULT_LOC_LNG_VALUE),
-                             getEpochPassed(RateLimiter.MIN_DATA_AGE + 1),
+                             getEpochPassed(RateLimiter.MIN_DATA_AGE_IN_MIN + 1),
                              DEFAULT_LIMIT_LIMIT_VALUE,
                              DEFAULT_LIMIT_REMAINING_VALUE,
                              getEpochInFuture(15));
@@ -68,7 +69,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isTrue();
     }
@@ -81,7 +82,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch("Unknow Limit Name",
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isTrue();
     }
@@ -94,7 +95,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       99,
                                                       99,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isTrue();
     }
@@ -107,7 +108,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE + 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN + 1));
 
         assertThat(shouldFetch).isFalse();
     }
@@ -116,14 +117,14 @@ public class RateLimiterTest {
     public void
     givenKnownEndPoint_whenRequestingWithSameLocationAndNoLaterThan3Min_thenReturnFalse() {
         limit = new RateLimitBuilder()
-                .setTime(MIN_DATA_AGE - 1)
+                .setTime(MIN_DATA_AGE_IN_MIN - 1)
                 .build();
 
         rateLimiter.addLimit(limit);
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isFalse();
     }
@@ -139,7 +140,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isFalse();
     }
@@ -156,7 +157,7 @@ public class RateLimiterTest {
         boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
                                                       DEFAULT_LOC_LAT_VALUE,
                                                       DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE - 1));
+                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN - 1));
 
         assertThat(shouldFetch).isTrue();
     }
@@ -176,7 +177,7 @@ public class RateLimiterTest {
         private String name = DEFAULT_LIMIT_NAME_VALUE;
         private double lat = DEFAULT_LOC_LAT_VALUE;
         private double lng = DEFAULT_LOC_LNG_VALUE;
-        private long time = getEpochPassed(RateLimiter.MIN_DATA_AGE + 1);
+        private long time = getEpochPassed(RateLimiter.MIN_DATA_AGE_IN_MIN + 1);
         private int limit = DEFAULT_LIMIT_LIMIT_VALUE;
         private int remaining = DEFAULT_LIMIT_REMAINING_VALUE;
         private long reset = getEpochInFuture(1);

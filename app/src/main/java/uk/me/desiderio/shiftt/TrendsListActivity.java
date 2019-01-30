@@ -12,7 +12,6 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import uk.me.desiderio.shiftt.ui.trendslist.TrendsListFragment;
 
-
 /**
  * activity to show list of twitter trends.
  */
@@ -32,6 +31,8 @@ public class TrendsListActivity extends AppCompatActivity implements HasSupportF
                     .replace(R.id.container, TrendsListFragment.newInstance())
                     .commitNow();
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

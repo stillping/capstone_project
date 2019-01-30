@@ -6,8 +6,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 /**
- * Holds parameter that will affect the logic to determine whether to allow a new
- * Twitter API request
+ * Holds parameters to be used determining whether to allow a new Twitter API request
  */
 public class RateLimit {
 
@@ -70,8 +69,8 @@ public class RateLimit {
         this.name = name;
         this.time = time;
         this.coors = Arrays.asList(lat, lng);
-        this.limit = Integer.parseInt(limit);
-        this.remaining = Integer.parseInt(remaining);
-        this.reset = Long.parseLong(reset);
+        this.limit = (limit != null)? Integer.parseInt(limit) : 0;
+        this.remaining = (remaining != null)? Integer.parseInt(remaining) : 0;
+        this.reset = (reset != null)? Long.parseLong(reset) : 0;
     }
 }

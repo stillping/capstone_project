@@ -17,52 +17,54 @@ import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
 
 /**
  * {@link LiveData} to observe {@link MapItem} list to be shown in the {@link ShifttMapFragment}
- *
+ * <p>
  * The class combines the different sources that will be shown on the map.
- *
+ * <p>
  * {@link Tweet} object has two different location information items attached to them:
- *  - {@link Coordinates} Locates {@link Tweet} in a precised position
- *  - {@link Place} Locates {@link Tweet} in a area that normally coincides with a neighbourghood
- *
- *  These are not always present. {@link Place} will be prioritised. When missing the
- *  {@link Coordinates} will be used instead. In both cases a {@link MapItem} will be generated
- *  from their properties
+ * - {@link Coordinates} Locates {@link Tweet} in a precised position
+ * - {@link Place} Locates {@link Tweet} in a area that normally coincides with a neighbourghood
+ * <p>
+ * These are not always present. {@link Place} will be prioritised. When missing the
+ * {@link Coordinates} will be used instead. In both cases a {@link MapItem} will be generated
+ * from their properties
  */
 public class CombinedMapLiveData extends MediatorLiveData<List<MapItem>> {
 
     private List<MapItem> sources;
 
-    private LiveData<List<PlaceEnt>> liveDataOne;
-    // private LiveData<CoordinatesEnt> liveDataTwo;
-
+    private boolean hasLiveDataOneBeenSet;
 
     public CombinedMapLiveData(LiveData<List<PlaceEnt>> sourceOne) {
 
         sources = new ArrayList<>();
 
         super.addSource(sourceOne, placeEnts -> {
-            liveDataOne = sourceOne;
-            List<MapItem> items = placeEnts.stream()
-                    .map(CombinedMapLiveData::getMapItemWithPlaceData)
-                    .collect(Collectors.toList());
+            hasLiveDataOneBeenSet = true;
+            if (placeEnts != null) {
+                List<MapItem> items = placeEnts.stream()
+                        .map(this::getMapItemWithPlaceData)
+                        .collect(Collectors.toList());
 
-            sources.addAll(items);
+                sources.addAll(items);
+            }
 
             setCombinedValue();
         });
     }
 
-    public static MapItem getMapItemWithPlaceData(PlaceEnt place) {
+    private MapItem getMapItemWithPlaceData(PlaceEnt place) {
         List<LatLng> coordinates = new ArrayList<>();
 
-        // TODO: 20/12/2018 : refractor to streams
-        List<List<List<Double>>> groupCoorsList = place.boundingBox.coordinates;
-        for (int i = 0; i < groupCoorsList.size(); i++) {
-            List<List<Double>> coorList = groupCoorsList.get(i);
-            for (int j = 0; j < coorList.size(); j++) {
-                List<Double> coors = coorList.get(j);
-                coordinates.add(new LatLng(coors.get(1),
-                                           coors.get(0)));
+        // TODO: Refractor to streams
+        if (place.boundingBox != null) {
+            List<List<List<Double>>> groupCoorsList = place.boundingBox.coordinates;
+            for (int i = 0; i < groupCoorsList.size(); i++) {
+                List<List<Double>> coorList = groupCoorsList.get(i);
+                for (int j = 0; j < coorList.size(); j++) {
+                    List<Double> coors = coorList.get(j);
+                    coordinates.add(new LatLng(coors.get(1),
+                                               coors.get(0)));
+                }
             }
         }
 
@@ -70,10 +72,8 @@ public class CombinedMapLiveData extends MediatorLiveData<List<MapItem>> {
     }
 
     private void setCombinedValue() {
-        if (liveDataOne != null) {
+        if (hasLiveDataOneBeenSet) {
             setValue(sources);
         }
     }
-
-    // TODO: 20/12/2018 : Invalidate the addSource and removeSource local methods
 }

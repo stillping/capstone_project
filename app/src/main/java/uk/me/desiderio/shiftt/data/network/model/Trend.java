@@ -14,7 +14,7 @@ public class Trend {
     public String url;
     public String query;
 
-    // TODO: Not implemented at this stage
+    // NOT implemented at this stage
     private int promoted_content;
 
     @SerializedName(value = "tweet_volume")

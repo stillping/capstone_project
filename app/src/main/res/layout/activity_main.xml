@@ -25,13 +25,13 @@
                 android:id="@+id/main_logo_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/toobar_vertical_internal_margin"
+                android:layout_marginBottom="@dimen/toobar_vertical_internal_margin"
                 android:adjustViewBounds="true"
                 android:src="@drawable/shiftt_logo" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- TODO improve fab icons -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_constraint_content"
@@ -39,7 +39,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         app:layout_anchor="@id/main_app_bar">
-
 
         <fragment
             android:id="@+id/main_map_fragment"
@@ -56,8 +55,8 @@
             android:id="@+id/main_refresh_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="@dimen/map_top_button_margin"
+            android:layout_marginEnd="@dimen/map_top_button_margin"
             app:srcCompat="@drawable/ic_refresh"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,8 +64,8 @@
             android:id="@+id/main_locate_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="@dimen/map_top_button_internal_margin"
+            android:layout_marginEnd="@dimen/map_top_button_margin"
             app:srcCompat="@drawable/ic_crosshairs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_refresh_button" />

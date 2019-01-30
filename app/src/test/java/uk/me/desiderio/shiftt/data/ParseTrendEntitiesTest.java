@@ -25,8 +25,8 @@ import static uk.me.desiderio.shiftt.data.network.TrendMockDataProvider.TREND_UR
 import static uk.me.desiderio.shiftt.data.network.TrendMockDataProvider.getExtepectedName;
 
 /**
- * tests serialization betweet {@link Trend} network data object and {@link TrendEnt}
- * room database data objects.
+ * tests serialization betweet {@link Trend} network dataSource object and {@link TrendEnt}
+ * room database dataSource objects.
  */
 @RunWith(JUnit4.class)
 public class ParseTrendEntitiesTest {

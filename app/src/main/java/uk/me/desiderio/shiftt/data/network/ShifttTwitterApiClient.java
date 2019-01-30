@@ -19,7 +19,6 @@ public class ShifttTwitterApiClient extends TwitterApiClient {
         return getService(ClosestPlacesByLocationService.class);
     }
 
-
     public TrendsByPlaceIdService getTrendsByPlaceService() {
         return getService(TrendsByPlaceIdService.class);
     }
