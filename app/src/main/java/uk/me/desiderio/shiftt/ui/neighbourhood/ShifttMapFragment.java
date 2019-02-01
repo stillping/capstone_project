@@ -40,6 +40,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPolygonClickListener {
 
     private static final String SAVED_STATE_KEY_MAP_CAMERA = "saved_state_key_map_camera";
+    private static final String SAVED_STATE_KEY_CURRENT_BOUNDS = "saved_state_key_current_bounds";
 
     private static final float DEFAULT_MAP_ZOOM = 16;
     private GoogleMap googleMap;
@@ -49,6 +50,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private List<Polygon> polygons;
     private CameraPosition savedStateCameraPosition;
     private Marker currentPositionMarker;
+    private LatLngBounds currentLatLngBounds;
 
     public static ShifttMapFragment newInstance() {
         return new ShifttMapFragment();
@@ -77,6 +79,9 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
         if (savedInstanceState != null) {
             savedStateCameraPosition = savedInstanceState.getParcelable(SAVED_STATE_KEY_MAP_CAMERA);
+            if (savedInstanceState.containsKey(SAVED_STATE_KEY_CURRENT_BOUNDS)) {
+                currentLatLngBounds = savedInstanceState.getParcelable(SAVED_STATE_KEY_CURRENT_BOUNDS);
+            }
         }
 
         return rootView;
@@ -86,6 +91,9 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (googleMap != null) {
             outState.putParcelable(SAVED_STATE_KEY_MAP_CAMERA, googleMap.getCameraPosition());
+        }
+        if (currentLatLngBounds != null) {
+            outState.putParcelable(SAVED_STATE_KEY_CURRENT_BOUNDS, currentLatLngBounds);
         }
         super.onSaveInstanceState(outState);
     }
@@ -127,6 +135,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
      * reset map removing polygon and reseting camera position to user location
      */
     public void reset() {
+        currentLatLngBounds = null;
         resetMapPoligons();
         moveMapCameraToCurrentLocation();
     }
@@ -139,6 +148,17 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         savedStateCameraPosition = null;
     }
 
+    /**
+     * animates map to current location if no polygons are displayed.
+     * otherwise, animates to bounds containing all polygons
+     */
+    public void goToCurrentLocation() {
+        if (currentLatLngBounds != null) {
+            animateCameraToBounds(currentLatLngBounds);
+        } else {
+            moveMapCameraToCurrentLocation();
+        }
+    }
 
     @Override
     public void onPolygonClick(Polygon polygon) {
@@ -197,9 +217,8 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
                     // todo this show when click . change strategy add/remove title
                     .title(getString(R.string.map_location_no_data))
                     .position(currentLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.ic_menu_add));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_loc));
             currentPositionMarker = googleMap.addMarker(options);
-
         }
     }
 
@@ -235,11 +254,12 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void updateMapCameraOnBounds(LatLngBounds boundsBuilder) {
+        currentLatLngBounds = boundsBuilder;
         if (savedStateCameraPosition != null) {
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(savedStateCameraPosition);
             googleMap.moveCamera(update);
         } else {
-            animateCameraToBounds(boundsBuilder);
+            animateCameraToBounds(currentLatLngBounds);
         }
     }
 

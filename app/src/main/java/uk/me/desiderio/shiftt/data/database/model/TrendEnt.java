@@ -41,7 +41,6 @@ public class TrendEnt {
         this.placeName = placeName;
     }
 
-
     @Ignore
     public TrendEnt(Trend trend) {
         this.name = trend.name;

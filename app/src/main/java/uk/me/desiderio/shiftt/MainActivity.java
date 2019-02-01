@@ -85,11 +85,15 @@ public class MainActivity extends AppCompatActivity implements
         progressBar = findViewById(R.id.main_progress_bar);
         progressBar.setVisibility(View.GONE);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mapFragment = (ShifttMapFragment) fragmentManager.findFragmentById(R.id.main_map_fragment);
+
         ImageView refreshButton = findViewById(R.id.main_refresh_button);
         refreshButton.setOnClickListener(v -> requestFreshLocation());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        mapFragment = (ShifttMapFragment) fragmentManager.findFragmentById(R.id.main_map_fragment);
+        ImageView locationButton = findViewById(R.id.main_locate_button);
+        locationButton.setOnClickListener(v -> mapFragment.goToCurrentLocation());
+
 
         FloatingActionMenu floatingActionMenu = findViewById(R.id.fab_menu);
         floatingActionMenu.setOnItemClickListener(this);
