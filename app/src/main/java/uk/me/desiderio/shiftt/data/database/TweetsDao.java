@@ -50,13 +50,13 @@ public abstract class TweetsDao {
     @Query("SELECT * FROM tweet WHERE NOT isMetadata")
     abstract LiveData<List<QueryTweetEnt>> getAllFeaturedPopTweetsEntQuery();
 
-
     @Transaction
     @Query("SELECT * FROM tweet WHERE NOT isMetadata AND id = :id")
     abstract LiveData<QueryTweetEnt> getFeaturedPopTweetEntQuery(long id);
 
-
-    @Query("SELECT * FROM place")
+    @Query("SELECT DISTINCT place.* FROM place " +
+            "INNER JOIN tweet on tweet.place_id = place.id " +
+            "WHERE NOT isMetadata")
     public abstract LiveData<List<PlaceEnt>> getAllPlaces();
 
     @Query("SELECT * FROM coordinates WHERE id = :id")
