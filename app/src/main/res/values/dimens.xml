@@ -7,4 +7,6 @@
     <dimen name="toobar_vertical_internal_margin">8dp</dimen>
     <dimen name="map_top_button_margin">24dp</dimen>
     <dimen name="map_top_button_internal_margin">8dp</dimen>
+    <dimen name="list_item_height">56dp</dimen>
+    <dimen name="list_item_default_internal_margin">16dp</dimen>
 </resources>

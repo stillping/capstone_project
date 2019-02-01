@@ -5,7 +5,10 @@
     <color name="colorAccent">#4DA0BC</color>
     <color name="colorAccentLight">#64D5FD</color>
 
-    <!-- use for the polygons fill and stroke-->
+    <!-- used for the polygons fill and stroke-->
     <color name="colorAccentLight_a50">#80B5FFFF</color>
     <color name="colorAccent_a70">#B34DA0BC</color>
+
+    <!-- used for the -->
+    <color name="colorLightOrange">#FF6D00</color>
 </resources>

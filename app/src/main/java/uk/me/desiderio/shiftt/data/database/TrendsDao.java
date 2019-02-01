@@ -1,5 +1,7 @@
 package uk.me.desiderio.shiftt.data.database;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,7 @@ public abstract class TrendsDao {
     // QUERY
 
     @Transaction
-    @Query("SELECT * FROM trend")
+    @Query("SELECT * FROM trend ORDER BY tweet_volume DESC")
     public abstract LiveData<List<QueryTrendEnt>> getAllQueryTrends();
 
 

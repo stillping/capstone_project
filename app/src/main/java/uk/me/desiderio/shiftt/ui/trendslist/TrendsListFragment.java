@@ -69,8 +69,9 @@ public class TrendsListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TrendsListAdapter();
+        adapter = new TrendsListAdapter(getContext());
         recyclerView.setAdapter(adapter);
+
 
         snackbarDelegate = new SnackbarDelegate(R.string
                                                         .snackbar_connected_message_trends_suffix,
