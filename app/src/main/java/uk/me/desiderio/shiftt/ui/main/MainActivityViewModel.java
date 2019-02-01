@@ -57,8 +57,11 @@ public class MainActivityViewModel extends ViewModel {
         locationRepository.getCurrentFusedLocation();
     }
 
-    public LiveData<Resource<List<MapItem>>> getNeighbourhoodResource(String trendName) {
-        trendNameLiveData.setValue(trendName);
+    public LiveData<Resource<List<MapItem>>> getNeighbourhoodResource(String trendName,
+                                                                      boolean observerImmediately) {
+        if(observerImmediately) {
+            trendNameLiveData.setValue(trendName);
+        }
         return Transformations.switchMap(trendNameLiveData, name -> {
             LocationQueryData loc = locationRepository.getLocationQueryDataFromPreferences();
 

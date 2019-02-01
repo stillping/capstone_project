@@ -264,12 +264,13 @@ public class MainActivity extends AppCompatActivity implements
         if (neighbourhoodResourceObserver == null) {
             neighbourhoodResourceObserver = this::processResource;
         }
-        viewModel.getNeighbourhoodResource(null).observe(this, neighbourhoodResourceObserver);
+        viewModel.getNeighbourhoodResource(null, true).observe(this, neighbourhoodResourceObserver);
     }
 
     private void resetNeighbourhoodDataObserver() {
+
         if (neighbourhoodResourceObserver != null) {
-            viewModel.getNeighbourhoodResource(null).removeObserver(neighbourhoodResourceObserver);
+            viewModel.getNeighbourhoodResource(null, false).removeObserver(neighbourhoodResourceObserver);
         }
     }
 
@@ -335,11 +336,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void resetViewForMainState() {
-        mapFragment.reset();
-
-        progressBar.setVisibility(View.GONE);
-
         resetNeighbourhoodDataObserver();
+        mapFragment.reset();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void showEmptyView(boolean shouldShow) {
