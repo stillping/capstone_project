@@ -278,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements
         toggleProgressBar(resource.status);
         swapViewData(resource.data);
         toggleSnackbar(resource.status);
+        showEmptyView(resource.data, resource.status);
     }
 
     private void registerConnectedUpdates(View.OnClickListener listener) {
@@ -332,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void swapViewData(List<MapItem> mapItemsList) {
         mapFragment.swapMapData(mapItemsList);
-        showEmptyView(mapItemsList == null || mapItemsList.isEmpty());
     }
 
     private void resetViewForMainState() {
@@ -341,7 +341,8 @@ public class MainActivity extends AppCompatActivity implements
         progressBar.setVisibility(View.GONE);
     }
 
-    private void showEmptyView(boolean shouldShow) {
+    private void showEmptyView(List data, @Resource.ResourceStatus int status) {
+        boolean shouldShow = status != Resource.LOADING && (data == null || data.isEmpty());
         mapFragment.shouldShowEmptyStateMessage(shouldShow);
     }
 

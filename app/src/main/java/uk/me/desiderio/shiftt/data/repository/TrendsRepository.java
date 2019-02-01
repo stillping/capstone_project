@@ -27,13 +27,12 @@ import static uk.me.desiderio.shiftt.data.repository.RateLimiter.TREND_PLACE_KEY
 
 /**
  * Repository to request Trends
- *
+ * <p>
  * It uses {@link NetworkBoundBiResouce} as in order to retrieve the available trends
  * two consecutive request has to be done:
  * - Twitter's closest API request to retrieve of the "places" near to user location.
  * - Twitter's place API request to retrieve all the trends available in places provided as
  * a parameter
- *
  */
 public class TrendsRepository {
 

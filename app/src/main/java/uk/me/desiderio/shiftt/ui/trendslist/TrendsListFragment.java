@@ -60,7 +60,7 @@ public class TrendsListFragment extends Fragment {
         progressBar = rootView.findViewById(R.id.trends_progress_bar);
 
         emptyView = rootView.findViewById(R.id.trends_empty_view);
-        showEmptyView(false);
+        shouldShowEmptyView(false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.trends_recycler_view);
 
@@ -101,6 +101,7 @@ public class TrendsListFragment extends Fragment {
         toggleProgressBar(resource.status);
         swapViewData(resource.data);
         toggleSnackbar(resource.status);
+        showEmptyView(resource.data, resource.status);
     }
 
 
@@ -114,7 +115,6 @@ public class TrendsListFragment extends Fragment {
 
     private void swapViewData(List<TrendEnt> trends) {
         adapter.swapData(trends);
-        showEmptyView(trends == null || trends.isEmpty());
     }
 
     private void toggleSnackbar(@Resource.ResourceStatus int status) {
@@ -129,12 +129,17 @@ public class TrendsListFragment extends Fragment {
         }
     }
 
-    private void showEmptyView(boolean shouldShow) {
+    private void shouldShowEmptyView(boolean shouldShow) {
         if (shouldShow) {
             emptyView.setVisibility(View.VISIBLE);
         } else {
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    private void showEmptyView(List data, @Resource.ResourceStatus int status) {
+        boolean shouldShow = status != Resource.LOADING && (data == null || data.isEmpty());
+        shouldShowEmptyView(shouldShow);
     }
 
     private void registerConnectedUpdates(View.OnClickListener listener) {

@@ -9,22 +9,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.MainActivity;
-import uk.me.desiderio.shiftt.data.repository.RateLimitsRepository;
-import uk.me.desiderio.shiftt.data.repository.LocationRepository;
-import uk.me.desiderio.shiftt.data.repository.TweetsRepository;
 import uk.me.desiderio.shiftt.data.location.LocationQueryData;
+import uk.me.desiderio.shiftt.data.repository.LocationRepository;
+import uk.me.desiderio.shiftt.data.repository.RateLimitsRepository;
 import uk.me.desiderio.shiftt.data.repository.Resource;
+import uk.me.desiderio.shiftt.data.repository.TweetsRepository;
 import uk.me.desiderio.shiftt.ui.model.LocationViewData;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
 
 /**
  * {@link ViewModel} for the {@link MainActivity}
- *
+ * <p>
  * The model gathers the neccessary location parameters from the {@link LocationRepository}
  * and makes the request for new {@link MapItem}s to the {@link TweetsRepository}
- *
+ * <p>
  * Using {@link Transformations}, it provides the availability to refresh data request
- *
+ * <p>
  * The model also initiates the {@link RateLimitsRepository} so that all rate limit data is ready
  * when Twitter API requests take place at a later stage.
  */
@@ -59,7 +59,7 @@ public class MainActivityViewModel extends ViewModel {
 
     public LiveData<Resource<List<MapItem>>> getNeighbourhoodResource(String trendName,
                                                                       boolean observerImmediately) {
-        if(observerImmediately) {
+        if (observerImmediately) {
             trendNameLiveData.setValue(trendName);
         }
         return Transformations.switchMap(trendNameLiveData, name -> {
