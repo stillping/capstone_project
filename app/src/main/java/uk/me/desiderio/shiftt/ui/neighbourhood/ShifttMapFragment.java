@@ -41,6 +41,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     private static final String SAVED_STATE_KEY_MAP_CAMERA = "saved_state_key_map_camera";
     private static final String SAVED_STATE_KEY_CURRENT_BOUNDS = "saved_state_key_current_bounds";
+    private static final String MARKER_TAG_CURRENT_POSITION = "current_position_marker_tag";
 
     private static final float DEFAULT_MAP_ZOOM = 16;
     private GoogleMap googleMap;
@@ -111,6 +112,8 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setOnPolygonClickListener(this);
         googleMap.setMyLocationEnabled(false);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        disableCurrentLocationMarkerClick();
 
     }
 
@@ -210,6 +213,16 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     // Map Markers
 
+    private void disableCurrentLocationMarkerClick() {
+        googleMap.setOnMarkerClickListener(marker -> {
+            if (marker.getTag().equals(MARKER_TAG_CURRENT_POSITION)) {
+                return true;
+            }
+            // do nothing
+            return false;
+        });
+    }
+
     private void addCurrentLocationMarkers() {
         if (googleMap != null && currentLocation != null) {
             String label = getCurrentLocationLabel(currentLocation);
@@ -219,6 +232,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
                     .position(currentLocation)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_loc));
             currentPositionMarker = googleMap.addMarker(options);
+            currentPositionMarker.setTag(MARKER_TAG_CURRENT_POSITION);
         }
     }
 
