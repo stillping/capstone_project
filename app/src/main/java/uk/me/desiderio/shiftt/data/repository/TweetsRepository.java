@@ -12,11 +12,14 @@ import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import okhttp3.Headers;
 import retrofit2.Call;
 import uk.me.desiderio.shiftt.data.CombinedMapLiveData;
 import uk.me.desiderio.shiftt.data.database.TweetsDao;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
+import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.network.ApiCallback;
 import uk.me.desiderio.shiftt.data.network.ApiResponse;
@@ -110,6 +113,63 @@ public class TweetsRepository {
                 });
                 return searchApiCallback.getResponse();
 
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<List<TweetEnt>>> getTweetsOnPlace(String placeFullName,
+                                                               double lat,
+                                                               double lng,
+                                                               long locTime,
+                                                               String radiusSize,
+                                                               @TwitterParams.RadiusUnit
+                                                                  String radiusUnit) {
+        return new NetworkBoundResouce<Search, List<TweetEnt>>(appExecutors,
+                                                              connectivityLiveData) {
+
+            @Override
+            protected void saveCallResult(Search item) {
+                List<Tweet> tweetList = item.tweets;
+                List<TweetEnt> tweetEntityList = getTweetEntList(tweetList);
+                tweetsDao.insertTweetEntities(tweetEntityList);
+            }
+
+            @Override
+            protected void saveHeaderInfo(Headers headers) {
+                rateLimitsRepository.updateRateLimit(TWEETS_KEY_NAME, lat, lng, headers);
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<TweetEnt> data) {
+                return hasNoData(data) || shouldFetchOnLimits(TWEETS_KEY_NAME,
+                                                              lat,
+                                                              lng,
+                                                              locTime);
+            }
+
+            @Override
+            protected LiveData<List<TweetEnt>> loadFromDb() {
+                LiveData<List<QueryTweetEnt>> queries =
+                        tweetsDao.getAllFeaturedPopTweetsEntQueryOnPlace(placeFullName);
+
+                return Transformations.map(queries, queryTweetEntList ->
+                    queryTweetEntList.stream()
+                            .map(queryTweetEnt -> queryTweetEnt.getPopulatedTweetEnt())
+                            .collect(Collectors.toList())
+                );
+            }
+
+            @Override
+            protected LiveData<ApiResponse<Search>> createCall() {
+                appExecutors.getNetworkIO().execute(() -> {
+                    Geocode.Distance distance = getGeocodeDistance(radiusUnit);
+                    Geocode geocode = getGeocode(lat, lng, radiusSize, distance);
+
+                    Call<Search> call = getSearchCall(null, geocode);
+                    call.enqueue(searchApiCallback);
+                });
+                return searchApiCallback.getResponse();
             }
         }.asLiveData();
     }

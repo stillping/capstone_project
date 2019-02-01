@@ -1,6 +1,7 @@
 package uk.me.desiderio.shiftt.ui.neighbourhood;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import uk.me.desiderio.shiftt.R;
+import uk.me.desiderio.shiftt.TweetListActivity;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
+
+import static uk.me.desiderio.shiftt.ui.tweetlist.TweetListFragment.ARGS_PLACE_FULL_NAME_KEY;
 
 /**
  * Fragment to show {@link GoogleMap}. It does initial map settings and provides a interface to
@@ -168,6 +172,9 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         // todo implement polygon click
         String tag = polygon.getTag().toString();
         Toast.makeText(getContext(), " : Polygon Name : " + tag, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), TweetListActivity.class);
+        intent.putExtra(ARGS_PLACE_FULL_NAME_KEY, tag);
+        startActivity(intent);
     }
 
     public void setCurrentLocation(LatLng lastKnownLocation, boolean isFresh) {

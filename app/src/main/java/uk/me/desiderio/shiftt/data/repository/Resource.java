@@ -59,6 +59,14 @@ public class Resource<T> {
         return new Resource<>(LOADING, data, null);
     }
 
+    //todo
+    /**
+     * returns data as {@link Resource} while loading. It is assumed that data will be stale.
+     */
+    public static <T> Resource<T> clone(int status, T data, String message) {
+        return new Resource<>(status, data, message);
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Resource) {
