@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
+import uk.me.desiderio.shiftt.ui.map.ShifttMapFragment;
 
 /**
  * View data object to be shown at the {@link ShifttMapFragment}

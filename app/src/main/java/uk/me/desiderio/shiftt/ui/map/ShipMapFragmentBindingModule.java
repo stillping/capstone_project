@@ -1,4 +1,4 @@
-package uk.me.desiderio.shiftt.ui.neighbourhood;
+package uk.me.desiderio.shiftt.ui.map;
 
 import androidx.fragment.app.Fragment;
 import dagger.Binds;
@@ -11,16 +11,16 @@ import dagger.multibindings.IntoMap;
  * Module providing binding for {@link ShifttMapFragment}
  */
 
-@Module(subcomponents = NeighbourhoodFragmentSubcomponent.class)
-public abstract class NeighbourhoodFragmentBindingModule {
+@Module(subcomponents = ShifttMapFragmentSubcomponent.class)
+public abstract class ShipMapFragmentBindingModule {
 
 
-    private NeighbourhoodFragmentBindingModule() {
+    private ShipMapFragmentBindingModule() {
     }
 
     @Binds
     @IntoMap
     @FragmentKey(ShifttMapFragment.class)
     abstract AndroidInjector.Factory<? extends Fragment> bindAndroidInjectorFactory(
-            NeighbourhoodFragmentSubcomponent.Builder builder);
+            ShifttMapFragmentSubcomponent.Builder builder);
 }

@@ -13,7 +13,7 @@ import androidx.lifecycle.MediatorLiveData;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.network.model.Place;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
-import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
+import uk.me.desiderio.shiftt.ui.map.ShifttMapFragment;
 
 /**
  * {@link LiveData} to observe {@link MapItem} list to be shown in the {@link ShifttMapFragment}

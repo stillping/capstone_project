@@ -1,6 +1,7 @@
-package uk.me.desiderio.shiftt.ui.neighbourhood;
+package uk.me.desiderio.shiftt.ui.map;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.internal.MapLifecycleDelegate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -25,13 +27,25 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import dagger.android.support.AndroidSupportInjection;
+import uk.me.desiderio.shiftt.MainActivity;
+import uk.me.desiderio.shiftt.NetworkStateResourceActivity;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.TweetListActivity;
+import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
+import uk.me.desiderio.shiftt.data.repository.Resource;
+import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
+import uk.me.desiderio.shiftt.ui.trendslist.TrendsListViewModel;
+import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 import static uk.me.desiderio.shiftt.ui.tweetlist.TweetListFragment.ARGS_PLACE_FULL_NAME_KEY;
 
@@ -48,6 +62,12 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private static final String MARKER_TAG_CURRENT_POSITION = "current_position_marker_tag";
 
     private static final float DEFAULT_MAP_ZOOM = 16;
+
+    @Inject
+    ViewModelFactory viewModelFactory;
+
+    private MapDataViewModel viewModel;
+
     private GoogleMap googleMap;
 
 
@@ -56,6 +76,8 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private CameraPosition savedStateCameraPosition;
     private Marker currentPositionMarker;
     private LatLngBounds currentLatLngBounds;
+
+    private Observer<Resource<List<MapItem>>> neighbourhoodResourceObserver;
 
     public static ShifttMapFragment newInstance() {
         return new ShifttMapFragment();
@@ -90,6 +112,20 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel = ViewModelProviders.
+                of(this, viewModelFactory).get(MapDataViewModel.class);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override
@@ -141,7 +177,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     /**
      * reset map removing polygon and reseting camera position to user location
      */
-    public void reset() {
+    private void reset() {
         currentLatLngBounds = null;
         resetMapPoligons();
         moveMapCameraToCurrentLocation();
@@ -169,16 +205,15 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPolygonClick(Polygon polygon) {
-        // todo implement polygon click
         String tag = polygon.getTag().toString();
-        Toast.makeText(getContext(), " : Polygon Name : " + tag, Toast.LENGTH_SHORT).show();
+        // todo remove if subtile is provide
+        Toast.makeText(getContext(), " : Showing tweets for: " + tag, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), TweetListActivity.class);
         intent.putExtra(ARGS_PLACE_FULL_NAME_KEY, tag);
         startActivity(intent);
     }
 
     public void setCurrentLocation(LatLng lastKnownLocation, boolean isFresh) {
-        // todo handle isFresh location to show location icon in a different colour
         this.currentLocation = lastKnownLocation;
         addCurrentLocationMarkers();
         moveMapCameraToCurrentLocation();
@@ -191,6 +226,42 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
             currentPositionMarker.hideInfoWindow();
         }
     }
+
+    public void showMapData() {
+        requestNeigbourhoodResource();
+    }
+
+    public void hideMapData() {
+        resetNeighbourhoodDataObserver();
+        reset();
+    }
+
+    private void requestNeigbourhoodResource() {
+        if (neighbourhoodResourceObserver == null) {
+            neighbourhoodResourceObserver = this::processResource;
+        }
+        viewModel.getMapItemsResource(null, true).observe(this,
+                                                                neighbourhoodResourceObserver);
+    }
+
+    private void resetNeighbourhoodDataObserver() {
+        if (neighbourhoodResourceObserver != null) {
+            viewModel.getMapItemsResource(null, false)
+                    .removeObserver(neighbourhoodResourceObserver);
+        }
+    }
+
+    private void processResource(@NonNull Resource<List<MapItem>> resource) {
+        swapMapData(resource.data);
+        showEmptyView(resource.data, resource.status);
+        updateGlobalViewStateOnResource(resource);
+    }
+
+    private void showEmptyView(List data, @Resource.ResourceStatus int status) {
+        boolean shouldShow = status != Resource.LOADING && (data == null || data.isEmpty());
+        shouldShowEmptyStateMessage(shouldShow);
+    }
+
 
     // Map Polygons
 
@@ -288,5 +359,10 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     private String getCurrentLocationLabel(LatLng coors) {
         return getContext().getString(R.string.map_location_label, coors.latitude, coors.longitude);
+    }
+
+    private void updateGlobalViewStateOnResource(@NonNull Resource<List<MapItem>> resource) {
+        ((NetworkStateResourceActivity) getActivity()).updateViewStateOnResource(resource,
+                                                                                 v -> viewModel.retry(null));
     }
 }

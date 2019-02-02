@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Shift•t</string>
     <string name="action_settings">Settings</string>
-    <string name="action_refresh_location">Refresh</string>
+    <string name="action_refresh_location">Refresh Location</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -48,6 +48,7 @@
     <string name="snackbar_connected_message">Connected to Internet. Retry Loading %1$s</string>
     <string name="snackbar_connected_message_map_suffix">More Map Items</string>
     <string name="snackbar_connected_message_trends_suffix">Trends</string>
+    <string name="snackbar_connected_message_tweets_suffix">Tweets</string>
     <string name="snackbar_no_connection_message">No Connection. Check connection for
         the latest activity</string>
     <string name="snackbar_error_message">Something Went Wrong</string>
@@ -56,6 +57,5 @@
     <string name="map_location_label">lat: %1$f, lon: %2$f</string>
     <string name="map_location_no_data">No much of a Tweet in this area</string>
     <string name="trends_empty_view_message">Nothing trending is this area</string>
-
 
 </resources>

@@ -1,34 +1,26 @@
 package uk.me.desiderio.shiftt;
 
 import android.os.Bundle;
+import android.view.View;
 
-import javax.inject.Inject;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import uk.me.desiderio.shiftt.ui.trendslist.TrendsListFragment;
+import uk.me.desiderio.shiftt.util.SnackbarDelegate;
 
 /**
  * activity to show list of twitter trends.
  */
 
-public class TrendsListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class TrendsListActivity extends NetworkStateResourceActivity implements HasSupportFragmentInjector {
 
-    @Inject
-    DispatchingAndroidInjector<Fragment> fragmentInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.trends_list_activity);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, TrendsListFragment.newInstance())
+                    .replace(R.id.base_fragment_container, TrendsListFragment.newInstance())
                     .commitNow();
         }
 
@@ -36,7 +28,10 @@ public class TrendsListActivity extends AppCompatActivity implements HasSupportF
     }
 
     @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentInjector;
+    protected SnackbarDelegate initSnackbarDelegate() {
+        View rootView = findViewById(android.R.id.content);
+        return new SnackbarDelegate(R.string.snackbar_connected_message_trends_suffix,
+                                    rootView);
     }
+
 }

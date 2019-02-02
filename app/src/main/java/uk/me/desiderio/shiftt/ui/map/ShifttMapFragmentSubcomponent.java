@@ -1,4 +1,4 @@
-package uk.me.desiderio.shiftt.ui.neighbourhood;
+package uk.me.desiderio.shiftt.ui.map;
 
 
 import dagger.Subcomponent;
@@ -9,7 +9,7 @@ import dagger.android.AndroidInjector;
  */
 
 @Subcomponent
-public interface NeighbourhoodFragmentSubcomponent extends AndroidInjector<ShifttMapFragment> {
+public interface ShifttMapFragmentSubcomponent extends AndroidInjector<ShifttMapFragment> {
 
     @Subcomponent.Builder
     abstract class Builder extends AndroidInjector.Builder<ShifttMapFragment> {}

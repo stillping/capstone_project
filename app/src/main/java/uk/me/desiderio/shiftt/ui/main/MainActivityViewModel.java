@@ -1,18 +1,13 @@
 package uk.me.desiderio.shiftt.ui.main;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.MainActivity;
-import uk.me.desiderio.shiftt.data.location.LocationQueryData;
 import uk.me.desiderio.shiftt.data.repository.LocationRepository;
 import uk.me.desiderio.shiftt.data.repository.RateLimitsRepository;
-import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.data.repository.TweetsRepository;
 import uk.me.desiderio.shiftt.ui.model.LocationViewData;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
@@ -32,21 +27,15 @@ import uk.me.desiderio.shiftt.ui.model.MapItem;
 public class MainActivityViewModel extends ViewModel {
 
     private final LocationRepository locationRepository;
-    private final TweetsRepository tweetsRepository;
-    private final MutableLiveData<String> trendNameLiveData;
 
     @Inject
     public MainActivityViewModel(LocationRepository locationRepository,
-                                 TweetsRepository tweetsRepository,
                                  RateLimitsRepository rateLimitsRepository) {
         this.locationRepository = locationRepository;
-        this.tweetsRepository = tweetsRepository;
 
         // init rateLimitRepo here
         // so that are ready for data request taking place after user selection
         rateLimitsRepository.initRateLimits();
-
-        this.trendNameLiveData = new MutableLiveData<>();
     }
 
     public LiveData<LocationViewData> getLocationViewData() {
@@ -55,27 +44,5 @@ public class MainActivityViewModel extends ViewModel {
 
     public void initLocationUpdates() {
         locationRepository.getCurrentFusedLocation();
-    }
-
-    public LiveData<Resource<List<MapItem>>> getNeighbourhoodResource(String trendName,
-                                                                      boolean observerImmediately) {
-        if (observerImmediately) {
-            trendNameLiveData.setValue(trendName);
-        }
-        return Transformations.switchMap(trendNameLiveData, name -> {
-            LocationQueryData loc = locationRepository.getLocationQueryDataFromPreferences();
-
-            return tweetsRepository.getMapsItems(name,
-                                                 loc.lat,
-                                                 loc.lng,
-                                                 loc.time,
-                                                 loc.radiusSize,
-                                                 loc.radiusUnit);
-        });
-    }
-
-
-    public void retry(String trendName) {
-        trendNameLiveData.setValue(trendName);
     }
 }

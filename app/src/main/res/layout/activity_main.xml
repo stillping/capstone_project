@@ -14,22 +14,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-            <ImageView
-                android:id="@+id/main_logo_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toobar_vertical_internal_margin"
-                android:layout_marginBottom="@dimen/toobar_vertical_internal_margin"
-                android:adjustViewBounds="true"
-                android:src="@drawable/shiftt_logo" />
-        </androidx.appcompat.widget.Toolbar>
+        <include layout="@layout/toolbar_layout"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,16 +25,7 @@
         android:layout_marginTop="?attr/actionBarSize"
         app:layout_anchor="@id/main_app_bar">
 
-        <fragment
-            android:id="@+id/main_map_fragment"
-            android:name="uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        <include layout="@layout/base_progress_container_merge" />
 
         <ImageView
             android:id="@+id/main_refresh_button"
@@ -69,16 +45,6 @@
             app:srcCompat="@drawable/ic_crosshairs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_refresh_button" />
-
-        <ProgressBar
-            android:id="@+id/main_progress_bar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

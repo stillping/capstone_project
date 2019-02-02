@@ -4,7 +4,7 @@
     android:id="@+id/google_map_outer_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.neighbourhood.ShifttMapFragment">
+    tools:context=".ui.map.ShifttMapFragment">
 
     <fragment
         android:id="@+id/google_map_fragment"

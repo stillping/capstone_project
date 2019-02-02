@@ -1,6 +1,6 @@
 package uk.me.desiderio.shiftt.ui.model;
 
-import uk.me.desiderio.shiftt.ui.neighbourhood.ShifttMapFragment;
+import uk.me.desiderio.shiftt.ui.map.ShifttMapFragment;
 
 /**
  * Data class to hold location data for map views at {@link ShifttMapFragment}

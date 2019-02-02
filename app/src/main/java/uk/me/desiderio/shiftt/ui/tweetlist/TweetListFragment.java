@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.FixedTweetTimeline;
@@ -23,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import dagger.android.support.AndroidSupportInjection;
+import uk.me.desiderio.shiftt.NetworkStateResourceActivity;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
@@ -38,20 +38,13 @@ public class TweetListFragment extends Fragment {
     @Inject
     ViewModelFactory viewModelFactory;
 
-    private TweetListViewModel viewModel;
-
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
     private View emptyView;
 
     public static TweetListFragment newInstance(Bundle args) {
         TweetListFragment frag = new TweetListFragment();
         frag.setArguments(args);
         return frag;
-    }
-
-    private String getPlaceFullName() {
-        return getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
     }
 
     @Nullable
@@ -62,8 +55,6 @@ public class TweetListFragment extends Fragment {
 
         View rootView = inflater
                 .inflate(R.layout.tweet_list_fragment, container, false);
-
-        progressBar = rootView.findViewById(R.id.tweets_progress_bar);
 
         emptyView = rootView.findViewById(R.id.tweets_empty_view);
         shouldShowEmptyView(false);
@@ -78,9 +69,9 @@ public class TweetListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.
+        TweetListViewModel viewModel = ViewModelProviders.
                 of(this, viewModelFactory).get(TweetListViewModel.class);
-        viewModel.getTweetOnPlace(getPlaceFullName()).observe(this, this::processResource);
+        viewModel.getTweetOnPlace(getPlaceFullNameArgsKey()).observe(this, this::processResource);
     }
 
     @Override
@@ -90,10 +81,9 @@ public class TweetListFragment extends Fragment {
     }
 
     private void processResource(@NonNull Resource<List<Tweet>> resource) {
-        toggleProgressBar(resource.status);
         swapViewData(resource.data);
         showEmptyView(resource.data, resource.status);
-
+        updateGlobalViewStateOnResource(resource);
     }
 
     private void swapViewData(List<Tweet> tweetList) {
@@ -128,17 +118,17 @@ public class TweetListFragment extends Fragment {
         }
     }
 
-    private void toggleProgressBar(@Resource.ResourceStatus int status) {
-        if (status == Resource.LOADING) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
-
     private void showEmptyView(List data, @Resource.ResourceStatus int status) {
         boolean shouldShow = status != Resource.LOADING && (data == null || data.isEmpty());
         shouldShowEmptyView(shouldShow);
+    }
+
+    private String getPlaceFullNameArgsKey() {
+        return getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
+    }
+
+    private void updateGlobalViewStateOnResource(@NonNull Resource<List<Tweet>> resource) {
+        ((NetworkStateResourceActivity) getActivity()).updateViewStateOnResource(resource, null);
     }
 
 }

@@ -1,6 +1,7 @@
 package uk.me.desiderio.shiftt;
 
 import android.os.Bundle;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -11,32 +12,34 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import uk.me.desiderio.shiftt.ui.tweetlist.TweetListFragment;
+import uk.me.desiderio.shiftt.util.SnackbarDelegate;
 
 /**
  * activity to show list of tweets.
  */
 
-public class TweetListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class TweetListActivity extends NetworkStateResourceActivity{
 
-    @Inject
-    DispatchingAndroidInjector<Fragment> fragmentInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tweet_list_activity);
 
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, TweetListFragment.newInstance(bundle))
+                    .replace(R.id.base_fragment_container, TweetListFragment.newInstance(bundle))
                     .commitNow();
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentInjector;
+    protected SnackbarDelegate initSnackbarDelegate() {
+        View rootView = findViewById(android.R.id.content);
+        return new SnackbarDelegate(R.string.snackbar_connected_message_tweets_suffix,
+                                    rootView);
     }
+
 }

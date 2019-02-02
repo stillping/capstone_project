@@ -6,7 +6,7 @@ import uk.me.desiderio.shiftt.ui.trendslist.TrendsListFragment;
 
 /**
  * Provides bindings for the {@link TweetListActivity} and
- * {@link TrendsListFragment}
+ * {@link TweetListFragment}
  */
 
 @Module

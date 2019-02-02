@@ -9,7 +9,7 @@ import dagger.Module;
 import dagger.multibindings.IntoMap;
 import uk.me.desiderio.shiftt.di.ViewModelKey;
 import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
-import uk.me.desiderio.shiftt.ui.neighbourhood.NeighbourhoodViewModel;
+import uk.me.desiderio.shiftt.ui.map.MapDataViewModel;
 import uk.me.desiderio.shiftt.ui.trendslist.TrendsListViewModel;
 import uk.me.desiderio.shiftt.ui.tweetlist.TweetListViewModel;
 
@@ -26,8 +26,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(NeighbourhoodViewModel.class)
-    abstract ViewModel providesNeighbourhoodViewModel(MainActivityViewModel mainActivityViewModel);
+    @ViewModelKey(MapDataViewModel.class)
+    abstract ViewModel providesMapDataViewModel(MapDataViewModel mapDataViewModel);
 
     @Binds
     @IntoMap
