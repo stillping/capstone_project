@@ -22,7 +22,6 @@ import static uk.me.desiderio.shiftt.data.ShifttSharedPreferences.COOR_DEFAULT_V
 
 public class SettingsActivity extends AppCompatActivity {
 
-    // TODO : setting should be initialize at the app start or add same defaults across all app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
             } else {
-                // TODO this needs to be formatted so that it is more user friendly
+                // wip this needs to be formatted so that it is more user friendly
                 Map<String, ?> allSharedPreference =  sharedPreferences.getAll();
                 Object pref = allSharedPreference.get(key);
                 if(pref instanceof Long) {

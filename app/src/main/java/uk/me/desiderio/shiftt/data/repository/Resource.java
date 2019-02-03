@@ -59,7 +59,6 @@ public class Resource<T> {
         return new Resource<>(LOADING, data, null);
     }
 
-    //todo
     /**
      * returns data as {@link Resource} while loading. It is assumed that data will be stale.
      */

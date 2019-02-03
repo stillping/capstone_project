@@ -68,7 +68,6 @@ public class LocationRepository {
         return locationLiveData;
     }
 
-    // TODO check if there is location services and connectivity
     public void getCurrentFusedLocation() {
         FusedLocationLiveData fusedLocationLiveData = new FusedLocationLiveData(fusedLocationProviderClient);
         this.locationLiveData.addSource(fusedLocationLiveData, location -> {

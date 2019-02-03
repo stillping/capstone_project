@@ -75,7 +75,7 @@ public class TrendsRepository {
                  connectivityLiveData) {
             @Override
             protected void saveCallResult(List<TrendsQueryResult> item) {
-                // todo inject place associated with the trend
+                // wip inject place associated with the trend
                 List<TrendEnt> trendEnts = parseTrendData(null, item);
                 trendsDao.insertTrendEntList(trendEnts);
             }
@@ -102,7 +102,6 @@ public class TrendsRepository {
                     ClosestPlacesByLocationService closestPlacesService = customApiClient
                             .getClosestPlacesByLocationService();
                     Call<List<Place>> placeCall = closestPlacesService.closest(lat, lng);
-                    // todo add network executors
                     placeCall.enqueue(closestApiCallback);
                 });
 
@@ -141,7 +140,7 @@ public class TrendsRepository {
                     if (trendsQuerys != null && trendsQuerys.trends != null) {
                         List<TrendEnt> queryTrendEnts = trendsQuerys.trends.stream()
                                 .map(trend -> {
-                                    // todo inject place associated with trend
+                                    // wip inject place associated with trend
                                     trend.place = place;
                                     return new TrendEnt(trend);
                                 })

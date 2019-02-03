@@ -45,7 +45,7 @@ public class SnackbarDelegate {
     private Snackbar getSnackbar(@SnackBarState int snackBarState,
                                  @NonNull View view,
                                  @Nullable View.OnClickListener listener) {
-        // todo inject info message for errors (?)
+        // wip inject info message for errors (?)
         Context context = view.getContext();
         String message;
         int duration;

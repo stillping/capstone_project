@@ -107,7 +107,6 @@ public class TweetsRepository {
                     Geocode geocode = getGeocode(lat, lng, radiusSize, distance);
 
                     Call<Search> call = getSearchCall(trendName, geocode);
-                    // todo add network executors
                     call.enqueue(searchApiCallback);
                 });
                 return searchApiCallback.getResponse();

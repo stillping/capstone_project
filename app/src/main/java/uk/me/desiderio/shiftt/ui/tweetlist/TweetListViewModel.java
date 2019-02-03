@@ -21,9 +21,7 @@ import uk.me.desiderio.shiftt.data.repository.TweetsRepository;
 /**
  * ViewModel for the {@link TweetListActivity}
  */
-
 public class TweetListViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
 
     private final LocationRepository locationRepository;
     private final TweetsRepository tweetsRepository;

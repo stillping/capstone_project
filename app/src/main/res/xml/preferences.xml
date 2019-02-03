@@ -3,7 +3,7 @@
         android:key="@string/pref_category_key_twitter"
         android:title="@string/pref_category_twitter">
 
-        <!-- todo change this for a slider or at least limit the values to enter-->
+        <!-- nice change this for a slider or at least limit the values to enter-->
         <EditTextPreference
             android:key="@string/pref_key_twitter_radius_size_key"
             android:title="@string/pref_twitter_search_radius_size_name"

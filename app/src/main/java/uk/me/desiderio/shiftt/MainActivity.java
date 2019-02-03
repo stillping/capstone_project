@@ -96,7 +96,7 @@ public class MainActivity extends NetworkStateResourceActivity implements
             boolean isAFreshLocation = RateLimiter.isAFreshLocation(locationViewData.getTime());
             if (!isAFreshLocation) {
                 requestFreshLocation();
-                // todo show progress bar
+                // wip show progress bar
             }
             mapFragment.setCurrentLocation(lastKnownLocation, isAFreshLocation);
         });

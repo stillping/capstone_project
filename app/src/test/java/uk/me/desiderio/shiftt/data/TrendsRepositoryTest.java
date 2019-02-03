@@ -149,7 +149,7 @@ public class TrendsRepositoryTest {
         assertThat(trendEnts).hasSize(expectedTotalTrends);
         trendEnts.stream()
                 .forEach(trendEnt -> {
-                    // todo assert data
+                    // wip assert data
                     //assertThat(tweetEnt.id).isEqualTo(tweetList.get((int) tweetEnt.id).id);
                 });
 

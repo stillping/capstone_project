@@ -23,7 +23,7 @@ public class ShifttSharedPreferences {
     private static String PREF_DEFAULT_SEARCH_RADIUS_SIZE;
 
 
-    // TODO add check for default values in order to not carry out request
+    // wip add check for default values in order to not carry out request
     public static final double COOR_DEFAULT_VALUE = 200;
 
     private final Context context;

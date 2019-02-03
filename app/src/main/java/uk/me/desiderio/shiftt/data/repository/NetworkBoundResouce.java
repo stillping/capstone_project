@@ -116,7 +116,7 @@ public abstract class NetworkBoundResouce<RequestType, ResultType>{
     protected final void processApiResponseAsNonSuccess(ApiResponse response, LiveData<ResultType>
             dbSource) {
         if (response instanceof ApiEmptyResponse) {
-            // todo : this execute might be irrelevant as it seems the method is called from main
+            // wip : this execute might be irrelevant as it seems the method is called from main
             // thread
             appExecutors.getMainThread().execute(() -> {
                 // reload from disk whatever we had

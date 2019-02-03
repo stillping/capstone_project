@@ -296,7 +296,6 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private void addCurrentLocationMarkers() {
         if (googleMap != null && currentLocation != null) {
             MarkerOptions options = new MarkerOptions()
-                    // todo this show when click . change strategy add/remove title
                     .title(getString(R.string.map_location_no_data))
                     .position(currentLocation)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_loc));
