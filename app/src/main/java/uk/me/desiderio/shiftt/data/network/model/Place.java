@@ -10,16 +10,16 @@ import uk.me.desiderio.shiftt.data.network.TrendsByPlaceIdService;
  */
 public class Place {
 
-    public String country;
-    public String countryCode;
-    public String name;
+    public final String country;
+    public final String countryCode;
+    public final String name;
 
     @SerializedName(value = "parentid")
-    public long parentId;
+    public final long parentId;
 
-    public PlaceType placeType;
-    public String url;
-    public long woeid;
+    public final PlaceType placeType;
+    public final String url;
+    public final long woeid;
 
 
     @VisibleForTesting

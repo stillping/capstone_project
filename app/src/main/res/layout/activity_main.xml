@@ -22,8 +22,9 @@
         android:id="@+id/main_constraint_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_anchor="@id/main_app_bar"
         android:layout_marginTop="?attr/actionBarSize"
-        app:layout_anchor="@id/main_app_bar">
+        tools:layout_editor_absoluteY="48dp">
 
         <include layout="@layout/base_progress_container_merge" />
 
@@ -33,18 +34,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/map_top_button_margin"
             android:layout_marginEnd="@dimen/map_top_button_margin"
-            app:srcCompat="@drawable/ic_refresh"
+            android:contentDescription="@string/content_des_refresh_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_refresh" />
+
         <ImageView
             android:id="@+id/main_locate_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/map_top_button_internal_margin"
             android:layout_marginEnd="@dimen/map_top_button_margin"
-            app:srcCompat="@drawable/ic_crosshairs"
+            android:contentDescription="@string/content_des_locate"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_refresh_button" />
+            app:layout_constraintTop_toBottomOf="@+id/main_refresh_button"
+            app:srcCompat="@drawable/ic_crosshairs" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -68,6 +72,7 @@
             android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
             android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            android:contentDescription="@string/content_des_fab_trends"
             app:backgroundTint="@color/colorAccentLight"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_arrow_trend" />
@@ -80,6 +85,7 @@
             android:layout_marginTop="@dimen/fab_mini_vertical_margin"
             android:layout_marginEnd="@dimen/fab_mini_horizontal_margin"
             android:layout_marginBottom="@dimen/fab_mini_vertical_margin"
+            android:contentDescription="@string/content_des_fab_map"
             app:backgroundTint="@color/colorAccentLight"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_map_outline" />
@@ -92,6 +98,7 @@
             android:layout_marginTop="@dimen/fab_normal_top_margin"
             android:layout_marginEnd="@dimen/fab_normal_margin"
             android:layout_marginBottom="@dimen/fab_normal_margin"
+            android:contentDescription="@string/content_des_fab_open"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_plus" />
 

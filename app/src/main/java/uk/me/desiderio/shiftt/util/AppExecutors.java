@@ -18,9 +18,9 @@ public class AppExecutors {
 
     protected static final Object LOCK = new Object();
     protected static AppExecutors instance;
-    private Executor diskIO;
-    private Executor networkIO;
-    private Executor mainThread;
+    private final Executor diskIO;
+    private final Executor networkIO;
+    private final Executor mainThread;
 
 
     protected AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
@@ -53,7 +53,7 @@ public class AppExecutors {
     }
 
     private static class MainThreadExecutor implements Executor {
-        private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+        private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
         @Override
         public void execute(@NonNull Runnable command) {

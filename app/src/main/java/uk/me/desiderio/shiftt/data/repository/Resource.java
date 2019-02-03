@@ -20,9 +20,9 @@ public class Resource<T> {
     public static final int NO_CONNECTION = 552;
 
     @ResourceStatus
-    public int status;
-    public T data;
-    public String message;
+    public final int status;
+    public final T data;
+    public final String message;
 
     private Resource(int status, T data, String message) {
         this.status = status;

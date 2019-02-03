@@ -15,7 +15,7 @@ import retrofit2.Response;
  */
 public class ApiCallback<T> implements Callback<T> {
 
-    private MutableLiveData<ApiResponse<T>> responseMutableLiveData;
+    private final MutableLiveData<ApiResponse<T>> responseMutableLiveData;
 
     public ApiCallback() {
         this.responseMutableLiveData = new MutableLiveData<>();

@@ -28,6 +28,7 @@ import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 /**
  * Provides mocked serielised network data to carry out tests on {@link TweetsDao}
  */
+@SuppressWarnings("unchecked")
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class TweetMockDataProvider {
 

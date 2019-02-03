@@ -14,25 +14,25 @@ import uk.me.desiderio.shiftt.data.network.model.Place;
  */
 @Entity(tableName = "trend_place",
         indices = {@Index(value = {"placeName"}, unique = true)})
-public class TrendPlaceEnt implements SeedProvider {
+public class TrendPlaceEnt implements SeedProvider<Place> {
 
-    public String country;
-    public String countryCode;
+    public final String country;
+    public final String countryCode;
 
     @PrimaryKey
     @NonNull
-    public String placeName;
+    public final String placeName;
 
     @ColumnInfo(name = "parent_id")
-    public long parentId;
+    public final long parentId;
 
     @Embedded(prefix = "place_type_")
     public PlaceTypeEnt placeType;
 
-    public String url;
-    public long woeid;
+    public final String url;
+    public final long woeid;
 
-    public TrendPlaceEnt(String country, String countryCode, String placeName,
+    public TrendPlaceEnt(String country, String countryCode, @NonNull String placeName,
                          long parentId,
                          PlaceTypeEnt placeType,
                          String url, long woeid) {
@@ -60,7 +60,6 @@ public class TrendPlaceEnt implements SeedProvider {
     /**
      * Returns a {@link Place} Twitter data object
      */
-    @SuppressWarnings("unchecked")
     public Place getSeed() {
         return new Place(country,
                          countryCode,

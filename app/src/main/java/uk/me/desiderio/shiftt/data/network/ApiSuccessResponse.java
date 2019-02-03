@@ -8,7 +8,7 @@ import okhttp3.Headers;
 public class ApiSuccessResponse<T> implements ApiResponse<T> {
 
     public T body;
-    public Headers headers;
+    public final Headers headers;
 
     public ApiSuccessResponse(T body, Headers headers) {
         this.body = body;

@@ -39,7 +39,9 @@
     <string name="pref_location_time_key">location_time_shared_preference_key</string>
 
     <!-- twitter settings -->
+    <!--suppress AndroidDomInspection -->
     <string name="com.twitter.sdk.android.CONSUMER_KEY" tools:ignore="ExtraTranslation">@string/twitter_consumer_key</string>
+    <!--suppress AndroidDomInspection -->
     <string name="com.twitter.sdk.android.CONSUMER_SECRET" tools:ignore="ExtraTranslation">@string/twitter_consumer_secret</string>
 
     <!-- snack bar -->
@@ -56,6 +58,15 @@
     <!-- map ui strings -->
     <string name="map_location_label">lat: %1$f, lon: %2$f</string>
     <string name="map_location_no_data">No much of a Tweet in this area</string>
-    <string name="trends_empty_view_message">Nothing trending is this area</string>
+    <string name="trends_empty_view_message">No thing trending is this area.</string>
+    <string name="tweets_empty_view_message">No tweet to show in this area.</string>
+    <string name="content_des_refresh_button">Refresh location</string>
+    <string name="content_des_locate">Center map to your location</string>
+    <string name="content_des_fab_open">Open action menut</string>
+    <string name="content_des_fab_map">Show twitter activity in your area</string>
+    <string name="content_des_fab_trends">Show trends in your area</string>
+    <string name="content_des_logo">Shiftt</string>
+    <string name="content_des_list_item_trend">trend</string>
+    <string name="trend_list_no_volume">-</string>
 
 </resources>

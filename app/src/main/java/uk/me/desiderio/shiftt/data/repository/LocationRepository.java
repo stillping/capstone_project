@@ -40,8 +40,8 @@ public class LocationRepository {
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private final AppExecutors appExecutors;
     private final ShifttSharedPreferences sharedPreferences;
-    private final ShifttDatabase database;
     private final MediatorLiveData<LocationViewData> locationLiveData;
+    private final ShifttDatabase database;
 
     @Inject
     public LocationRepository(ShifttDatabase database,

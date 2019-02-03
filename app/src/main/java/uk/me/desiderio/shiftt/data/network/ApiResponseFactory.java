@@ -6,7 +6,9 @@ import com.google.android.gms.common.util.Strings;
  * Util factory class to provide {@link ApiResponse}. The response type will be determined by
  * parameter provided
  */
+@SuppressWarnings("unchecked")
 public class ApiResponseFactory<T> {
+
     public static <T> ApiResponse<T> getApiResponse(retrofit2.Response response) {
         if (response.isSuccessful()) {
             Object body = response.body();

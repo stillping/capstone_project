@@ -20,7 +20,7 @@ import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 public class TrendsListAdapter extends RecyclerView.Adapter<TrendsListAdapter.TrendsViewHolder> {
 
     private List<TrendEnt> data;
-    private Context context;
+    private final Context context;
 
     public TrendsListAdapter(Context context) {
         this.context = context;
@@ -72,7 +72,7 @@ public class TrendsListAdapter extends RecyclerView.Adapter<TrendsListAdapter.Tr
         if (volume > 0) {
             return String.valueOf(volume);
         } else {
-            return "-";
+            return context.getString(R.string.trend_list_no_volume);
         }
     }
 

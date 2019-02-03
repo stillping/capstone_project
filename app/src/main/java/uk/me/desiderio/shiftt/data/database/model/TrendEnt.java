@@ -15,17 +15,17 @@ public class TrendEnt {
 
     @NonNull
     @PrimaryKey
-    public String name;
+    public final String name;
 
-    public String url;
-    public String query;
+    public final String url;
+    public final String query;
 
     @Ignore
     @ColumnInfo(name = "promoted_content")
     public int promotedContent;
 
     @ColumnInfo(name = "tweet_volume")
-    public long tweetVolume;
+    public final long tweetVolume;
 
     // this is injected at dao
     @Ignore
@@ -33,7 +33,7 @@ public class TrendEnt {
     @ColumnInfo(name = "place_name")
     public String placeName;
 
-    public TrendEnt(String name, String url, String query, long tweetVolume, String placeName) {
+    public TrendEnt(@NonNull String name, String url, String query, long tweetVolume, String placeName) {
         this.name = name;
         this.url = url;
         this.query = query;

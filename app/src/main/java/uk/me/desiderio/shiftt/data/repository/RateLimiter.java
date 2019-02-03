@@ -51,7 +51,7 @@ public class RateLimiter {
 
     @Inject
     public RateLimiter() {
-        this.limits = new ArrayMap();
+        this.limits = new ArrayMap<>();
     }
 
     public void addLimit(String name,

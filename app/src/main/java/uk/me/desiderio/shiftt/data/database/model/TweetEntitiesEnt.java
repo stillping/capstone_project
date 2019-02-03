@@ -25,7 +25,7 @@ import uk.me.desiderio.shiftt.data.database.converter.UrlEntityTypeConverter;
  * Room entity class for the {@link TweetEntities} Twitter data object
  */
 @Entity(tableName = "entities")
-public class TweetEntitiesEnt implements SeedProvider {
+public class TweetEntitiesEnt implements SeedProvider<TweetEntities> {
 
     @TypeConverters(UrlEntityTypeConverter.class)
     public final List<UrlEntity> urls;
@@ -39,7 +39,7 @@ public class TweetEntitiesEnt implements SeedProvider {
     @TypeConverters(SymbolEntityTypeConverter.class)
     public final List<SymbolEntity> symbols;
     @Ignore
-    public List<HashtagEntityEnt> hashtags;
+    public final List<HashtagEntityEnt> hashtags;
     @PrimaryKey(autoGenerate = true)
     public long id;
 
@@ -66,7 +66,6 @@ public class TweetEntitiesEnt implements SeedProvider {
     /**
      * Returns a {@link TweetEntities} Twitter data object
      */
-    @SuppressWarnings("unchecked")
     public TweetEntities getSeed() {
         return new TweetEntities(urls,
                                  userMentions,

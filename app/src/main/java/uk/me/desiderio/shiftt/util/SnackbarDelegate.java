@@ -27,9 +27,9 @@ public class SnackbarDelegate {
     public static final int ERROR = 1;
 
     private Snackbar snackbar;
-    private View anchorView;
+    private final View anchorView;
     @StringRes
-    private int messageSuffixResId;
+    private final int messageSuffixResId;
 
     public SnackbarDelegate(@StringRes int messageSuffixResId,
                             View anchorView) {

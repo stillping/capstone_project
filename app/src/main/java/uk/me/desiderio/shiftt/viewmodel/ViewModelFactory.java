@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
+    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
 
     @Inject
     public ViewModelFactory(Map<Class<? extends ViewModel>,

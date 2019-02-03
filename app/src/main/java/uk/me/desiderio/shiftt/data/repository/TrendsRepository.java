@@ -132,6 +132,7 @@ public class TrendsRepository {
         }.asLiveData();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private List<TrendEnt> parseTrendData(Place place, List<TrendsQueryResult> trendResultList) {
         List<TrendEnt> trendList = new ArrayList<>();
 

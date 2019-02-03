@@ -27,9 +27,9 @@ import uk.me.desiderio.shiftt.util.ConnectivityLiveData;
  */
 public abstract class NetworkBoundResouce<RequestType, ResultType>{
 
-    protected AppExecutors appExecutors;
-    protected MediatorLiveData<Resource<ResultType>> result;
-    private ConnectivityLiveData connectivityLiveData;
+    protected final AppExecutors appExecutors;
+    protected final MediatorLiveData<Resource<ResultType>> result;
+    private final ConnectivityLiveData connectivityLiveData;
 
 
     public NetworkBoundResouce(AppExecutors executors,
@@ -43,7 +43,7 @@ public abstract class NetworkBoundResouce<RequestType, ResultType>{
     }
 
     private void init() {
-        Resource resource = Resource.loading(null);
+        Resource resource = Resource.<ResultType>loading(null);
         result.setValue(resource);
 
         LiveData<ResultType> dbSource = loadFromDb();
@@ -74,6 +74,7 @@ public abstract class NetworkBoundResouce<RequestType, ResultType>{
     }
 
 
+
     protected void fetchFromNetwork(LiveData<ResultType> dbSource) {
         LiveData<ApiResponse<RequestType>> apiResponse = createCall();
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
@@ -94,6 +95,7 @@ public abstract class NetworkBoundResouce<RequestType, ResultType>{
         });
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     protected final void processFinalSuccessResponse(ApiSuccessResponse<RequestType> response) {
 
         appExecutors.getDiskIO().execute(() -> {

@@ -1,7 +1,5 @@
 package uk.me.desiderio.shiftt.data.database;
 
-import android.util.Log;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

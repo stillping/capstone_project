@@ -19,7 +19,6 @@ import uk.me.desiderio.shiftt.data.CombinedMapLiveData;
 import uk.me.desiderio.shiftt.data.database.TweetsDao;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
-import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.network.ApiCallback;
 import uk.me.desiderio.shiftt.data.network.ApiResponse;

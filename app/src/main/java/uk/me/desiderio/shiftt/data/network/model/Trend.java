@@ -10,15 +10,15 @@ import uk.me.desiderio.shiftt.data.network.TrendsByPlaceIdService;
  */
 public class Trend {
 
-    public String name;
-    public String url;
-    public String query;
+    public final String name;
+    public final String url;
+    public final String query;
 
     // NOT implemented at this stage
     private int promoted_content;
 
     @SerializedName(value = "tweet_volume")
-    public long tweetVolume;
+    public final long tweetVolume;
 
     // this is injected locally at the dao
     public Place place;

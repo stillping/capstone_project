@@ -123,8 +123,13 @@ public class TweetListFragment extends Fragment {
         shouldShowEmptyView(shouldShow);
     }
 
+    @Nullable
     private String getPlaceFullNameArgsKey() {
-        return getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
+        if (getArguments() != null) {
+            return getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
+        } else {
+            return null;
+        }
     }
 
     private void updateGlobalViewStateOnResource(@NonNull Resource<List<Tweet>> resource) {

@@ -38,7 +38,7 @@
             android:layout_marginTop="@dimen/default_text_margin"
             android:layout_marginEnd="@dimen/default_text_margin"
             android:baselineAligned="false"
-            android:text="@string/trends_empty_view_message" />
+            android:text="@string/tweets_empty_view_message" />
 
     </LinearLayout>
 

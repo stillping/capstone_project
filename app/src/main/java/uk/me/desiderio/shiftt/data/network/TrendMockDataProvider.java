@@ -16,7 +16,7 @@ import uk.me.desiderio.shiftt.data.network.model.Trend;
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class TrendMockDataProvider {
 
-    public static final int TREND_LIST_COUNT = 10;
+    private static final int TREND_LIST_COUNT = 10;
 
     public static final String TREND_NAME_VALUE = "trend_name_expected_value_";
     public static final String TREND_URL_VALUE = "trend_url_expected_value";

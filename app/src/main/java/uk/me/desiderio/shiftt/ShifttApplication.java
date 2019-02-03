@@ -23,9 +23,6 @@ public class ShifttApplication extends DaggerApplication {
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-        AndroidInjector<? extends DaggerApplication> injector =
-                DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-
-        return injector;
+        return DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 }

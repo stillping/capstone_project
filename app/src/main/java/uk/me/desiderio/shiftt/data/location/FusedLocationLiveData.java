@@ -22,8 +22,8 @@ public class FusedLocationLiveData extends LiveData<Location> {
 
     private static final String TAG = FusedLocationLiveData.class.getSimpleName();
 
-    private FusedLocationProviderClient locationProviderClient;
-    private LocationCallback locationCallback;
+    private final FusedLocationProviderClient locationProviderClient;
+    private final LocationCallback locationCallback;
 
 
     public FusedLocationLiveData(FusedLocationProviderClient locationProviderClient) {

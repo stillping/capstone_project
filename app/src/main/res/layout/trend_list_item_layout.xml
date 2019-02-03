@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/list_item_height"
         android:layout_marginStart="@dimen/list_item_default_internal_margin"
+        android:contentDescription="@string/content_des_list_item_trend"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:textSize="16sp"
-        android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/trend_list_item_image_view"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:textSize="12sp"
-        android:text="-"
+        android:text="@string/trend_list_no_volume"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

@@ -17,9 +17,9 @@ import androidx.lifecycle.LiveData;
  */
 public class ConnectivityLiveData extends LiveData<Boolean> {
 
-    ConnectivityManager connectivityManager;
+    private final ConnectivityManager connectivityManager;
 
-    private NetworkCallback networkCallback = new NetworkCallback() {
+    private final NetworkCallback networkCallback = new NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
             postValue(true);
@@ -60,10 +60,8 @@ public class ConnectivityLiveData extends LiveData<Boolean> {
     private boolean hasConnectivityCheck() {
         NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
         if (capabilities != null) {
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                return true;
-            }
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
         }
         return false;
     }

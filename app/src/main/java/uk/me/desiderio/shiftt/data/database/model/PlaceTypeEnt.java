@@ -1,7 +1,5 @@
 package uk.me.desiderio.shiftt.data.database.model;
 
-import com.twitter.sdk.android.core.models.Place;
-
 import androidx.room.Ignore;
 import uk.me.desiderio.shiftt.data.network.model.PlaceType;
 
@@ -10,8 +8,8 @@ import uk.me.desiderio.shiftt.data.network.model.PlaceType;
  */
 public class PlaceTypeEnt {
 
-    public int code;
-    public String name;
+    public final int code;
+    public final String name;
 
     public PlaceTypeEnt(int code, String name) {
         this.code = code;

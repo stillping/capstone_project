@@ -28,7 +28,7 @@ import uk.me.desiderio.shiftt.data.database.converter.StringListTypeConverter;
  * Room entity class for the {@link Tweet} Twitter data object
  */
 @Entity(tableName = "tweet")
-public class TweetEnt implements SeedProvider {
+public class TweetEnt implements SeedProvider<Tweet> {
 
     @NonNull
     @ColumnInfo(name = "created_at")
@@ -113,7 +113,7 @@ public class TweetEnt implements SeedProvider {
     @TypeConverters(CardTypeConverter.class)
     public Card card;
 
-    public TweetEnt(long coordinatesId, String createdAt, Integer favoriteCount,
+    public TweetEnt(long coordinatesId, @NonNull String createdAt, Integer favoriteCount,
                     boolean favorited, String filterLevel, long id, String idStr,
                     String inReplyToScreenName, long inReplyToStatusId, String inReplyToStatusIdStr,
                     long inReplyToUserId, String inReplyToUserIdStr, String lang,
@@ -210,7 +210,6 @@ public class TweetEnt implements SeedProvider {
     /**
      * Returns a {@link Tweet} Twitter data object
      */
-    @SuppressWarnings("unchecked")
     public Tweet getSeed() {
         Coordinates coor = getChildSeed(coordinates);
         TweetEntities tweetEntities = getChildSeed(entities);

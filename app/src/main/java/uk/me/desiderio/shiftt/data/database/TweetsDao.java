@@ -19,7 +19,6 @@ import uk.me.desiderio.shiftt.data.database.model.HashtagEntityEnt;
 import uk.me.desiderio.shiftt.data.database.model.PlaceEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.QueryTweetEntitiesHashtagEntityJoin;
-import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEnt;
 import uk.me.desiderio.shiftt.data.database.model.TweetEntitiesEnt;
 import uk.me.desiderio.shiftt.data.database.model.UserEnt;
@@ -73,9 +72,6 @@ public abstract class TweetsDao {
 
     @Query("SELECT * FROM entities WHERE id = :id")
     public abstract TweetEntitiesEnt getRawTweetEntities(long id);
-
-    @Query("SELECT * FROM hashtag WHERE text = :text")
-    public abstract HashtagEntityEnt getHashtagEntity(String text);
 
     @Query("SELECT * FROM entities_hastags_join WHERE tweet_entities_id IN (:entitiesId)")
     public abstract List<QueryTweetEntitiesHashtagEntityJoin> getHashtagEntityListByEntitiesId(

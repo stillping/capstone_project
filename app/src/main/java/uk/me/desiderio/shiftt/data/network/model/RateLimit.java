@@ -13,35 +13,35 @@ public class RateLimit {
     /**
      * name of the request as define in the Twitter rate limit status
      */
-    public String name;
+    public final String name;
 
     /**
      * latitude and longitude used as query for the Twitter request
      */
-    public List<Double> coors;
+    public final List<Double> coors;
 
     /**
      * time when request was made last
      */
-    public long time;
+    public final long time;
 
     /**
      * max number of request for a 15min window
      * this value is returned as part of the request header
      */
-    public int limit;
+    public final int limit;
 
     /**
      * remaining number of request in the current 15min window
      * this value is returned as part of the request header
      */
-    public int remaining;
+    public final int remaining;
 
     /**
      * UTC epoch of the time in the future when the 15min window will reset
      * this value is returned as part of the request header
      */
-    public long reset;
+    public final long reset;
 
 
     public RateLimit(String name,
@@ -60,9 +60,9 @@ public class RateLimit {
 
 
     public RateLimit(@NonNull String name,
-                     @NonNull double lat,
-                     @NonNull double lng,
-                     @NonNull long time,
+                     double lat,
+                     double lng,
+                     long time,
                      @NonNull String limit,
                      @NonNull String remaining,
                      @NonNull String reset) {

@@ -19,7 +19,7 @@ import uk.me.desiderio.shiftt.data.database.converter.PlaceEntityAttributesTypeC
  */
 @Entity(tableName = "place",
         indices = {@Index(value = {"id"}, unique = true)})
-public class PlaceEnt implements SeedProvider {
+public class PlaceEnt implements SeedProvider<Place> {
 
     @PrimaryKey(autoGenerate = true)
     public int rowId;

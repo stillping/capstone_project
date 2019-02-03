@@ -14,19 +14,19 @@ import uk.me.desiderio.shiftt.di.ForApplication;
  */
 public class ShifttSharedPreferences {
 
-    public static String PREF_KEY_LATITUDE;
-    public static String PREF_KEY_LONGITUDE;
-    public static String PREF_KEY_LOCATION_TIME;
-    public static String PREF_KEY_SEARCH_RADIUS_UNITS;
-    public static String PREF_KEY_SEARCH_RADIUS_SIZE;
-    public static String PREF_DEFAULT_SEARCH_RADIUS_UNITS;
-    public static String PREF_DEFAULT_SEARCH_RADIUS_SIZE;
+    private static String PREF_KEY_LATITUDE;
+    private static String PREF_KEY_LONGITUDE;
+    private static String PREF_KEY_LOCATION_TIME;
+    private static String PREF_KEY_SEARCH_RADIUS_UNITS;
+    private static String PREF_KEY_SEARCH_RADIUS_SIZE;
+    private static String PREF_DEFAULT_SEARCH_RADIUS_UNITS;
+    private static String PREF_DEFAULT_SEARCH_RADIUS_SIZE;
 
 
     // TODO add check for default values in order to not carry out request
     public static final double COOR_DEFAULT_VALUE = 200;
 
-    private Context context;
+    private final Context context;
 
     @Inject
     public ShifttSharedPreferences(@ForApplication Context context) {

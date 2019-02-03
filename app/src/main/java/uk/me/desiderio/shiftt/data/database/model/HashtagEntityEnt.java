@@ -21,7 +21,7 @@ public class HashtagEntityEnt extends EntityEnt {
     @PrimaryKey
     public final String text;
 
-    public HashtagEntityEnt(String text, List<Integer> indices) {
+    public HashtagEntityEnt(@NonNull String text, List<Integer> indices) {
         super(indices);
         this.text = text;
     }

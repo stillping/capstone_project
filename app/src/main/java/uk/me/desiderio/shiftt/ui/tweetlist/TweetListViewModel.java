@@ -25,22 +25,15 @@ import uk.me.desiderio.shiftt.data.repository.TweetsRepository;
 public class TweetListViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
-    LocationRepository locationRepository;
-    TweetsRepository tweetsRepository;
-    private MutableLiveData<String> message;
+    private final LocationRepository locationRepository;
+    private final TweetsRepository tweetsRepository;
 
     @Inject
     public TweetListViewModel(LocationRepository locationRepository,
                               TweetsRepository tweetsRepository) {
         this.locationRepository = locationRepository;
         this.tweetsRepository = tweetsRepository;
-        this.message = new MutableLiveData<>();
     }
-
-    public MutableLiveData<String> getMessage() {
-        return message;
-    }
-
 
     public LiveData<Resource<List<Tweet>>> getTweetOnPlace(String placeFullName) {
         LocationQueryData loc = locationRepository.getLocationQueryDataFromPreferences();

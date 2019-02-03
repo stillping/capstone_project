@@ -1,6 +1,5 @@
 package uk.me.desiderio.shiftt.di;
 
-import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.models.Search;

@@ -30,7 +30,7 @@ import uk.me.desiderio.shiftt.ui.map.ShifttMapFragment;
  */
 public class CombinedMapLiveData extends MediatorLiveData<List<MapItem>> {
 
-    private List<MapItem> sources;
+    private final List<MapItem> sources;
 
     private boolean hasLiveDataOneBeenSet;
 

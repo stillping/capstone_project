@@ -18,104 +18,104 @@ import uk.me.desiderio.shiftt.data.database.converter.UserEntitiesTypeConverter;
  * Room entity class to store data from the {@link User} Twitter data object
  */
 @Entity(tableName = "user")
-public class UserEnt implements SeedProvider {
+public class UserEnt implements SeedProvider<User> {
 
     @ColumnInfo(name = "contributors_enabled")
-    public boolean contributorsEnabled;
+    public final boolean contributorsEnabled;
 
     @ColumnInfo(name = "created_at")
-    public String createdAt;
+    public final String createdAt;
 
     @ColumnInfo(name = "default_profile")
-    public boolean defaultProfile;
+    public final boolean defaultProfile;
 
     @ColumnInfo(name = "default_profile_image")
-    public boolean defaultProfileImage;
+    public final boolean defaultProfileImage;
 
-    public String description;
+    public final String description;
 
-    public String email;
+    public final String email;
 
     @TypeConverters(UserEntitiesTypeConverter.class)
-    public UserEntities entities;
+    public final UserEntities entities;
 
     @ColumnInfo(name = "favourites_count")
-    public int favouritesCount;
+    public final int favouritesCount;
 
     @ColumnInfo(name = "follow_request_sent")
-    public boolean followRequestSent;
+    public final boolean followRequestSent;
 
     @ColumnInfo(name = "followers_count")
-    public int followersCount;
+    public final int followersCount;
 
     @ColumnInfo(name = "friends_count")
-    public int friendsCount;
+    public final int friendsCount;
 
     @ColumnInfo(name = "geo_enabled")
-    public boolean geoEnabled;
+    public final boolean geoEnabled;
 
     @PrimaryKey
-    public long id;
+    public final long id;
 
     @ColumnInfo(name = "id_str")
-    public String idStr;
+    public final String idStr;
 
     @ColumnInfo(name = "is_translator")
-    public boolean isTranslator;
+    public final boolean isTranslator;
 
-    public String lang;
+    public final String lang;
 
     @ColumnInfo(name = "listed_count")
-    public int listedCount;
+    public final int listedCount;
 
-    public String location;
+    public final String location;
 
-    public String name;
+    public final String name;
 
     @ColumnInfo(name = "profile_background_color")
-    public String profileBackgroundColor;
+    public final String profileBackgroundColor;
 
     @ColumnInfo(name = "profile_background_image_url")
-    public String profileBackgroundImageUrl;
+    public final String profileBackgroundImageUrl;
 
     @ColumnInfo(name = "profile_background_image_url_https")
-    public String profileBackgroundImageUrlHttps;
+    public final String profileBackgroundImageUrlHttps;
 
     @ColumnInfo(name = "profile_background_tile")
-    public boolean profileBackgroundTile;
+    public final boolean profileBackgroundTile;
 
     @ColumnInfo(name = "profile_banner_url")
-    public String profileBannerUrl;
+    public final String profileBannerUrl;
 
     @ColumnInfo(name = "profile_image_url")
-    public String profileImageUrl;
+    public final String profileImageUrl;
 
     @ColumnInfo(name = "profile_image_url_https")
-    public String profileImageUrlHttps;
+    public final String profileImageUrlHttps;
 
     @ColumnInfo(name = "profile_link_color")
-    public String profileLinkColor;
+    public final String profileLinkColor;
 
     @ColumnInfo(name = "profile_sidebar_border_color")
-    public String profileSidebarBorderColor;
+    public final String profileSidebarBorderColor;
 
     @ColumnInfo(name = "profile_sidebar_fill_color")
-    public String profileSidebarFillColor;
+    public final String profileSidebarFillColor;
 
     @ColumnInfo(name = "profile_text_color")
-    public String profileTextColor;
+    public final String profileTextColor;
 
     @ColumnInfo(name = "profile_use_background_image")
-    public boolean profileUseBackgroundImage;
+    public final boolean profileUseBackgroundImage;
 
     @ColumnInfo(name = "protected")
-    public boolean protectedUser;
+    public final boolean protectedUser;
 
     @ColumnInfo(name = "screen_name")
-    public String screenName;
+    public final String screenName;
 
     @ColumnInfo(name = "show_all_inline_media")
-    public boolean showAllInlineMedia;
+    public final boolean showAllInlineMedia;
 
     @Ignore
     public TweetEnt status;
@@ -123,24 +123,24 @@ public class UserEnt implements SeedProvider {
     public long statusId;
 
     @ColumnInfo(name = "statuses_count")
-    public int statusesCount;
+    public final int statusesCount;
 
     @ColumnInfo(name = "time_zone")
-    public String timeZone;
+    public final String timeZone;
 
-    public String url;
+    public final String url;
 
     @ColumnInfo(name = "utc_offset")
-    public int utcOffset;
+    public final int utcOffset;
 
-    public boolean verified;
+    public final boolean verified;
 
     @ColumnInfo(name = "withheld_in_countries")
     @TypeConverters(StringListTypeConverter.class)
-    public List<String> withheldInCountries;
+    public final List<String> withheldInCountries;
 
     @ColumnInfo(name = "withheld_scope")
-    public String withheldScope;
+    public final String withheldScope;
 
     public UserEnt(boolean contributorsEnabled, String createdAt, boolean defaultProfile,
                    boolean defaultProfileImage, String description, String email,

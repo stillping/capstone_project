@@ -14,7 +14,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.internal.MapLifecycleDelegate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,15 +35,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import dagger.android.support.AndroidSupportInjection;
-import uk.me.desiderio.shiftt.MainActivity;
 import uk.me.desiderio.shiftt.NetworkStateResourceActivity;
 import uk.me.desiderio.shiftt.R;
 import uk.me.desiderio.shiftt.TweetListActivity;
-import uk.me.desiderio.shiftt.data.database.model.TrendEnt;
 import uk.me.desiderio.shiftt.data.repository.Resource;
-import uk.me.desiderio.shiftt.ui.main.MainActivityViewModel;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
-import uk.me.desiderio.shiftt.ui.trendslist.TrendsListViewModel;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
 
 import static uk.me.desiderio.shiftt.ui.tweetlist.TweetListFragment.ARGS_PLACE_FULL_NAME_KEY;
@@ -160,7 +155,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     /**
      * Updates map with {@link MapItem} data provided as parameter
      */
-    public void swapMapData(List<MapItem> mapItems) {
+    private void swapMapData(List<MapItem> mapItems) {
         if (mapItems != null && !mapItems.isEmpty()) {
             resetMapPoligons();
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -219,7 +214,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         moveMapCameraToCurrentLocation();
     }
 
-    public void shouldShowEmptyStateMessage(boolean shouldShow) {
+    private void shouldShowEmptyStateMessage(boolean shouldShow) {
         if (shouldShow) {
             currentPositionMarker.showInfoWindow();
         } else {
@@ -293,17 +288,13 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     private void disableCurrentLocationMarkerClick() {
         googleMap.setOnMarkerClickListener(marker -> {
-            if (marker.getTag().equals(MARKER_TAG_CURRENT_POSITION)) {
-                return true;
-            }
+            return marker.getTag().equals(MARKER_TAG_CURRENT_POSITION);
             // do nothing
-            return false;
         });
     }
 
     private void addCurrentLocationMarkers() {
         if (googleMap != null && currentLocation != null) {
-            String label = getCurrentLocationLabel(currentLocation);
             MarkerOptions options = new MarkerOptions()
                     // todo this show when click . change strategy add/remove title
                     .title(getString(R.string.map_location_no_data))

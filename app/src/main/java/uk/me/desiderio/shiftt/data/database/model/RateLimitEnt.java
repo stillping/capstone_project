@@ -23,10 +23,10 @@ public class RateLimitEnt {
     public final List<Double> coors;
     public final int limit;
     public final long reset;
-    public int remaining;
+    public final int remaining;
 
 
-    public RateLimitEnt(String name,
+    public RateLimitEnt(@NonNull String name,
                         List<Double> coors,
                         long time,
                         int limit,

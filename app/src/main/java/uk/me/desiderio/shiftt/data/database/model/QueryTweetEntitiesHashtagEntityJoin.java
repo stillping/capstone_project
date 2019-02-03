@@ -33,14 +33,13 @@ import static androidx.room.ForeignKey.CASCADE;
 
 )
 public class QueryTweetEntitiesHashtagEntityJoin {
-    @NonNull
     @ColumnInfo(name = "tweet_entities_id")
     public final long tweetEntitiesId;
     @NonNull
     @ColumnInfo(name = "hashtag_text")
     public final String hashtagText;
 
-    public QueryTweetEntitiesHashtagEntityJoin(long tweetEntitiesId, String hashtagText) {
+    public QueryTweetEntitiesHashtagEntityJoin(long tweetEntitiesId, @NonNull String hashtagText) {
         this.tweetEntitiesId = tweetEntitiesId;
         this.hashtagText = hashtagText;
     }

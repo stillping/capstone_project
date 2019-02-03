@@ -27,7 +27,7 @@ import uk.me.desiderio.shiftt.viewmodel.ViewModelModule;
         TwitterCoreModule.class})
 public class AppModule {
 
-    Application app;
+    private final Application app;
 
     public AppModule(Application app) {
         this.app = app;

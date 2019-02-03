@@ -8,8 +8,8 @@ import uk.me.desiderio.shiftt.data.network.TrendsByPlaceIdService;
  */
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 public class PlaceType {
-    public int code;
-    public String name;
+    public final int code;
+    public final String name;
 
     @VisibleForTesting
     public PlaceType(int code, String name) {

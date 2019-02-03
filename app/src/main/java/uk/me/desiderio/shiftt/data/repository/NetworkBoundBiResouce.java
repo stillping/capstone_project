@@ -37,6 +37,7 @@ public abstract class NetworkBoundBiResouce<InitialRequestType, NestedRequestTyp
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void processApiResponse(ApiResponse<InitialRequestType>
                                             initialResponse,
                                     LiveData<ResultType> dbSource) {

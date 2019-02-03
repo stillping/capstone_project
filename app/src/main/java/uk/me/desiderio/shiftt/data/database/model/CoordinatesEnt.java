@@ -14,7 +14,7 @@ import uk.me.desiderio.shiftt.data.database.converter.DoubleListTypeConverter;
  * Room entity class for the {@link Coordinates} Twitter data object
  */
 @Entity(tableName = "coordinates")
-public class CoordinatesEnt implements SeedProvider {
+public class CoordinatesEnt implements SeedProvider<Coordinates> {
 
     @PrimaryKey(autoGenerate = true)
     public int id;

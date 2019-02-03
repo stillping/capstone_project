@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/toobar_vertical_internal_margin"
             android:layout_marginBottom="@dimen/toobar_vertical_internal_margin"
+            android:contentDescription="@string/content_des_logo"
             android:adjustViewBounds="true"
             android:src="@drawable/shiftt_logo" />
     </androidx.appcompat.widget.Toolbar>

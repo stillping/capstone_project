@@ -11,8 +11,8 @@ import uk.me.desiderio.shiftt.ui.map.ShifttMapFragment;
  */
 public class MapItem {
 
-    public String name;
-    public List<LatLng> coordinates;
+    public final String name;
+    public final List<LatLng> coordinates;
 
     public MapItem(String name, List<LatLng> coordinates) {
         this.name = name;
