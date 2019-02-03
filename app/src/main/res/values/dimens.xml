@@ -9,4 +9,8 @@
     <dimen name="map_top_button_internal_margin">8dp</dimen>
     <dimen name="list_item_height">56dp</dimen>
     <dimen name="list_item_default_internal_margin">16dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="subheading_elevation">2dp</dimen>
+    <dimen name="subheading_height">48dp</dimen>
+    <dimen name="subheading_internal_start_margin">16dp</dimen>
 </resources>

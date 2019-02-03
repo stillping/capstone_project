@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.FixedTweetTimeline;
@@ -40,6 +41,8 @@ public class TweetListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private View emptyView;
+    private TextView titleTextView;
+    private String placeFullName;
 
     public static TweetListFragment newInstance(Bundle args) {
         TweetListFragment frag = new TweetListFragment();
@@ -59,6 +62,11 @@ public class TweetListFragment extends Fragment {
         emptyView = rootView.findViewById(R.id.tweets_empty_view);
         shouldShowEmptyView(false);
 
+        placeFullName = getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
+
+        titleTextView = rootView.findViewById(R.id.tweet_subtitle_text_view);
+        titleTextView.setText(placeFullName);
+
         recyclerView = rootView.findViewById(R.id.tweets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -71,7 +79,7 @@ public class TweetListFragment extends Fragment {
 
         TweetListViewModel viewModel = ViewModelProviders.
                 of(this, viewModelFactory).get(TweetListViewModel.class);
-        viewModel.getTweetOnPlace(getPlaceFullNameArgsKey()).observe(this, this::processResource);
+        viewModel.getTweetOnPlace(placeFullName).observe(this, this::processResource);
     }
 
     @Override
@@ -123,18 +131,8 @@ public class TweetListFragment extends Fragment {
         shouldShowEmptyView(shouldShow);
     }
 
-    @Nullable
-    private String getPlaceFullNameArgsKey() {
-        if (getArguments() != null) {
-            return getArguments().getString(ARGS_PLACE_FULL_NAME_KEY);
-        } else {
-            return null;
-        }
-    }
-
     private void updateGlobalViewStateOnResource(@NonNull Resource<List<Tweet>> resource) {
         ((NetworkStateResourceActivity) getActivity()).updateViewStateOnResource(resource, null);
     }
-
 }
 

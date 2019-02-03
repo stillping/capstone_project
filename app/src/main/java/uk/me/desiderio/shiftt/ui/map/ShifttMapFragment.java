@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -201,8 +200,6 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPolygonClick(Polygon polygon) {
         String tag = polygon.getTag().toString();
-        // todo remove if subtile is provide
-        Toast.makeText(getContext(), " : Showing tweets for: " + tag, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), TweetListActivity.class);
         intent.putExtra(ARGS_PLACE_FULL_NAME_KEY, tag);
         startActivity(intent);
@@ -236,7 +233,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
             neighbourhoodResourceObserver = this::processResource;
         }
         viewModel.getMapItemsResource(null, true).observe(this,
-                                                                neighbourhoodResourceObserver);
+                                                          neighbourhoodResourceObserver);
     }
 
     private void resetNeighbourhoodDataObserver() {
