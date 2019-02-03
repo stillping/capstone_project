@@ -69,4 +69,11 @@
     <string name="content_des_list_item_trend">trend</string>
     <string name="trend_list_no_volume">-</string>
 
+    <!-- no location dialog strings -->
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="noLocation_dialog_message">Shiftt needs location service to work. Please try
+        again and accept permissions requested.</string>
+    <string name="noLocation_dialog_title">Location Permission Requested</string>
+
 </resources>

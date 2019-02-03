@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -94,7 +95,7 @@ public class MainActivity extends NetworkStateResourceActivity implements
                                            locationViewData.getLongitude());
 
             boolean isAFreshLocation = RateLimiter.isAFreshLocation(locationViewData.getTime());
-            if (!isAFreshLocation) {
+            if (true) {
                 requestFreshLocation();
                 // wip show progress bar
             }
@@ -211,10 +212,15 @@ public class MainActivity extends NetworkStateResourceActivity implements
                 showNoLocationDialog();
                 break;
             case PermissionManager.PERMISSION_DENIED:
-                permissionManager.requestPermissions(LocationPermissionRequest.REQUIRED_PERMISIONS,
-                                                     LocationPermissionRequest.LOCATION_REQUEST_CODE);
+                requestPermissions();
                 break;
         }
+    }
+
+    private void requestPermissions() {
+        permissionManager.requestPermissions(LocationPermissionRequest.REQUIRED_PERMISIONS,
+                                             LocationPermissionRequest.LOCATION_REQUEST_CODE);
+
     }
 
     private boolean hasAnyPermissionGranted(int[] grantResults) {
@@ -278,7 +284,13 @@ public class MainActivity extends NetworkStateResourceActivity implements
     }
 
     private void showNoLocationDialog() {
-        // TODO : need to be implemented : can ask permission path
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.noLocation_dialog_message))
+                .setTitle(getString(R.string.noLocation_dialog_title));
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> requestPermissions());
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> finish());
+
+        builder.create().show();
     }
 
     @IntDef({MAIN_VIEW_STATE, NEIGHBOURG_VIEW_STATE})
