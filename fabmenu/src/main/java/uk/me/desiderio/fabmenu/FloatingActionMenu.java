@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat;
  * View defines two attributes:
  * - background colour for the screen showing when the menu is open
  * - button to open and close menu
- *
  */
 public class FloatingActionMenu extends LinearLayout implements View.OnClickListener {
 
@@ -75,6 +74,7 @@ public class FloatingActionMenu extends LinearLayout implements View.OnClickList
         views = new ArrayList<>();
         setOrientation(VERTICAL);
         initAnimations();
+        setOnClickListener(this);
     }
 
     private void initAttributes(@NonNull Context context, AttributeSet attrs) {
@@ -85,7 +85,7 @@ public class FloatingActionMenu extends LinearLayout implements View.OnClickList
                                       ContextCompat.getColor(getContext(),
                                                              R.color.fabDefaultBackground));
 
-        if(mainButtonId == 0) {
+        if (mainButtonId == 0) {
             throw new IllegalArgumentException("Missing Resource: 'main_fab' has to be provided " +
                                                        "in the xml file pointing to button to act" +
                                                        " as main button");
@@ -164,10 +164,16 @@ public class FloatingActionMenu extends LinearLayout implements View.OnClickList
 
     private void openMenu() {
         startMenuAnimation(openAnimation);
+        shouldEnableMiniButtons(true);
     }
 
     private void closeMenu() {
         startMenuAnimation(closeAnimation);
+        shouldEnableMiniButtons(false);
+    }
+
+    private void shouldEnableMiniButtons(boolean shouldEnable) {
+        views.stream().forEach(view -> view.setEnabled(shouldEnable));
     }
 
     private void startMenuAnimation(Animation animation) {

@@ -61,7 +61,7 @@
         android:gravity="end|bottom"
         app:layout_behavior="uk.me.desiderio.fabmenu.FloatingActionMenuBehaviour"
         app:layout_dodgeInsetEdges="bottom"
-        custom:background_colour="@color/fabDefaultBackground"
+        custom:background_colour="@color/colorAccentLight_a50"
         custom:main_fab="@id/fab_main">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
