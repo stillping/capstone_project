@@ -102,19 +102,6 @@ public class RateLimiterTest {
 
     @Test
     public void
-    givenKnownEndPoint_whenRequestingWithStaleLocation_thenReturnFalse() {
-        limit = new RateLimitBuilder().build();
-        rateLimiter.addLimit(limit);
-        boolean shouldFetch = rateLimiter.shouldFetch(DEFAULT_LIMIT_NAME_VALUE,
-                                                      DEFAULT_LOC_LAT_VALUE,
-                                                      DEFAULT_LOC_LNG_VALUE,
-                                                      getEpochPassed(MAX_LOCATION_AGE_IN_MIN + 1));
-
-        assertThat(shouldFetch).isFalse();
-    }
-
-    @Test
-    public void
     givenKnownEndPoint_whenRequestingWithSameLocationAndNoLaterThan3Min_thenReturnFalse() {
         limit = new RateLimitBuilder()
                 .setTime(MIN_DATA_AGE_IN_MIN - 1)

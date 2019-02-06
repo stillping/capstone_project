@@ -29,26 +29,26 @@
         <include layout="@layout/base_progress_container_merge" />
 
         <ImageView
-            android:id="@+id/main_refresh_button"
+            android:id="@+id/main_locate_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/map_top_button_margin"
             android:layout_marginEnd="@dimen/map_top_button_margin"
-            android:contentDescription="@string/content_des_refresh_button"
+            android:contentDescription="@string/content_des_locate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_refresh" />
+            app:srcCompat="@drawable/ic_crosshairs" />
 
         <ImageView
-            android:id="@+id/main_locate_button"
+            android:id="@+id/main_refresh_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/map_top_button_internal_margin"
             android:layout_marginEnd="@dimen/map_top_button_margin"
-            android:contentDescription="@string/content_des_locate"
+            android:contentDescription="@string/content_des_refresh_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_refresh_button"
-            app:srcCompat="@drawable/ic_crosshairs" />
+            app:layout_constraintTop_toBottomOf="@+id/main_locate_button"
+            app:srcCompat="@drawable/ic_refresh" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -39,6 +39,7 @@ public class CombinedMapLiveData extends MediatorLiveData<List<MapItem>> {
         sources = new ArrayList<>();
 
         super.addSource(sourceOne, placeEnts -> {
+            removeSource(sourceOne);
             hasLiveDataOneBeenSet = true;
             if (placeEnts != null) {
                 List<MapItem> items = placeEnts.stream()

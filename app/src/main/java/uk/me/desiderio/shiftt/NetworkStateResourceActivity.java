@@ -41,6 +41,8 @@ public abstract class NetworkStateResourceActivity extends AppCompatActivity imp
     ConnectivityLiveData connectivityLiveData;
     private Observer<Boolean> onConnectedObserver;
 
+    protected boolean isTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
@@ -54,6 +56,8 @@ public abstract class NetworkStateResourceActivity extends AppCompatActivity imp
         progressBar = findViewById(R.id.base_progressBar);
 
         snackbarDelegate = initSnackbarDelegate();
+
+        isTwoPane = getResources().getBoolean(R.bool.isTwoPane);
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.location.LocationManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import javax.inject.Singleton;
+
 import androidx.room.Room;
 import dagger.Module;
 import dagger.Provides;
@@ -28,9 +30,15 @@ import uk.me.desiderio.shiftt.viewmodel.ViewModelModule;
 public class AppModule {
 
     private final Application app;
+    private ShifttDatabase database;
 
     public AppModule(Application app) {
         this.app = app;
+        database = Room.databaseBuilder(app,
+                                        ShifttDatabase.class,
+                                        ShifttDatabase.DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     @Provides
@@ -46,41 +54,44 @@ public class AppModule {
     }
 
     @Provides
+    @Singleton
     LocationManager providesLocationManager(@ForApplication Application context) {
         return (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Provides
+    @Singleton
     FusedLocationProviderClient providesFusedLocationProviderClient(@ForApplication Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
     }
 
     @Provides
+    @Singleton
     AppExecutors providesAppExecutors() {
         return AppExecutors.getInstance();
     }
 
     @Provides
-    ShifttDatabase providesDatabase(@ForApplication Context context) {
-        return Room.databaseBuilder(context,
-                                    ShifttDatabase.class,
-                                    ShifttDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .build();
+    @Singleton
+    ShifttDatabase providesDatabase() {
+        return database;
     }
 
     @Provides
+    @Singleton
     TweetsDao providesTweetsDao(ShifttDatabase database) {
         return database.tweetsDao();
     }
 
     @Provides
+    @Singleton
     TrendsDao provideTrendssDao(ShifttDatabase database) {
         return database.trendsDao();
     }
 
 
     @Provides
+    @Singleton
     RateLimitDao provideRateLimitDao(ShifttDatabase database) {
         return database.rateLimitsDao();
     }

@@ -26,15 +26,22 @@ public class SnackbarDelegate {
     public static final int NO_CONNECTED = 2;
     public static final int ERROR = 1;
 
+    private Context context;
     private Snackbar snackbar;
-    private final View anchorView;
+    private View anchorView;
+
     @StringRes
     private final int messageSuffixResId;
 
-    public SnackbarDelegate(@StringRes int messageSuffixResId,
+    public SnackbarDelegate(Context context, @StringRes int messageSuffixResId,
                             View anchorView) {
-        this.anchorView = anchorView;
+        this.context = context;
         this.messageSuffixResId = messageSuffixResId;
+        this.anchorView = anchorView;
+    }
+
+    public void setAnchorView(View anchorView) {
+        this.anchorView = anchorView;
     }
 
     /**
@@ -45,8 +52,8 @@ public class SnackbarDelegate {
     private Snackbar getSnackbar(@SnackBarState int snackBarState,
                                  @NonNull View view,
                                  @Nullable View.OnClickListener listener) {
-        // wip inject info message for errors (?)
-        Context context = view.getContext();
+        // wip ST-208
+
         String message;
         int duration;
         String buttonLabel = null;
@@ -65,7 +72,7 @@ public class SnackbarDelegate {
             case ERROR:
                 buttonLabel = context.getString(R.string.snackbar_error_button_label);
                 message = context.getString(R.string.snackbar_error_message);
-                duration = Snackbar.LENGTH_INDEFINITE;
+                duration = Snackbar.LENGTH_LONG;
                 break;
             default:
                 message = "";
@@ -83,7 +90,8 @@ public class SnackbarDelegate {
         return snackbar;
     }
 
-    public void showSnackbar(@SnackBarState int snackBarState, View.OnClickListener listener) {
+    public void showSnackbar(@SnackBarState int snackBarState,
+                             View.OnClickListener listener) {
         snackbar = getSnackbar(snackBarState, anchorView, listener);
         snackbar.show();
     }
@@ -94,7 +102,6 @@ public class SnackbarDelegate {
             snackbar.dismiss();
         }
     }
-
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CONNECTED, NO_CONNECTED, ERROR})

@@ -6,6 +6,8 @@ import com.twitter.sdk.android.core.models.Search;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import androidx.annotation.Nullable;
 import dagger.Module;
 import dagger.Provides;
@@ -19,6 +21,7 @@ import uk.me.desiderio.shiftt.data.network.model.TrendsQueryResult;
 public class TwitterCoreModule {
 
     @Provides
+    @Singleton
     ShifttTwitterApiClient providesShifttTwitterApiClient(@Nullable TwitterSession activeSession) {
         // pass custom OkHttpClient into TwitterApiClient and add to TwitterCore
         final ShifttTwitterApiClient customApiClient;
@@ -34,6 +37,7 @@ public class TwitterCoreModule {
     }
 
     @Provides @Nullable
+    @Singleton
     TwitterSession providesTwitterSession() {
         return TwitterCore.getInstance().getSessionManager().getActiveSession();
     }

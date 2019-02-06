@@ -70,21 +70,33 @@ public class RateLimiter {
 
     public boolean shouldFetch(String name, double lat, double lng, long time) {
         // if no limit, it is first request
+        // wip : ST-201
         if (!limits.containsKey(name)) {
             return true;
         }
 
         RateLimit rateLimit = limits.get(name);
-        return isAFreshLocation(time)
-                && isDataStale(lat, lng, rateLimit)
+        return isDataStale(lat, lng, rateLimit)
                 && wouldServerAllow(rateLimit);
     }
 
+    /**
+     * checks if the location is not stale and is not older than 30min defined by the
+     * MAX_LOCATION_AGE_IN_MIN const.
+     *
+     * it would determine whether the app should request a new location
+     */
     public static boolean isAFreshLocation(long lastKnownLocTime) {
         Instant locationMaxAge = getMaxLocationAge(lastKnownLocTime);
         return now().isBefore(locationMaxAge);
     }
 
+    /**
+     * given a location makes sure that data is not older than 3 min as
+     * defined by MIN_DATA_AGE_IN_MIN constant
+     *
+     * if data stored doesn't relate to new location, data will be considered stale
+     */
     private boolean isDataStale(double newLat, double newLng, RateLimit rateLimit) {
         if (isSameLocation(newLat, newLng, rateLimit)) {
             return now().isAfter(getMaxDataAge(rateLimit.time));
@@ -92,8 +104,15 @@ public class RateLimiter {
         return true;
     }
 
+    /**
+     * determines if the new call will be allowed by server
+     * checks if there is enough remaining request available in the current window.
+     * Twitter window are normally 15min in length. In each window there is a request allowance
+     * which is determined by the endpoint.
+     * If window time has passed, remaining request are reset to the max for that endpoint
+     */
     private boolean wouldServerAllow(RateLimit rateLimit) {
-        return hasResetTimePassed(rateLimit.reset)
+        return  hasResetTimePassed(rateLimit.reset)
                 || rateLimit.remaining > 0;
     }
 

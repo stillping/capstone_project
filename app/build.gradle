@@ -102,8 +102,8 @@ dependencies {
     // Test helpers for Room
     //testImplementation "android.arch.persistence.room:testing:1.0.0"
 
-    // aligned with he okhttp3 at twitter-core
-    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.8.1'
+    // Don't Update: aligned with okhttp3 at twitter-core
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.4.0'
 
     androidTestImplementation 'org.powermock:powermock-module-junit4:1.6.6'
     androidTestImplementation 'org.powermock:powermock-api-mockito:1.6.6'

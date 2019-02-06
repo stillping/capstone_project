@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="fab_normal_margin">24dp</dimen>
+    <dimen name="fab_mini_horizontal_margin">32dp</dimen>
+
+    <dimen name="list_item_default_internal_margin">24dp</dimen>
+    <dimen name="subheading_internal_start_margin">24dp</dimen>
+    <dimen name="map_top_button_margin">24dp</dimen>
+    <dimen name="default_text_margin">24dp</dimen>
+</resources>

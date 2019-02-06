@@ -13,10 +13,16 @@ import uk.me.desiderio.shiftt.util.SnackbarDelegate;
 
 public class TrendsListActivity extends NetworkStateResourceActivity implements HasSupportFragmentInjector {
 
+    public static final int REQUEST_CODE_TRENDS = 756;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (isTwoPane) {
+            setResult(RESULT_OK, null);
+            finish();
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -30,7 +36,7 @@ public class TrendsListActivity extends NetworkStateResourceActivity implements 
     @Override
     protected SnackbarDelegate initSnackbarDelegate() {
         View rootView = findViewById(android.R.id.content);
-        return new SnackbarDelegate(R.string.snackbar_connected_message_trends_suffix,
+        return new SnackbarDelegate(this, R.string.snackbar_connected_message_trends_suffix,
                                     rootView);
     }
 

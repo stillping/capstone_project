@@ -74,7 +74,6 @@ public class FloatingActionMenu extends LinearLayout implements View.OnClickList
         views = new ArrayList<>();
         setOrientation(VERTICAL);
         initAnimations();
-        setOnClickListener(this);
     }
 
     private void initAttributes(@NonNull Context context, AttributeSet attrs) {
@@ -163,11 +162,13 @@ public class FloatingActionMenu extends LinearLayout implements View.OnClickList
     }
 
     private void openMenu() {
+        setOnClickListener(this);
         startMenuAnimation(openAnimation);
         shouldEnableMiniButtons(true);
     }
 
     private void closeMenu() {
+        setOnClickListener(null);
         startMenuAnimation(closeAnimation);
         shouldEnableMiniButtons(false);
     }

@@ -49,7 +49,6 @@ public class FusedLocationLiveData extends LiveData<Location> {
 
     @Override
     protected void onInactive() {
-        Log.d(TAG, "Place : Data : Inactive");
         stopLocationUpdates();
     }
 

@@ -2,7 +2,6 @@ package uk.me.desiderio.shiftt.ui.map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +35,9 @@ import androidx.lifecycle.ViewModelProviders;
 import dagger.android.support.AndroidSupportInjection;
 import uk.me.desiderio.shiftt.NetworkStateResourceActivity;
 import uk.me.desiderio.shiftt.R;
-import uk.me.desiderio.shiftt.TweetListActivity;
 import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.ui.model.MapItem;
 import uk.me.desiderio.shiftt.viewmodel.ViewModelFactory;
-
-import static uk.me.desiderio.shiftt.ui.tweetlist.TweetListFragment.ARGS_PLACE_FULL_NAME_KEY;
 
 /**
  * Fragment to show {@link GoogleMap}. It does initial map settings and provides a interface to
@@ -72,6 +68,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private LatLngBounds currentLatLngBounds;
 
     private Observer<Resource<List<MapItem>>> neighbourhoodResourceObserver;
+    private OnPolygonClickedListener polygonClickedListener;
 
     public static ShifttMapFragment newInstance() {
         return new ShifttMapFragment();
@@ -111,6 +108,8 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        polygonClickedListener = (OnPolygonClickedListener) getActivity();
 
         viewModel = ViewModelProviders.
                 of(this, viewModelFactory).get(MapDataViewModel.class);
@@ -175,6 +174,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         currentLatLngBounds = null;
         resetMapPoligons();
         moveMapCameraToCurrentLocation();
+        shouldShowEmptyStateMessage(false);
     }
 
     /**
@@ -199,10 +199,8 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPolygonClick(Polygon polygon) {
-        String tag = polygon.getTag().toString();
-        Intent intent = new Intent(getContext(), TweetListActivity.class);
-        intent.putExtra(ARGS_PLACE_FULL_NAME_KEY, tag);
-        startActivity(intent);
+        String placeFullName = polygon.getTag().toString();
+        polygonClickedListener.onPolygonClicked(placeFullName);
     }
 
     public void setCurrentLocation(LatLng lastKnownLocation, boolean isFresh) {
@@ -212,14 +210,17 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void shouldShowEmptyStateMessage(boolean shouldShow) {
-        if (shouldShow) {
-            currentPositionMarker.showInfoWindow();
-        } else {
-            currentPositionMarker.hideInfoWindow();
+        if (currentPositionMarker != null) {
+            if (shouldShow) {
+                currentPositionMarker.showInfoWindow();
+            } else {
+                currentPositionMarker.hideInfoWindow();
+            }
         }
     }
 
     public void showMapData() {
+        reset();
         requestNeigbourhoodResource();
     }
 
@@ -232,15 +233,14 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         if (neighbourhoodResourceObserver == null) {
             neighbourhoodResourceObserver = this::processResource;
         }
-        viewModel.getMapItemsResource(null, true).observe(this,
-                                                          neighbourhoodResourceObserver);
+        viewModel.getMapItemsResource(null).observe(this, neighbourhoodResourceObserver);
     }
 
     private void resetNeighbourhoodDataObserver() {
         if (neighbourhoodResourceObserver != null) {
-            viewModel.getMapItemsResource(null, false)
-                    .removeObserver(neighbourhoodResourceObserver);
+            viewModel.getMapItemsResource(null).removeObserver(neighbourhoodResourceObserver);
         }
+        neighbourhoodResourceObserver = null;
     }
 
     private void processResource(@NonNull Resource<List<MapItem>> resource) {
@@ -296,6 +296,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
                     .title(getString(R.string.map_location_no_data))
                     .position(currentLocation)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_loc));
+            if(currentPositionMarker != null) currentPositionMarker.remove();
             currentPositionMarker = googleMap.addMarker(options);
             currentPositionMarker.setTag(MARKER_TAG_CURRENT_POSITION);
         }
@@ -350,6 +351,10 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
     private void updateGlobalViewStateOnResource(@NonNull Resource<List<MapItem>> resource) {
         ((NetworkStateResourceActivity) getActivity()).updateViewStateOnResource(resource,
-                                                                                 v -> viewModel.retry(null));
+                                                                                 null);
+    }
+
+    public interface OnPolygonClickedListener {
+        void onPolygonClicked(String placeFullName);
     }
 }

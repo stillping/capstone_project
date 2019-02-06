@@ -12,10 +12,10 @@ import dagger.multibindings.IntoMap;
  */
 
 @Module(subcomponents = ShifttMapFragmentSubcomponent.class)
-public abstract class ShipMapFragmentBindingModule {
+public abstract class ShifftMapFragmentBindingModule {
 
 
-    private ShipMapFragmentBindingModule() {
+    private ShifftMapFragmentBindingModule() {
     }
 
     @Binds

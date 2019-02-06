@@ -18,8 +18,6 @@ import uk.me.desiderio.shiftt.ui.model.MapItem;
  * The model gathers the neccessary location parameters from the {@link LocationRepository}
  * and makes the request for new {@link MapItem}s to the {@link TweetsRepository}
  * <p>
- * Using {@link Transformations}, it provides the availability to refresh data request
- * <p>
  * The model also initiates the {@link RateLimitsRepository} so that all rate limit data is ready
  * when Twitter API requests take place at a later stage.
  */

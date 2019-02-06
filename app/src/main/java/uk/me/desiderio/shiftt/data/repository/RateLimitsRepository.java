@@ -3,6 +3,7 @@ package uk.me.desiderio.shiftt.data.repository;
 import java.time.Instant;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import okhttp3.Headers;
 import uk.me.desiderio.shiftt.data.database.RateLimitDao;
@@ -14,6 +15,7 @@ import uk.me.desiderio.shiftt.util.AppExecutors;
  * Repository to persist and retrieve rate limit data
  */
 
+@Singleton
 public class RateLimitsRepository {
 
     private final AppExecutors appExecutors;
@@ -26,7 +28,6 @@ public class RateLimitsRepository {
             RateLimitDao rateLimitDao,
             AppExecutors appExecutors,
             RateLimiter rateLimiter) {
-
         this.rateLimitDao = rateLimitDao;
         this.appExecutors = appExecutors;
         this.rateLimiter = rateLimiter;
@@ -38,11 +39,11 @@ public class RateLimitsRepository {
     public void initRateLimits() {
         rateLimitDao.getAllRateLimits().observeForever(rateLimitList -> {
             rateLimitList.forEach(rateLimitEnt -> rateLimiter.addLimit(rateLimitEnt.name,
-                                                                  rateLimitEnt.coors,
-                                                                  rateLimitEnt.time,
-                                                                  rateLimitEnt.limit,
-                                                                  rateLimitEnt.remaining,
-                                                                  rateLimitEnt.reset));
+                                                                   rateLimitEnt.coors,
+                                                                   rateLimitEnt.time,
+                                                                   rateLimitEnt.limit,
+                                                                   rateLimitEnt.remaining,
+                                                                   rateLimitEnt.reset));
         });
     }
 
