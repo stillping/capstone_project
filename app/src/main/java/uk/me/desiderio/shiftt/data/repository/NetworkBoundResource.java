@@ -25,15 +25,15 @@ import uk.me.desiderio.shiftt.util.ConnectivityLiveData;
  * @see <a href="https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/app/src/main/java/com/android/example/github/repository/NetworkBoundResource.kt">NetworkBoundResource.kt</a>
  *
  */
-public abstract class NetworkBoundResouce<RequestType, ResultType>{
+public abstract class NetworkBoundResource<RequestType, ResultType>{
 
     protected final AppExecutors appExecutors;
     protected final MediatorLiveData<Resource<ResultType>> result;
     private final ConnectivityLiveData connectivityLiveData;
 
 
-    public NetworkBoundResouce(AppExecutors executors,
-                               ConnectivityLiveData connectivityLiveData) {
+    public NetworkBoundResource(AppExecutors executors,
+                                ConnectivityLiveData connectivityLiveData) {
         this.appExecutors = executors;
         this.connectivityLiveData = connectivityLiveData;
 
@@ -116,7 +116,8 @@ public abstract class NetworkBoundResouce<RequestType, ResultType>{
     protected final void processApiResponseAsNonSuccess(ApiResponse response, LiveData<ResultType>
             dbSource) {
         if (response instanceof ApiEmptyResponse) {
-            // wip : this execute might be irrelevant as it seems the method is called from main
+            // wip : ST-204
+            // main
             // thread
             appExecutors.getMainThread().execute(() -> {
                 // reload from disk whatever we had

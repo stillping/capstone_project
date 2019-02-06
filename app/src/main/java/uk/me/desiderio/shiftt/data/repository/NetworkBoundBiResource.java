@@ -11,15 +11,15 @@ import uk.me.desiderio.shiftt.util.ConnectivityLiveData;
  * Provides a {@link Resource} with data gathered from both database and Twitter API. As well as
  * data, it provides info on the process state.
  * <p>
- * The class is an extension of {@link NetworkBoundResouce}. It implements a different strategy
+ * The class is an extension of {@link NetworkBoundResource}. It implements a different strategy
  * when retrieving data from network. It solves the problem when the data to be provided it is
  * dependendant on TWO consecutive network request.
  */
-public abstract class NetworkBoundBiResouce<InitialRequestType, NestedRequestType, ResultType>
-        extends NetworkBoundResouce<NestedRequestType, ResultType> {
+public abstract class NetworkBoundBiResource<InitialRequestType, NestedRequestType, ResultType>
+        extends NetworkBoundResource<NestedRequestType, ResultType> {
 
-    public NetworkBoundBiResouce(AppExecutors executors,
-                                 ConnectivityLiveData connectivityLiveData) {
+    public NetworkBoundBiResource(AppExecutors executors,
+                                  ConnectivityLiveData connectivityLiveData) {
         super(executors, connectivityLiveData);
     }
 

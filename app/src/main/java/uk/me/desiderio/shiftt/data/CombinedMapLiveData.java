@@ -56,7 +56,7 @@ public class CombinedMapLiveData extends MediatorLiveData<List<MapItem>> {
     private MapItem getMapItemWithPlaceData(PlaceEnt place) {
         List<LatLng> coordinates = new ArrayList<>();
 
-        // wip: Refractor to streams
+        // wip: ST-203
         if (place.boundingBox != null) {
             List<List<List<Double>>> groupCoorsList = place.boundingBox.coordinates;
             for (int i = 0; i < groupCoorsList.size(); i++) {

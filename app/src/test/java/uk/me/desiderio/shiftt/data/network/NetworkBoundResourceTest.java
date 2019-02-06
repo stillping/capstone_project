@@ -22,7 +22,7 @@ import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import uk.me.desiderio.shiftt.data.repository.NetworkBoundResouce;
+import uk.me.desiderio.shiftt.data.repository.NetworkBoundResource;
 import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.data.util.InstantAppExecutors;
 import uk.me.desiderio.shiftt.util.AppExecutors;
@@ -35,10 +35,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link NetworkBoundResouce}
+ * Tests for {@link NetworkBoundResource}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NetworkBoundResouceTest {
+public class NetworkBoundResourceTest {
 
     public static final String HEADER_ELEMENT_NAME = "header_element_one_name";
     public static final String HEADER_ELEMENT_VALUE = "header_element_one_value";
@@ -59,7 +59,7 @@ public class NetworkBoundResouceTest {
     private Consumer<Foo> handleSaveCallResult;
     private Consumer<Headers> handleSaveHeadersInfo;
     private Predicate<Foo> handleShouldMatch;
-    private NetworkBoundResouce<Foo, Foo> networkBoundResouce;
+    private NetworkBoundResource<Foo, Foo> networkBoundResource;
     private final AtomicBoolean fetchedOnce = new AtomicBoolean(false);
 
     @Before
@@ -93,7 +93,7 @@ public class NetworkBoundResouceTest {
 
         handleCreateCall = createApiCall(Response.success(networkResult, headers));
 
-        networkBoundResouce.asLiveData().observeForever(observer);
+        networkBoundResource.asLiveData().observeForever(observer);
 
         verify(observer).onChanged(Resource.loading(null));
         reset(observer);
@@ -126,7 +126,7 @@ public class NetworkBoundResouceTest {
         Response<Foo> response = Response.error(500, body);
         handleCreateCall = createApiCall(response);
 
-        networkBoundResouce.asLiveData().observeForever(observer);
+        networkBoundResource.asLiveData().observeForever(observer);
 
         verify(observer).onChanged(Resource.loading(null));
         reset(observer);
@@ -160,7 +160,7 @@ public class NetworkBoundResouceTest {
         };
 
 
-        networkBoundResouce.asLiveData().observeForever(observer);
+        networkBoundResource.asLiveData().observeForever(observer);
 
         verify(observer).onChanged(Resource.loading(null));
         reset(observer);
@@ -198,7 +198,7 @@ public class NetworkBoundResouceTest {
         MutableLiveData<ApiResponse<Foo>> apiResponseLiveData = new MutableLiveData<>();
         handleCreateCall = () -> apiResponseLiveData;
 
-        networkBoundResouce.asLiveData().observeForever(observer);
+        networkBoundResource.asLiveData().observeForever(observer);
 
         verify(observer).onChanged(Resource.loading(null));
         reset(observer);
@@ -245,7 +245,7 @@ public class NetworkBoundResouceTest {
         MutableLiveData<ApiResponse<Foo>> apiResponseLiveData = new MutableLiveData<>();
         handleCreateCall = () -> apiResponseLiveData;
 
-        networkBoundResouce.asLiveData().observeForever(observer);
+        networkBoundResource.asLiveData().observeForever(observer);
 
         verify(observer).onChanged(Resource.loading(null));
         reset(observer);
@@ -278,8 +278,8 @@ public class NetworkBoundResouceTest {
     }
 
     private void initNetworkBoundResouce() {
-        networkBoundResouce = new NetworkBoundResouce<Foo, Foo>(appExecutors,
-                                                                connectivityLiveData) {
+        networkBoundResource = new NetworkBoundResource<Foo, Foo>(appExecutors,
+                                                                  connectivityLiveData) {
             @Override
             protected void saveHeaderInfo(Headers headers) {
                 handleSaveHeadersInfo.accept(headers);

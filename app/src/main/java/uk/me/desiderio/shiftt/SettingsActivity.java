@@ -102,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
             } else {
-                // wip this needs to be formatted so that it is more user friendly
+                // wip ST-207
                 Map<String, ?> allSharedPreference =  sharedPreferences.getAll();
                 Object pref = allSharedPreference.get(key);
                 if(pref instanceof Long) {

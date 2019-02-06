@@ -69,8 +69,8 @@ public class TweetsRepository {
                                                           String radiusSize,
                                                           @TwitterParams.RadiusUnit
                                                                   String radiusUnit) {
-        return new NetworkBoundResouce<Search, List<MapItem>>(appExecutors,
-                                                              connectivityLiveData) {
+        return new NetworkBoundResource<Search, List<MapItem>>(appExecutors,
+                                                               connectivityLiveData) {
 
             @Override
             protected void saveCallResult(Search item) {
@@ -122,8 +122,8 @@ public class TweetsRepository {
                                                                String radiusSize,
                                                                @TwitterParams.RadiusUnit
                                                                   String radiusUnit) {
-        return new NetworkBoundResouce<Search, List<TweetEnt>>(appExecutors,
-                                                              connectivityLiveData) {
+        return new NetworkBoundResource<Search, List<TweetEnt>>(appExecutors,
+                                                                connectivityLiveData) {
 
             @Override
             protected void saveCallResult(Search item) {

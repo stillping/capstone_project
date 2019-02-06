@@ -44,8 +44,8 @@ public class RateLimiter {
     public static final String TWEETS_KEY_NAME = "/search/tweets";
     public static final String TREND_PLACE_KEY_NAME = "trends/place";
 
-    public static final long MAX_LOCATION_AGE_IN_MIN = 30;
-    public static final long MIN_DATA_AGE_IN_MIN = 3;
+    public static final long MAX_LOCATION_AGE_IN_MIN = 5;
+    public static final long MIN_DATA_AGE_IN_MIN = 10;
 
     private final Map<String, RateLimit> limits;
 

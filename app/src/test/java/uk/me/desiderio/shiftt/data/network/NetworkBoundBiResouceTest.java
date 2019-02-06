@@ -22,7 +22,7 @@ import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import uk.me.desiderio.shiftt.data.repository.NetworkBoundBiResouce;
+import uk.me.desiderio.shiftt.data.repository.NetworkBoundBiResource;
 import uk.me.desiderio.shiftt.data.repository.Resource;
 import uk.me.desiderio.shiftt.data.util.InstantAppExecutors;
 import uk.me.desiderio.shiftt.util.AppExecutors;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * Tests for {@link NetworkBoundBiResouce}
+ * Tests for {@link NetworkBoundBiResource}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class NetworkBoundBiResouceTest {
@@ -60,7 +60,7 @@ public class NetworkBoundBiResouceTest {
     private Consumer<Foo> handleSaveCallResult;
     private Consumer<Headers> handleSaveHeadersInfo;
     private Predicate<Foo> handleShouldMatch;
-    private NetworkBoundBiResouce<Foo, Foo, Foo> networkBoundBiResouce;
+    private NetworkBoundBiResource<Foo, Foo, Foo> networkBoundBiResouce;
     private final AtomicBoolean fetchedOnce = new AtomicBoolean(false);
 
     @Before
@@ -326,8 +326,8 @@ public class NetworkBoundBiResouceTest {
     }
 
     private void initNetworkBoundResouce() {
-        networkBoundBiResouce = new NetworkBoundBiResouce<Foo, Foo, Foo>(appExecutors,
-                                                                         connectivityLiveData) {
+        networkBoundBiResouce = new NetworkBoundBiResource<Foo, Foo, Foo>(appExecutors,
+                                                                          connectivityLiveData) {
 
             @Override
             protected void saveHeaderInfo(Headers headers) {

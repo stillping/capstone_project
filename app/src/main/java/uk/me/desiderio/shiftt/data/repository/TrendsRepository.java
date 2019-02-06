@@ -28,7 +28,7 @@ import static uk.me.desiderio.shiftt.data.repository.RateLimiter.TREND_PLACE_KEY
 /**
  * Repository to request Trends
  * <p>
- * It uses {@link NetworkBoundBiResouce} as in order to retrieve the available trends
+ * It uses {@link NetworkBoundBiResource} as in order to retrieve the available trends
  * two consecutive request has to be done:
  * - Twitter's closest API request to retrieve of the "places" near to user location.
  * - Twitter's place API request to retrieve all the trends available in places provided as
@@ -70,12 +70,12 @@ public class TrendsRepository {
     public LiveData<Resource<List<TrendEnt>>> getAllTrendsByLocation(double lat,
                                                                      double lng,
                                                                      long locationTime) {
-        return new NetworkBoundBiResouce<List<Place>, List<TrendsQueryResult>, List<TrendEnt>>
+        return new NetworkBoundBiResource<List<Place>, List<TrendsQueryResult>, List<TrendEnt>>
                 (appExecutors,
                  connectivityLiveData) {
             @Override
             protected void saveCallResult(List<TrendsQueryResult> item) {
-                // wip inject place associated with the trend
+                // wip ST-205
                 List<TrendEnt> trendEnts = parseTrendData(null, item);
                 trendsDao.insertTrendEntList(trendEnts);
             }
@@ -140,7 +140,7 @@ public class TrendsRepository {
                     if (trendsQuerys != null && trendsQuerys.trends != null) {
                         List<TrendEnt> queryTrendEnts = trendsQuerys.trends.stream()
                                 .map(trend -> {
-                                    // wip inject place associated with trend
+                                    /// wip ST-205
                                     trend.place = place;
                                     return new TrendEnt(trend);
                                 })
