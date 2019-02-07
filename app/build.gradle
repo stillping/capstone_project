@@ -4,8 +4,20 @@ def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
+    signingConfigs {
+        release_conf {
+            keyAlias keystoreProperties['shiftt_key_name']
+            keyPassword keystoreProperties['shiftt_key_pswd']
+            storeFile file('release_keystore')
+            storePassword keystoreProperties['store_pswd']
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "uk.me.desiderio.shiftt"
@@ -14,53 +26,58 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue 'string', "geo_api_key", apikeyProperties['google_geo_api_key']
+        resValue 'string', "twitter_consumer_key", apikeyProperties['twitter_consumer_key']
+        resValue 'string', "twitter_consumer_secret", apikeyProperties['twitter_consumer_secret']
+
     }
     buildTypes {
         debug {
-            //buildConfigField 'String', "geoApiKey", google_geo_api_key
-            resValue 'string', "geo_api_key", apikeyProperties['google_geo_api_key']
-            resValue 'string', "twitter_consumer_key", apikeyProperties['twitter_consumer_key']
-            resValue 'string', "twitter_consumer_secret", apikeyProperties['twitter_consumer_secret']
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release_conf
         }
     }
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
-
     // robolectric 4.0 setting
     testOptions.unitTests.includeAndroidResources = true
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":fabmenu")
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':fabmenu')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
-
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
+
     // Google Services
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+
     // Dagger core dependencies
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger:$dagger_version"
+
     // Dagger Android dependencies
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
+
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-runtime:$architecture_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$architecture_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$architecture_version"
+
     // Room
     implementation "android.arch.persistence.room:runtime:$architecture_version"
     annotationProcessor "android.arch.persistence.room:compiler:$architecture_version"
@@ -71,11 +88,12 @@ dependencies {
 
     // Required -- JUnit 4 framework
     testImplementation 'junit:junit:4.12'
+
     // Optional -- Robolectric environment
     testImplementation "androidx.test:core:$test_x_version"
+
     // Optional -- Mockito framework NOT USED
     testImplementation 'org.mockito:mockito-core:2.22.0'
-
     testImplementation 'com.google.truth:truth:0.42'
 
     // Core library
@@ -84,13 +102,11 @@ dependencies {
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
-
-    testImplementation "org.robolectric:robolectric:4.0.2"
+    testImplementation 'org.robolectric:robolectric:4.0.2'
 
     // Assertions
     androidTestImplementation "androidx.test.ext:junit:$test_x_version"
     androidTestImplementation "androidx.test.ext:truth:$test_x_version"
-
 
     // Espresso dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
@@ -100,11 +116,11 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$architecture_version"
 
     // Test helpers for Room
+
     //testImplementation "android.arch.persistence.room:testing:1.0.0"
 
     // Don't Update: aligned with okhttp3 at twitter-core
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.4.0'
-
     androidTestImplementation 'org.powermock:powermock-module-junit4:1.6.6'
     androidTestImplementation 'org.powermock:powermock-api-mockito:1.6.6'
 }
