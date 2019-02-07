@@ -61,6 +61,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <service android:name=".data.network.settings.RemoteSettingIntentService"
+            android:exported="false" />
 
     </application>
 

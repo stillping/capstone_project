@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -66,6 +67,7 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
     private CameraPosition savedStateCameraPosition;
     private Marker currentPositionMarker;
     private LatLngBounds currentLatLngBounds;
+    private String mapStyleJsonString;
 
     private Observer<Resource<List<MapItem>>> neighbourhoodResourceObserver;
     private OnPolygonClickedListener polygonClickedListener;
@@ -111,9 +113,17 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
 
         polygonClickedListener = (OnPolygonClickedListener) getActivity();
 
+
         viewModel = ViewModelProviders.
                 of(this, viewModelFactory).get(MapDataViewModel.class);
+
+        viewModel.getMapSettings().observe(this, jsonString -> {
+            mapStyleJsonString = jsonString;
+            stylizeMap();
+        });
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -145,9 +155,16 @@ public class ShifttMapFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setOnPolygonClickListener(this);
         googleMap.setMyLocationEnabled(false);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        stylizeMap();
 
         disableCurrentLocationMarkerClick();
 
+    }
+
+    private void stylizeMap() {
+        if(mapStyleJsonString != null && googleMap != null) {
+            googleMap.setMapStyle(new MapStyleOptions(mapStyleJsonString));
+        }
     }
 
     /**

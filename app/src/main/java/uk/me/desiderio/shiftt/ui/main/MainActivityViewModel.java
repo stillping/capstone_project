@@ -3,7 +3,6 @@ package uk.me.desiderio.shiftt.ui.main;
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import uk.me.desiderio.shiftt.MainActivity;
 import uk.me.desiderio.shiftt.data.repository.LocationRepository;

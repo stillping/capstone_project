@@ -26,7 +26,8 @@ import uk.me.desiderio.shiftt.viewmodel.ViewModelModule;
 
 @Module(includes = {ViewModelModule.class,
         AppBindingsModule.class,
-        TwitterCoreModule.class})
+        TwitterCoreModule.class,
+        RemoteSettingsModule.class})
 public class AppModule {
 
     private final Application app;

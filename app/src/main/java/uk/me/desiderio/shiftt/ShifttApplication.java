@@ -2,8 +2,11 @@ package uk.me.desiderio.shiftt;
 
 import com.twitter.sdk.android.core.Twitter;
 
+import javax.inject.Inject;
+
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
+import uk.me.desiderio.shiftt.data.repository.RemoteSettingsRepository;
 import uk.me.desiderio.shiftt.di.AppComponent;
 import uk.me.desiderio.shiftt.di.AppModule;
 import uk.me.desiderio.shiftt.di.DaggerAppComponent;
@@ -14,6 +17,10 @@ import uk.me.desiderio.shiftt.di.DaggerAppComponent;
  */
 
 public class ShifttApplication extends DaggerApplication {
+
+    @Inject
+    public RemoteSettingsRepository remoteSettingsRepository;
+
 
     @Override
     public void onCreate() {
